@@ -1,10 +1,21 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Index from '../views/index/index'
+import Layouts from '@/layouts/index'
+import Cuicons from '@/views/cuicons'
 
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
   {
     path: '/',
-    element: <Index />
+    element: <Layouts />,
+  },
+  {
+    path: '/icon',
+    element: <Layouts />,
+    children: [
+      {
+        path: 'Cuicons',
+        element: <Cuicons />
+      }
+    ]
   }
 ])
 

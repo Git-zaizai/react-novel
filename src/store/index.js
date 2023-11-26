@@ -4,13 +4,17 @@ import { setRootCss } from '@/styles/cssVars'
 import { checkIsDarkMode } from '@/utlis'
 
 const windowTheme = checkIsDarkMode()
-setRootCss(windowTheme ? 'light' : 'dark')
 
 const [useAccountStore, getAccountStore] = createGlobalStore(() => {
   const [state, setState] = useState({
     theme: windowTheme,
-    nprogress: false
+    nprogress: false,
+    mainScroll: false
   })
+
+  function setValueStore(obj) {
+    setState((v) => ({ ...v, ...obj }))
+  }
 
   function setThemeToggle(value) {
     setState((v) => {
@@ -24,7 +28,7 @@ const [useAccountStore, getAccountStore] = createGlobalStore(() => {
     setState((v) => ({ ...v, nprogress: !v.nprogress }))
   }
 
-  return { store: state, setThemeToggle, nprogressToggle }
+  return { store: state, setValueStore, setThemeToggle, nprogressToggle }
 })
 
 export const useStore = useAccountStore

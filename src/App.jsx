@@ -1,13 +1,7 @@
-import './App.css'
 import { HoxRoot } from 'hox'
+import RouterView from '@/router/index'
 
-import Router from './router/index'
-import TabBar from '@/layouts/tabBar/tabBar'
-import Card from '@/components/Card/Card'
-
-import Layouts from './layouts'
-
-
+import './styles/index.css'
 
 /**
  *
@@ -18,7 +12,7 @@ function App() {
   return (
     <>
       <HoxRoot>
-        <Layouts></Layouts>
+        <RouterView></RouterView>
       </HoxRoot>
     </>
   )
