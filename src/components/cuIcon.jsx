@@ -301,7 +301,7 @@ export default ({ icon, size, color, onClick }) => {
   return (
     <>
       <i
-        className={`cuIcon-${icon}`}
+        className={`el-transition-color cuIcon-${icon}`}
         style={{
           fontSize: size + 'px',
           color: color

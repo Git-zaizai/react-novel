@@ -15,6 +15,10 @@
   color: var(--text-color-1);
   background: var(--body-back-color);
   justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
 }
 
 .header-current {
@@ -23,19 +27,17 @@
   height: 100%;
 }
 
+.header-rigth {
+  margin-right: 30px;
+}
+
 .zaiView {
   width: 100%;
+  /* height: calc(100vh - (10px + 64px)); */
+  min-height: 100vh;
 }
 
 @media screen and (max-width: 980px) {
-  .zaiheader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    box-shadow: var(--box-shadow-1);
-  }
-
   .zaiView {
     overflow-y: scroll;
     width: 100%;
@@ -50,6 +52,10 @@
     box-shadow: 0 0px 12px rgb(0 0 0 / 18%);
     height: 67px;
     background: var(--body-back-color);
+  }
+
+  .header-rigth {
+    margin-right: 0;
   }
 
   .zf-item {

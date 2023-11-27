@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { ConfigProvider, App, Layout, theme, Drawer } from 'antd'
 import { useLocation, useOutlet } from 'react-router-dom'
 import { useStore } from '@/store'
@@ -7,7 +7,6 @@ import ZaiHeader from './header'
 import ZaiFooter from './footer'
 import { debounce } from '@/utlis'
 import Transition from '@/components/Transition'
-import { SwitchTransition, CSSTransition } from 'react-transition-group'
 
 const { Header, Content, Footer } = Layout
 
@@ -26,7 +25,7 @@ const WinConfig = () => {
 export default ({ children }) => {
   const location = useLocation()
   const currentOutlet = useOutlet()
-  const { store, setValueStore, setThemeToggle } = useStore()
+  const { store, setValueStore, setThemeToggle, nprogressToggle } = useStore()
 
   const scrollView = () => {
     const scrolltop = document.querySelector('.zaiView').scrollTop
@@ -70,8 +69,14 @@ export default ({ children }) => {
                   <Transition
                     show={location.pathname}
                     appear={false}
-                    timeout={200}
+                    timeout={300}
                     unmountOnExit={true}
+                    onEnter={() => {
+                      nprogressToggle()
+                    }}
+                    onEntered={() => {
+                      nprogressToggle()
+                    }}
                   >
                     {() => <div>{currentOutlet}</div>}
                   </Transition>

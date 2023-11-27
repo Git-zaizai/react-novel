@@ -50,3 +50,9 @@ export function debounce(fn, delay = 200, immediate = false, resultCb) {
   // 防抖函数会返回另一个函数，该函数才是真正被调用的函数
   return _debounce
 }
+
+export function isMobile() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  )
+}
