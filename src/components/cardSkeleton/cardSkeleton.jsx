@@ -5,7 +5,7 @@ export default ({ active = true }) => {
       style={{
         flexDirection: 'column',
         padding: '0 10px',
-        marginBottom: '50px'
+        marginBottom: '30px'
       }}
     >
       <Skeleton.Input block active={active} />

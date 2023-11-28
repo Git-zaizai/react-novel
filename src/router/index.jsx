@@ -1,3 +1,4 @@
+import { createRef } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Layouts from '@/layouts'
 import Cuicons from '@/views/cuicons'
@@ -11,7 +12,8 @@ export const routes = [
     children: [
       {
         index: true,
-        element: <Index />
+        element: <Index />,
+        nodeRef: createRef()
       }
     ]
   },
@@ -21,7 +23,8 @@ export const routes = [
     children: [
       {
         path: 'Cuicons',
-        element: <Cuicons />
+        element: <Cuicons />,
+        nodeRef: createRef()
       }
     ]
   }

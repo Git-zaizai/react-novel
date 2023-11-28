@@ -9,6 +9,7 @@ import CuIcon from '@/components/cuIcon'
 import { CardSkeletons } from '@/components/cardSkeleton'
 
 import styles from './index.module.css'
+import { useEffect } from 'react'
 
 const { Meta } = Card
 const App = () => {
@@ -27,9 +28,16 @@ const App = () => {
 
   return (
     <>
-      {loading ? (
-        <CardSkeletons />
-      ) : (
+      <Button
+        onClick={() => {
+          console.log(loading)
+          setLoading(!loading)
+        }}
+        key='askjdh'
+      >
+        爱的速递
+      </Button>
+      <CardSkeletons show={loading}>
         <div className={styles.view}>
           <Card
             bordered={false}
@@ -61,7 +69,7 @@ const App = () => {
             </div>
           </Card>
         </div>
-      )}
+      </CardSkeletons>
     </>
   )
 }
