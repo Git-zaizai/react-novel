@@ -1,6 +1,5 @@
 import { HoxRoot } from 'hox'
 import RouterView from '@/router/index'
-import Layouts from './layouts'
 
 import './styles/index.css'
 

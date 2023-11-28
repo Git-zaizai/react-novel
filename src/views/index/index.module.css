@@ -1,0 +1,33 @@
+.view {
+  padding: 0 10px;
+}
+
+.cardtitle {
+  margin-left: 5px;
+  width: 80%;
+}
+
+.cardbody {
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.cardtab {
+  flex-wrap: wrap;
+}
+
+:global(.ant-tag-green) {
+  margin-bottom: 5px;
+}
+
+.cardbut {
+  margin-bottom: 10px;
+}
+
+:global(.ant-card .ant-card-body) {
+  padding: 15px 10px;
+}
+
+:global(.ant-card .ant-card-head) {
+  padding: 0 10px;
+}
