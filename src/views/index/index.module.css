@@ -14,9 +14,10 @@
 
 .cardtab {
   flex-wrap: wrap;
+  align-items: center;
 }
 
-:global(.ant-tag-green) {
+:global(.ant-tag) {
   margin-bottom: 5px;
 }
 

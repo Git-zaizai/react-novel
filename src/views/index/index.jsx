@@ -47,15 +47,16 @@ const App = () => {
           extra={<h4>第1035-205789章</h4>}
         >
           <div className={'flex ' + styles.cardtab}>
-            <Tag color='green'>green</Tag>
-            <Tag color='green'>green</Tag>
-            <Tag color='green'>green</Tag>
-            <Tag color='green'>green</Tag>
-            <Tag color='green'>green</Tag>
-            <Tag color='green'>green</Tag>
-            <Tag color='green'>green</Tag>
-            <Tag color='green'>green</Tag>
-            <Tag color='green'>green</Tag>
+            <h4>标签：</h4>
+            <Tag>green</Tag>
+            <Tag>green</Tag>
+            <Tag>green</Tag>
+            <Tag>green</Tag>
+            <Tag>green</Tag>
+            <Tag>green</Tag>
+            <Tag>green</Tag>
+            <Tag>green</Tag>
+            <Tag>green</Tag>
           </div>
           <div className={styles.cardbody + ' flex'}>{arr}</div>
         </Card>
