@@ -7,6 +7,7 @@ import ZaiHeader from './header'
 import ZaiFooter from './footer'
 import { debounce } from '@/utlis'
 import Transition from '@/components/Transition'
+import { routes } from '@/router'
 
 const { Header, Content, Footer } = Layout
 
@@ -45,34 +46,22 @@ export default ({ children }) => {
     setThemeToggle()
     document.querySelector('.zaiView').addEventListener(
       'scroll',
-      debounce((e) => {})
+      debounce(e => {})
     )
   }, [])
 
-  function getThemeFn(val) {
-    if (val) {
-      return {
-        colorPrimary: '#18a058',
-        colorInfo: '#18a058',
-        colorSuccess: '#18a058'
-      }
-    }
-    return {
-      colorPrimary: '#63e2b7',
-      colorInfo: '#63e2b7',
-      colorSuccess: '#18a058'
-    }
-  }
+  useEffect(() => {
+    nprogressToggle()
+  }, [location.pathname])
+
+  const { nodeRef } =
+    routes.find(route => route.path === location.pathname) ?? {}
 
   return (
     <>
-      <Nprogress
-        isAnimating={store.nprogress}
-        key='Nprogress'
-      />
+      <Nprogress isAnimating={store.nprogress} key='Nprogress' />
       <ConfigProvider
         theme={{
-          token: getThemeFn(store.theme),
           algorithm: store.theme ? theme.defaultAlgorithm : theme.darkAlgorithm
         }}
       >
@@ -83,24 +72,16 @@ export default ({ children }) => {
               <Drawer />
               <ZaiHeader></ZaiHeader>
               <Content>
-                <div
-                  className='zaiView'
-                  onScroll={(e) => scrollView(e)}
-                >
+                <div className='zaiView' onScroll={e => scrollView(e)}>
                   <div style={{ height: '75px' }}></div>
                   <Transition
                     show={location.pathname}
                     appear={false}
-                    timeout={300}
+                    timeout={200}
                     unmountOnExit={true}
-                    onEnter={() => {
-                      nprogressToggle()
-                    }}
-                    onEntered={() => {
-                      nprogressToggle()
-                    }}
+                    nodeRef={nodeRef}
                   >
-                    {() => <div>{currentOutlet}</div>}
+                    {() => <div ref={nodeRef}>{currentOutlet}</div>}
                   </Transition>
                 </div>
               </Content>

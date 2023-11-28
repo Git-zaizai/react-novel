@@ -4,7 +4,7 @@ import Cuicons from '@/views/cuicons'
 
 import Index from '@/views/index'
 
-export const router = createBrowserRouter([
+export const routes = [
   {
     path: '/',
     element: <Layouts />,
@@ -25,7 +25,9 @@ export const router = createBrowserRouter([
       }
     ]
   }
-])
+]
+
+export const router = createBrowserRouter(routes)
 
 export default function Router() {
   return <RouterProvider router={router} />

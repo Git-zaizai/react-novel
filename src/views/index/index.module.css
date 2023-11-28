@@ -1,3 +1,7 @@
+.skeletondiv{
+  flex-direction: column;
+}
+
 .view {
   padding: 0 10px;
 }
@@ -15,14 +19,24 @@
 .cardtab {
   flex-wrap: wrap;
   align-items: center;
+  margin-top: 10px;
+}
+
+.carppeizhu {
+  background-color: var(--tag-color);
+  margin-top: 10px;
+  border-radius: 3px;
+  padding: 5px;
+  color: var(--text-color-3);
+}
+
+.cardbut {
+  margin-bottom: 5px;
+  margin-right: 5px;
 }
 
 :global(.ant-tag) {
   margin-bottom: 5px;
-}
-
-.cardbut {
-  margin-bottom: 10px;
 }
 
 :global(.ant-card .ant-card-body) {

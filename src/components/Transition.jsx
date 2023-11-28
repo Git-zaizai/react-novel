@@ -1,29 +1,14 @@
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-export default ({
-  show,
-  timeout = 200,
-  name,
-  appear = true,
-  children,
-  ...props
-}) => {
-  const getkey = () => {
-    if (typeof show === 'boolean') {
-      return show ? 'show' : 'hidden'
-    }
-    return show
-  }
-
+export default ({ show, nodeRef, children, ...props }) => {
   return (
     <>
       <SwitchTransition mode='out-in'>
         <CSSTransition
-          key={getkey()}
-          timeout={timeout}
-          classNames={name ?? 'fade'}
-          appear={appear}
-          unmountOnExit
+          key={show}
+          timeout={props?.timeout ?? 300}
+          classNames={props?.name ?? 'fade'}
+          nodeRef={nodeRef}
           {...props}
         >
           {children}
