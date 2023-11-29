@@ -39,6 +39,13 @@
   word-break: break-all;
   white-space: nowrap;
 }
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 3;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
 /****************************   *******************************/
 .w-100 {
   width: 100%;
@@ -46,11 +53,17 @@
 .ml-10 {
   margin-left: 10px;
 }
+.ml-20 {
+  margin-left: 20px;
+}
 .mt-5 {
   margin-top: 5px;
 }
 .mt-10 {
   margin-top: 10px;
+}
+.mt-15 {
+  margin-top: 15px;
 }
 .text-align {
   text-align: center;

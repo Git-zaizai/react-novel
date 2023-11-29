@@ -1,12 +1,9 @@
 import Transition from '@/components/Transition'
 import { useStore } from '@/store'
-import {
-  PlusOutlined,
-  SwapOutlined,
-  CloseCircleOutlined
-} from '@ant-design/icons'
+import { Back } from '@icon-park/react'
 import { useToggle } from 'ahooks'
 import styles from './css.module.css'
+import CuIcon from '@/components/cuIcon'
 
 export default () => {
   const { store, setValueStore } = useStore()
@@ -15,17 +12,10 @@ export default () => {
   const AddDrawerFooter = (
     <>
       <div className='flex-fdc-aic-juc'>
-        <Button
-          type='primary'
-          className='w-100'
-        >
+        <Button type='primary' className='w-100'>
           添加
         </Button>
-        <Button
-          danger
-          type='primary'
-          className='mt-10 w-100'
-        >
+        <Button danger type='primary' className='mt-10 w-100'>
           删除
         </Button>
       </div>
@@ -43,42 +33,31 @@ export default () => {
     >
       <Form layout='vertical'>
         <Form.Item>
-          <Radio.Group
-            defaultValue='a'
-            className='flex'
-          >
-            <Radio
-              value='a'
-              className='w-100'
-            >
+          <Radio.Group defaultValue='a' className='flex'>
+            <Radio value='a' className='w-100'>
               小说
             </Radio>
-            <Radio
-              value='b'
-              className='w-100'
-            >
+            <Radio value='b' className='w-100'>
               推荐
             </Radio>
           </Radio.Group>
         </Form.Item>
 
         <Form.Item label='名：'>
-          <Input
-            placeholder='input placeholder'
-            allowClear
-            size='large'
-          />
+          <Input placeholder='名' allowClear size='large' />
         </Form.Item>
 
-        <Form.Item label='章节：'>
+        <Form.Item label='节：'>
           <Space.Compact size='large'>
             <Input
               addonBefore='第'
               placeholder='0'
               addonAfter='-'
               className='text-align'
+              allowClear
             />
             <Input
+              allowClear
               addonAfter='章'
               placeholder='*'
               className='text-align'
@@ -86,40 +65,23 @@ export default () => {
           </Space.Compact>
         </Form.Item>
 
-        <Form.Item label='是否读完'>
-          <Radio.Group
-            defaultValue='a'
-            className='flex'
-          >
-            <Radio.Button
-              value='a'
-              className='w-100'
-            >
+        <Form.Item label='读完：'>
+          <Radio.Group defaultValue='a' className='flex'>
+            <Radio.Button value='a' className='w-100'>
               小说
             </Radio.Button>
-            <Radio.Button
-              value='b'
-              className='w-100'
-            >
+            <Radio.Button value='b' className='w-100'>
               推荐
             </Radio.Button>
           </Radio.Group>
         </Form.Item>
 
         <Form.Item label='首链接：'>
-          <Input
-            placeholder='首链接'
-            allowClear
-            size='large'
-          />
+          <Input placeholder='首链接' allowClear size='large' />
         </Form.Item>
 
         <Form.Item label='后续链接：'>
-          <Input
-            placeholder='后续链接'
-            allowClear
-            size='large'
-          />
+          <Input placeholder='后续链接' allowClear size='large' />
         </Form.Item>
 
         {/*     <Form.Item
@@ -143,7 +105,7 @@ export default () => {
             <Button
               className='w-100'
               type='dashed'
-              icon={<PlusOutlined />}
+              icon={<CuIcon icon='add' />}
               onClick={isLinkShowtoggle}
             >
               添加链接
@@ -162,13 +124,15 @@ export default () => {
                           style={{ position: 'relative' }}
                         >
                           <Input
+                            allowClear
                             addonBefore='链接名：'
-                            placeholder='...'
+                            placeholder='名'
                           />
                           <Input
-                            addonBefore='URL：&emsp;'
+                            addonBefore='URL：'
                             placeholder='URL'
                             className='mt-10'
+                            allowClear
                           />
                           <CloseCircleOutlined
                             className={styles.addLinkClose}
@@ -181,9 +145,9 @@ export default () => {
                           type='dashed'
                           onClick={() => add()}
                           block
-                          icon={<PlusOutlined />}
+                          icon={<CuIcon icon='add' />}
                         >
-                          Add field
+                          添加新链接
                         </Button>
                       </Form.Item>
                     </>
@@ -192,7 +156,7 @@ export default () => {
 
                 <Button
                   className='w-100'
-                  icon={<SwapOutlined />}
+                  icon={<Back theme='outline' size='14' />}
                   onClick={isLinkShowtoggle}
                 >
                   返回

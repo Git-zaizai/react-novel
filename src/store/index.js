@@ -13,17 +13,19 @@ const [useAccountStore, getAccountStore] = createGlobalStore(() => {
       colorInfo: '#18a058',
       colorSuccess: '#18a058'
     },
-    isAddDrawer: true,
+    isAddDrawer: false,
     nprogress: false,
-    mainScroll: false
+    mainScroll: false,
+    isSearch: false,
+    isSettingTwo: false
   })
 
   function setValueStore(obj) {
-    setState((v) => ({ ...v, ...obj }))
+    setState(v => ({ ...v, ...obj }))
   }
 
   function setThemeToggle(value) {
-    setState((v) => {
+    setState(v => {
       const res = { ...v, theme: value ?? !v.theme }
       res.themeToken = getThemeToken(v.theme)
       setRootCss(res.theme ? 'light' : 'dark')
@@ -32,7 +34,7 @@ const [useAccountStore, getAccountStore] = createGlobalStore(() => {
   }
 
   function nprogressToggle() {
-    setState((v) => ({ ...v, nprogress: !v.nprogress }))
+    setState(v => ({ ...v, nprogress: !v.nprogress }))
   }
 
   return { store: state, setValueStore, setThemeToggle, nprogressToggle }

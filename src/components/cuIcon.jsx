@@ -297,11 +297,11 @@ export const cuicons = [
   'btn'
 ]
 
-export default ({ icon, size, color, onClick, style }) => {
+export default ({ icon, size, color, onClick, style, className }) => {
   return (
     <>
       <i
-        className={`el-transition-color cuIcon-${icon}`}
+        className={`el-transition-color cuIcon-${icon} ${className ?? ''}`}
         style={{
           fontSize: size + 'px',
           color: color,

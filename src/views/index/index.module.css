@@ -11,18 +11,12 @@
   width: 80%;
 }
 
-.cardtab {
-  flex-wrap: wrap;
-  align-items: center;
-  margin-top: 10px;
-}
-
 .carppeizhu {
   background-color: var(--tag-color);
   margin-top: 10px;
   border-radius: 3px;
   padding: 5px;
-  color: var(--text-color-3);
+  color: var(--text-color-2);
 }
 
 .cardbut {
@@ -30,8 +24,15 @@
   /* margin-right: 15px; */
 }
 
-:global(.ant-tag) {
-  margin-bottom: 5px;
+.search {
+  position: relative;
+  height: 45px;
+}
+
+.searchPr {
+  position: fixed;
+  width: 80vw;
+  left: calc(50vw - 40vw);
 }
 
 :global(.ant-card .ant-card-body) {

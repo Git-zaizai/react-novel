@@ -9,6 +9,7 @@ import { debounce } from '@/utlis'
 import Transition from '@/components/Transition'
 import { routes } from '@/router'
 import AddDrawer from './addDrawer/addDrawer'
+import SettingTwo from './SettingTwo'
 
 const { Header, Content, Footer } = Layout
 
@@ -30,7 +31,7 @@ export default () => {
   const { store, setValueStore, setThemeToggle, nprogressToggle } = useStore()
 
   const { nodeRef } =
-    routes.find((route) => route.path === location.pathname) ?? {}
+    routes.find(route => route.path === location.pathname) ?? {}
 
   const drawerStyles = {
     mask: {
@@ -57,16 +58,13 @@ export default () => {
     setThemeToggle()
     document.querySelector('.zaiView').addEventListener(
       'scroll',
-      debounce((e) => {})
+      debounce(e => {})
     )
   }, [])
 
   return (
     <>
-      <Nprogress
-        isAnimating={store.nprogress}
-        key={location.key}
-      />
+      <Nprogress isAnimating={store.nprogress} key={location.key} />
       <ConfigProvider
         drawer={{
           styles: drawerStyles
@@ -82,11 +80,9 @@ export default () => {
             <Layout>
               <ZaiHeader />
               <AddDrawer />
+              <SettingTwo />
               <Content>
-                <div
-                  className='zaiView'
-                  onScroll={(e) => scrollView(e)}
-                >
+                <div className='zaiView' onScroll={e => scrollView(e)}>
                   <div style={{ height: '75px' }}></div>
                   <Transition
                     show={location.pathname}
