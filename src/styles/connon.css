@@ -21,6 +21,17 @@
   justify-content: space-between;
 }
 
+.flex-fw {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.flex-ju-sb {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
 /****************************  flex  *******************************/
 .singe-line {
   text-overflow: ellipsis;
@@ -29,6 +40,9 @@
   white-space: nowrap;
 }
 /****************************   *******************************/
+.w-100 {
+  width: 100%;
+}
 .ml-10 {
   margin-left: 10px;
 }
@@ -37,6 +51,9 @@
 }
 .mt-10 {
   margin-top: 10px;
+}
+.text-align {
+  text-align: center;
 }
 /********************/
 .el-transition {

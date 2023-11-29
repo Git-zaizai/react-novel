@@ -10,6 +10,8 @@ export default defineConfig({
   plugins: [
     react(),
     AutoImport({
+      imports: ['react', 'react-router-dom', 'ahooks'],
+      dts: true,
       resolvers: [AntdResolver()]
     })
   ],

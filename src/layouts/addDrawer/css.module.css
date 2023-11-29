@@ -1,0 +1,16 @@
+.addLinkForm {
+  /* padding: 15px 3px 3px 3px; */
+  /* border-top: 2px solid; */
+  margin: 15px 0;
+}
+
+.addLinkClose {
+  position: absolute;
+  right: 10px;
+  top: -25px;
+  font-size: 15px;
+}
+
+:global(.ant-drawer .ant-drawer-body) {
+  padding: 15px;
+}

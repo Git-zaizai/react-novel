@@ -23,7 +23,10 @@ export default () => {
               color: getColor('/')
             }}
           >
-            <CuIcon icon='hot' size='30' />
+            <CuIcon
+              icon='hot'
+              size='30'
+            />
             <h4>首页</h4>
           </dir>
           <dir
@@ -33,7 +36,23 @@ export default () => {
               color: getColor('/icon/Cuicons')
             }}
           >
-            <CuIcon icon='favor' size='30' />
+            <CuIcon
+              icon='favor'
+              size='30'
+            />
+            <h4>icon</h4>
+          </dir>
+          <dir
+            className='zf-item flex-fdc-aic-juc'
+            onClick={() => navigate('/test-view')}
+            style={{
+              color: getColor('/test-view')
+            }}
+          >
+            <CuIcon
+              icon='repair'
+              size='30'
+            />
             <h4>icon</h4>
           </dir>
         </footer>

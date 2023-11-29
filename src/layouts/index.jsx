@@ -8,6 +8,7 @@ import ZaiFooter from './footer'
 import { debounce } from '@/utlis'
 import Transition from '@/components/Transition'
 import { routes } from '@/router'
+import AddDrawer from './addDrawer/addDrawer'
 
 const { Header, Content, Footer } = Layout
 
@@ -23,11 +24,21 @@ const WinConfig = () => {
   return <></>
 }
 
-export default ({ children }) => {
+export default () => {
   const location = useLocation()
   const currentOutlet = useOutlet()
   const { store, setValueStore, setThemeToggle, nprogressToggle } = useStore()
 
+  const { nodeRef } =
+    routes.find((route) => route.path === location.pathname) ?? {}
+
+  const drawerStyles = {
+    mask: {
+      backdropFilter: 'blur(10px)'
+    }
+  }
+
+  /******************************************************************** */
   const scrollView = () => {
     const scrolltop = document.querySelector('.zaiView').scrollTop
     if (scrolltop > 100) {
@@ -46,33 +57,36 @@ export default ({ children }) => {
     setThemeToggle()
     document.querySelector('.zaiView').addEventListener(
       'scroll',
-      debounce(e => {})
+      debounce((e) => {})
     )
   }, [])
 
-  useEffect(() => {
-    nprogressToggle()
-  }, [location.pathname])
-
-  const { nodeRef } =
-    routes.find(route => route.path === location.pathname) ?? {}
-
   return (
     <>
-      <Nprogress isAnimating={store.nprogress} key='Nprogress' />
+      <Nprogress
+        isAnimating={store.nprogress}
+        key={location.key}
+      />
       <ConfigProvider
+        drawer={{
+          styles: drawerStyles
+        }}
         theme={{
+          token: store.themeToken,
           algorithm: store.theme ? theme.defaultAlgorithm : theme.darkAlgorithm
         }}
       >
-        <App>
+        <App message={{ top: 70 }}>
           <WinConfig />
           <Layout>
             <Layout>
-              <Drawer />
-              <ZaiHeader></ZaiHeader>
+              <ZaiHeader />
+              <AddDrawer />
               <Content>
-                <div className='zaiView' onScroll={e => scrollView(e)}>
+                <div
+                  className='zaiView'
+                  onScroll={(e) => scrollView(e)}
+                >
                   <div style={{ height: '75px' }}></div>
                   <Transition
                     show={location.pathname}
@@ -80,6 +94,10 @@ export default ({ children }) => {
                     timeout={200}
                     unmountOnExit={true}
                     nodeRef={nodeRef}
+                    onEnter={() => nprogressToggle()}
+                    onEntered={() => {
+                      nprogressToggle()
+                    }}
                   >
                     {() => <div ref={nodeRef}>{currentOutlet}</div>}
                   </Transition>

@@ -2,14 +2,17 @@ import { useStore } from '@/store'
 import { AppstoreOutlined } from '@ant-design/icons'
 import { SunOne, Moon } from '@icon-park/react'
 import Transition from '@/components/Transition'
-import { isMobile } from '@/utlis'
+import CuIcon from '@/components/cuIcon'
 
-export default props => {
-  const { store, setThemeToggle } = useStore()
+export default (props) => {
+  const { store, setThemeToggle, setValueStore } = useStore()
 
   return (
     <>
-      <header className='zaiheader' style={props.style}>
+      <header
+        className='zaiheader'
+        style={props.style}
+      >
         <AppstoreOutlined
           className='el-transition-color'
           style={{
@@ -17,8 +20,18 @@ export default props => {
             color: 'var(--success-color)'
           }}
         />
-        <div className='header-current'>
-         
+        <div className='header-current flex'>
+          <CuIcon
+            icon='roundadd'
+            size='36'
+            color='var(--success-color)'
+            style={{
+              marginLeft: '20px'
+            }}
+            onClick={() => {
+              setValueStore({ isAddDrawer: !store.isAddDrawer })
+            }}
+          />
         </div>
         <Transition show={store.theme}>
           {store.theme ? (

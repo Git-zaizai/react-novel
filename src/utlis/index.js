@@ -1,14 +1,4 @@
-/**
- * @function 浏览器检测是否为亮色模式
- * @returns
- */
-export function checkIsDarkMode() {
-  try {
-    return window.matchMedia('(prefers-color-scheme: light)').matches
-  } catch (err) {
-    return false
-  }
-}
+
 
 // 第一个参数是需要进行防抖处理的函数，第二个参数是延迟时间，默认为1秒钟
 // 这里多传一个参数，immediate用来决定是否要第一次立即执行, 默认为false

@@ -1,9 +1,16 @@
-import { createRef } from 'react'
+import { createRef, lazy, Suspense } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Layouts from '@/layouts'
-import Cuicons from '@/views/cuicons'
-
 import Index from '@/views/index'
+
+const LazyImport = (fn) => {
+  const LazyComponent = lazy(fn)
+  return (
+    <Suspense>
+      <LazyComponent />
+    </Suspense>
+  )
+}
 
 export const routes = [
   {
@@ -23,8 +30,18 @@ export const routes = [
     children: [
       {
         path: 'Cuicons',
-        element: <Cuicons />,
+        element: LazyImport(() => import('@/views/cuicons')),
         nodeRef: createRef()
+      }
+    ]
+  },
+  {
+    path: '/test-view',
+    element: <Layouts />,
+    children: [
+      {
+        index: true,
+        element: LazyImport(() => import('@/views/test.view'))
       }
     ]
   }

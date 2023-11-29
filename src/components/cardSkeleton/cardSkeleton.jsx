@@ -8,7 +8,10 @@ export default ({ active = true }) => {
         marginBottom: '30px'
       }}
     >
-      <Skeleton.Input block active={active} />
+      <Skeleton.Input
+        block
+        active={active}
+      />
 
       <div className='flex-jusp mt-10'>
         <Skeleton.Button active={active} />
@@ -24,7 +27,12 @@ export default ({ active = true }) => {
           block
           active={active}
         />
-        <Skeleton.Input size='large' block active={active} className='mt-5' />
+        <Skeleton.Input
+          size='large'
+          block
+          active={active}
+          className='mt-5'
+        />
       </div>
     </div>
   )

@@ -19,13 +19,14 @@
   top: 0;
   left: 0;
   width: 100vw;
-  z-index: 9999;
+  z-index: 999;
 }
 
 .header-current {
   position: relative;
   flex: 1;
   height: 100%;
+  align-items: center;
 }
 
 .header-rigth {

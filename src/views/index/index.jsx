@@ -1,49 +1,48 @@
-import {
-  EditOutlined,
-  EllipsisOutlined,
-  SettingOutlined
-} from '@ant-design/icons'
-import React, { useState } from 'react'
-import { Avatar, Card, Skeleton, Switch, Flex } from 'antd'
 import CuIcon from '@/components/cuIcon'
 import { CardSkeletons } from '@/components/cardSkeleton'
+import { LinkOutlined } from '@ant-design/icons'
 
 import styles from './index.module.css'
-import { useEffect } from 'react'
+import { Space } from 'antd'
 
-const { Meta } = Card
 const App = () => {
   const [loading, setLoading] = useState(true)
-  const onChange = checked => {
+  const onChange = (checked) => {
     setLoading(!checked)
   }
 
-  const arr = Array.from({ length: 5 }).map(v => {
+  const arr = Array.from({ length: 5 }).map((_, i) => {
     return (
-      <Button type='primary' className={styles.cardbut} key={v}>
-        复制链接
+      <Button
+        type='dashed'
+        className={styles.cardbut}
+        key={i}
+        icon={<LinkOutlined />}
+        onClick={() => {
+          window.$message.success('复制链接')
+        }}
+      >
+        复制 {'i =' + i}
       </Button>
     )
   })
 
+  useEffect(() => {
+    setTimeout(() => setLoading(!loading), 1000)
+  }, [])
+
   return (
     <>
-      <Button
-        onClick={() => {
-          console.log(loading)
-          setLoading(!loading)
-        }}
-        key='askjdh'
-      >
-        爱的速递
-      </Button>
       <CardSkeletons show={loading}>
         <div className={styles.view}>
           <Card
             bordered={false}
             title={
               <div className='flex'>
-                <CuIcon icon='hot' size='22' />
+                <CuIcon
+                  icon='hot'
+                  size='22'
+                />
                 <h4 className={styles.cardtitle + ' singe-line'}>
                   啊实打实大萨达萨达啊撒大声地
                 </h4>
@@ -51,7 +50,12 @@ const App = () => {
             }
             extra={<h4>第1035-205789章</h4>}
           >
-            <div className={styles.cardbody + ' flex'}>{arr}</div>
+            <Space
+              size={[14, 7]}
+              wrap
+            >
+              {arr}
+            </Space>
             <div className={'flex ' + styles.cardtab}>
               <h4>标签：</h4>
               <Tag>green</Tag>

@@ -1,6 +1,8 @@
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-export default ({ show, nodeRef, children, ...props }) => {
+export default (props) => {
+  const { show, nodeRef, children, onEnter, onEntered, ...Remaining } = props
+
   return (
     <>
       <SwitchTransition mode='out-in'>
@@ -9,7 +11,9 @@ export default ({ show, nodeRef, children, ...props }) => {
           timeout={props?.timeout ?? 300}
           classNames={props?.name ?? 'fade'}
           nodeRef={nodeRef}
-          {...props}
+          onEnter={onEnter}
+          onEntered={onEntered}
+          {...Remaining}
         >
           {children}
         </CSSTransition>
