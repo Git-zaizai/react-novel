@@ -55,23 +55,13 @@ export default () => {
       >
         <Form.Item name='recommended'>
           <Radio.Group className='flex'>
-            <Radio.Button
-              value={0}
-              className='w-100'
-            >
+            <Radio.Button value={0} className='w-100'>
               <div className='flex-ai-c'>
-                <Star
-                  theme='outline'
-                  size='16'
-                  className='mr-10'
-                />
+                <Star theme='outline' size='16' className='mr-10' />
                 小说
               </div>
             </Radio.Button>
-            <Radio.Button
-              value={1}
-              className='w-100'
-            >
+            <Radio.Button value={1} className='w-100'>
               <div
                 className='flex-ai-c'
                 style={{
@@ -79,42 +69,25 @@ export default () => {
                 }}
               >
                 推荐
-                <Star
-                  theme='outline'
-                  size='16'
-                  className='ml-10'
-                />
+                <Star theme='outline' size='16' className='ml-10' />
               </div>
             </Radio.Button>
           </Radio.Group>
         </Form.Item>
 
-        <Form.Item
-          name='title'
-          label='小说名：'
-        >
-          <Input
-            placeholder='名'
-            allowClear
-            size='large'
-          />
+        <Form.Item name='title' label='小说名：'>
+          <Input placeholder='名' allowClear size='large' />
         </Form.Item>
 
-        <Form.Item
-          name='chapter'
-          label='章节：'
-        >
-          <Space.Compact
-            size='large'
-            className='w-100'
-          >
+        <Form.Item name='chapter' label='章节：'>
+          <Space.Compact size='large' className='w-100'>
             <Input
               addonBefore='第'
               placeholder='0'
               className='text-align'
               allowClear
             />
-            <div className={styles.zj}></div>
+            <div className={styles.zj + ' flex-fdc-aic-juc'}></div>
             <Input
               allowClear
               addonAfter='章'
@@ -124,46 +97,43 @@ export default () => {
           </Space.Compact>
         </Form.Item>
 
-        <Form.Item
-          name='duwan'
-          label='读完：'
-        >
+        <Form.Item name='duwan' label='读完：'>
           <Radio.Group className='flex'>
-            <Radio.Button
-              value={0}
-              className='w-100'
-            >
-              未读完
+            <Radio.Button value={0} className='w-100'>
+              <div className='flex-ai-c'>
+                <CuIcon icon='tag' className='mr-10' />
+                未读完
+              </div>
             </Radio.Button>
-            <Radio.Button
-              value={1}
-              className='w-100'
-            >
-              读完
+            <Radio.Button value={1} className='w-100'>
+              <div className='flex-ai-c' style={{ justifyContent: 'flex-end' }}>
+                读完
+                <CuIcon icon='medal' className='ml-10' />
+              </div>
             </Radio.Button>
           </Radio.Group>
         </Form.Item>
 
-        <Form.Item
-          name='link'
-          label='首链接：'
-        >
-          <Input
-            placeholder='首链接'
-            allowClear
-            size='large'
-          />
+        <Form.Item name='link' label='首链接：'>
+          <Input placeholder='首链接' allowClear size='large' />
         </Form.Item>
 
-        <Form.Item
-          name='linkback'
-          label='后续链接：'
-        >
-          <Input
-            placeholder='后续链接'
-            allowClear
-            size='large'
-          />
+        <Form.Item name='linkback' label='后续链接：'>
+          <Input placeholder='后续链接' allowClear size='large' />
+        </Form.Item>
+
+        <Form.Item name='tabs' label='标签：'>
+          <Checkbox.Group>
+            <Row>
+              <Col>
+                {Array.from({ length: 10 }).map((_, i) => (
+                  <Checkbox key={i} value={i} style={{ lineHeight: '32px' }}>
+                    {`${i * i}`}
+                  </Checkbox>
+                ))}
+              </Col>
+            </Row>
+          </Checkbox.Group>
         </Form.Item>
 
         <div className={styles.addLinkForm}>
@@ -171,10 +141,7 @@ export default () => {
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name, ...restField }) => (
-                  <div
-                    style={{ position: 'relative' }}
-                    key={key}
-                  >
+                  <div style={{ position: 'relative' }} key={key}>
                     <Form.Item
                       label={`新链接 - ${key} ：`}
                       {...restField}
@@ -186,19 +153,15 @@ export default () => {
                         placeholder='名'
                       />
                     </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, 'linkitem']}
-                    >
-                      <Input
-                        addonBefore='URL：'
-                        placeholder='URL'
-                        allowClear
-                      />
+                    <Form.Item {...restField} name={[name, 'linkitem']}>
+                      <Input addonBefore='URL：' placeholder='URL' allowClear />
                     </Form.Item>
                     <DeleteThree
                       theme='outline'
                       size='16'
+                      style={{
+                        color: 'var(--error-color)'
+                      }}
                       className={styles.addLinkClose}
                       onClick={() => remove(name)}
                     />

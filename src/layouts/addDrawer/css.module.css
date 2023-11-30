@@ -9,6 +9,7 @@
   right: 10px;
   top: 6px;
   font-size: 15px;
+  
 }
 
 .zj {
@@ -25,8 +26,6 @@
   width: 12px;
   height: 2px;
   background: var(--text-color-2);
-  position: absolute;
-  transform: translate(9px, 18px);
 }
 
 :global(.ant-drawer .ant-drawer-body) {

@@ -9,6 +9,7 @@ import { debounce } from '@/utlis'
 import Transition from '@/components/Transition'
 import AddDrawer from './addDrawer/addDrawer'
 import SettingTwo from './SettingTwo/SettingTwo'
+import { routes } from '@/router'
 
 const { Header, Content, Footer } = Layout
 
@@ -55,16 +56,13 @@ export default () => {
     setThemeToggle()
     document.querySelector('.zaiView').addEventListener(
       'scroll',
-      debounce((e) => {})
+      debounce(e => {})
     )
   }, [])
 
   return (
     <>
-      <Nprogress
-        isAnimating={store.nprogress}
-        key={location.key}
-      />
+      <Nprogress isAnimating={store.nprogress} key={location.key} />
       <ConfigProvider
         drawer={{
           styles: drawerStyles

@@ -7,6 +7,8 @@ export {}
 declare global {
   const Button: typeof import('antd')['Button']
   const Card: typeof import('antd')['Card']
+  const Checkbox: typeof import('antd')['Checkbox']
+  const Col: typeof import('antd')['Col']
   const Drawer: typeof import('antd')['Drawer']
   const Flex: typeof import('antd')['Flex']
   const Form: typeof import('antd')['Form']
@@ -18,6 +20,7 @@ declare global {
   const Radio: typeof import('antd')['Radio']
   const Route: typeof import('react-router-dom')['Route']
   const Routes: typeof import('react-router-dom')['Routes']
+  const Row: typeof import('antd')['Row']
   const Skeleton: typeof import('antd')['Skeleton']
   const Space: typeof import('antd')['Space']
   const Tag: typeof import('antd')['Tag']

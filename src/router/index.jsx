@@ -1,9 +1,7 @@
 import { createRef, lazy, Suspense, memo } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Layouts from '@/layouts'
-import Index from '@/views/index'
 
-const LazyImport = (fn) => {
+const LazyImport = fn => {
   const LazyComponent = lazy(fn)
   return (
     <Suspense>
@@ -12,22 +10,22 @@ const LazyImport = (fn) => {
   )
 }
 
-const Layout = memo(Layouts)
+const Layout = LazyImport(() => import('@/layouts/index'))
 
-export const routes = [
+export const tabsRoutes = [
   {
     path: '/',
-    element: <Layout />,
+    element: Layout,
     children: [
       {
         index: true,
-        element: <Index />
+        element: LazyImport(() => import('@/views/index'))
       }
     ]
   },
   {
     path: '/icon',
-    element: <Layout />,
+    element: Layout,
     children: [
       {
         path: 'Cuicons',
@@ -37,7 +35,7 @@ export const routes = [
   },
   {
     path: '/test-view',
-    element: <Layout />,
+    element: Layout,
     children: [
       {
         index: true,
@@ -46,6 +44,8 @@ export const routes = [
     ]
   }
 ]
+
+export const routes = [...tabsRoutes]
 
 export const router = createBrowserRouter(routes)
 

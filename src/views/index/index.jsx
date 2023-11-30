@@ -26,11 +26,7 @@ function Introduction({ txt }) {
 function Tabs({ tablist }) {
   tablist = [1, 2, 3, 4, 5]
   return tablist.map((_, i) => (
-    <Tag
-      color={randomHexColor()}
-      key={i}
-      className='mt-10 mb-10'
-    >
+    <Tag color={randomHexColor()} key={i} className='mt-10 mb-10'>
       {randomHexColor()}
     </Tag>
   ))
@@ -41,7 +37,7 @@ const TabsMemo = memo(Tabs)
 export default () => {
   const { store } = useStore()
   const [loading, setLoading] = useState(true)
-  const onChange = (checked) => {
+  const onChange = checked => {
     setLoading(!checked)
   }
 
@@ -51,12 +47,7 @@ export default () => {
         type='dashed'
         className={styles.cardbut}
         key={i}
-        icon={
-          <LinkTwo
-            theme='outline'
-            size='15'
-          />
-        }
+        icon={<LinkTwo theme='outline' size='15' />}
         onClick={() => {
           window.$message.success('复制链接')
         }}
@@ -70,7 +61,19 @@ export default () => {
     setTimeout(() => setLoading(!loading), 550)
   }, [])
 
-  const onSearch = (e) => {}
+  const onSearch = e => {}
+
+  const onDel = async () => {
+    const modalRes = await window.$modal.confirm({
+      okText: '删除',
+      okType: 'danger',
+      maskClosable: true,
+      centered: true,
+      cancelText: '取消',
+      title: '删除小说',
+      content: '是否将（删除）'
+    })
+  }
 
   return (
     <>
@@ -78,11 +81,7 @@ export default () => {
         {store.isSearch && (
           <div className={styles.search}>
             <div className={styles.searchPr}>
-              <Search
-                placeholder='小说名'
-                allowClear
-                onSearch={onSearch}
-              />
+              <Search placeholder='小说名' allowClear onSearch={onSearch} />
             </div>
           </div>
         )}
@@ -100,6 +99,7 @@ export default () => {
                     size='22'
                     color='var(--primary-color)'
                     className='mr-10'
+                    onClick={onDel}
                   />
                   <h4 className={styles.cardtitle + ' singe-line'}>
                     啊实打实大萨达萨达啊撒大声地asdasd
@@ -109,11 +109,7 @@ export default () => {
               extra={<h4>第1035-205789章</h4>}
             >
               <h4>链接：</h4>
-              <Space
-                size={[14, 7]}
-                wrap
-                className='mt-10'
-              >
+              <Space size={[14, 7]} wrap className='mt-10'>
                 {arr}
               </Space>
               <div className='mt-5'>
