@@ -6,22 +6,57 @@ import { Space, Input } from 'antd'
 import { useStore } from '@/store'
 
 import styles from './index.module.css'
+import { memo } from 'react'
 
 const { Search } = Input
-const App = () => {
+
+function Introduction({ txt }) {
+  const [isText, { toggle }] = useToggle('nowrap', 'normal')
+  return (
+    <div
+      onClick={toggle}
+      style={{ whiteSpace: isText }}
+      className={styles.carppeizhu + ' singe-line mt-15'}
+    >
+      {txt}
+    </div>
+  )
+}
+
+function Tabs({ tablist }) {
+  tablist = [1, 2, 3, 4, 5]
+  return tablist.map((_, i) => (
+    <Tag
+      color={randomHexColor()}
+      key={i}
+      className='mt-10 mb-10'
+    >
+      {randomHexColor()}
+    </Tag>
+  ))
+}
+
+const TabsMemo = memo(Tabs)
+
+export default () => {
   const { store } = useStore()
   const [loading, setLoading] = useState(true)
-  const onChange = checked => {
+  const onChange = (checked) => {
     setLoading(!checked)
   }
 
-  const arr = Array.from({ length: 5 }).map((_, i) => {
+  const arr = Array.from({ length: 3 }).map((_, i) => {
     return (
       <Button
         type='dashed'
         className={styles.cardbut}
         key={i}
-        icon={<LinkTwo theme='outline' size='15' fill={randomHexColor()} />}
+        icon={
+          <LinkTwo
+            theme='outline'
+            size='15'
+          />
+        }
         onClick={() => {
           window.$message.success('复制链接')
         }}
@@ -35,19 +70,7 @@ const App = () => {
     setTimeout(() => setLoading(!loading), 550)
   }, [])
 
-  function Introduction(props) {
-    const [isText, { toggle }] = useToggle('nowrap', 'normal')
-    return (
-      <div
-        onClick={toggle}
-        style={{ whiteSpace: isText }}
-        className={styles.carppeizhu + ' singe-line mt-10'}
-      >
-        {props}
-      </div>
-    )
-  }
-  const onSearch = e => {}
+  const onSearch = (e) => {}
 
   return (
     <>
@@ -55,43 +78,53 @@ const App = () => {
         {store.isSearch && (
           <div className={styles.search}>
             <div className={styles.searchPr}>
-              <Search placeholder='小说名' allowClear onSearch={onSearch} />
+              <Search
+                placeholder='小说名'
+                allowClear
+                onSearch={onSearch}
+              />
             </div>
           </div>
         )}
         <div className={styles.view}>
-          <Card
-            bordered={false}
-            title={
-              <div className='flex'>
-                <CuIcon icon='hot' size='22' />
-                <h4 className={styles.cardtitle + ' singe-line'}>
-                  啊实打实大萨达萨达啊撒大声地asdasd
-                </h4>
+          {Array.from({ length: 30 }).map((_, i) => (
+            <Card
+              key={i}
+              className={styles.cardindex}
+              bordered={false}
+              hoverable
+              title={
+                <div className='flex'>
+                  <CuIcon
+                    icon='hot'
+                    size='22'
+                    color='var(--primary-color)'
+                    className='mr-10'
+                  />
+                  <h4 className={styles.cardtitle + ' singe-line'}>
+                    啊实打实大萨达萨达啊撒大声地asdasd
+                  </h4>
+                </div>
+              }
+              extra={<h4>第1035-205789章</h4>}
+            >
+              <h4>链接：</h4>
+              <Space
+                size={[14, 7]}
+                wrap
+                className='mt-10'
+              >
+                {arr}
+              </Space>
+              <div className='mt-5'>
+                <h4>标签：</h4>
+                <TabsMemo />
               </div>
-            }
-            extra={<h4>第1035-205789章</h4>}
-          >
-            <Space size={[14, 7]} wrap>
-              {arr}
-            </Space>
-            <Space size={[0, 5]} wrap className='mt-10'>
-              <h4>标签：</h4>
-              {Array.from({ length: 6 }).map((_, i) => {
-                return (
-                  <Tag color={randomHexColor()} key={i}>
-                    {randomHexColor()}
-                  </Tag>
-                )
-              })}
-            </Space>
-            {Introduction(
-              '啊垦利街道哈喽蛇口街道哈拉刷卡机等哈索拉卡登记哈索拉卡接啊好理发卡合法科技吧哇哇哇哇哇哇微辣科技八点接娃嗯拉倒科技趣闻不良贷款加完班芭芭拉未打卡几把网络科技别忘了科技别忘了科技别忘了科技别忘了科技别忘了看吧'
-            )}
-          </Card>
+              <Introduction txt='阿斯达大师大师大阿斯达大师大师大数据库等哈手机卡老大哈拉萨科技大好啦卡机手打数据库等哈手机卡老大哈拉萨科技大好啦卡机手打' />
+            </Card>
+          ))}
         </div>
       </CardSkeletons>
     </>
   )
 }
-export default App

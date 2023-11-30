@@ -7,9 +7,8 @@ import ZaiHeader from './header'
 import ZaiFooter from './footer'
 import { debounce } from '@/utlis'
 import Transition from '@/components/Transition'
-import { routes } from '@/router'
 import AddDrawer from './addDrawer/addDrawer'
-import SettingTwo from './SettingTwo'
+import SettingTwo from './SettingTwo/SettingTwo'
 
 const { Header, Content, Footer } = Layout
 
@@ -26,12 +25,10 @@ const WinConfig = () => {
 }
 
 export default () => {
+  console.log('layouts')
   const location = useLocation()
   const currentOutlet = useOutlet()
   const { store, setValueStore, setThemeToggle, nprogressToggle } = useStore()
-
-  const { nodeRef } =
-    routes.find(route => route.path === location.pathname) ?? {}
 
   const drawerStyles = {
     mask: {
@@ -40,7 +37,7 @@ export default () => {
   }
 
   /******************************************************************** */
-  const scrollView = () => {
+  const scrollViewFun = useCallback(() => () => {
     const scrolltop = document.querySelector('.zaiView').scrollTop
     if (scrolltop > 100) {
       setValueStore({
@@ -51,20 +48,23 @@ export default () => {
         mainScroll: false
       })
     }
-  }
+  })
 
   useEffect(() => {
     setThemeToggle()
     setThemeToggle()
     document.querySelector('.zaiView').addEventListener(
       'scroll',
-      debounce(e => {})
+      debounce((e) => {})
     )
   }, [])
 
   return (
     <>
-      <Nprogress isAnimating={store.nprogress} key={location.key} />
+      <Nprogress
+        isAnimating={store.nprogress}
+        key={location.key}
+      />
       <ConfigProvider
         drawer={{
           styles: drawerStyles
@@ -82,20 +82,21 @@ export default () => {
               <AddDrawer />
               <SettingTwo />
               <Content>
-                <div className='zaiView' onScroll={e => scrollView(e)}>
+                <div
+                  className='zaiView'
+                  onScroll={scrollViewFun}
+                  id='zaiViewId'
+                >
                   <div style={{ height: '75px' }}></div>
                   <Transition
                     show={location.pathname}
-                    appear={false}
-                    timeout={200}
-                    unmountOnExit={true}
-                    nodeRef={nodeRef}
+                    timeout={300}
                     onEnter={() => nprogressToggle()}
                     onEntered={() => {
                       nprogressToggle()
                     }}
                   >
-                    {() => <div ref={nodeRef}>{currentOutlet}</div>}
+                    {() => <div>{currentOutlet}</div>}
                   </Transition>
                 </div>
               </Content>

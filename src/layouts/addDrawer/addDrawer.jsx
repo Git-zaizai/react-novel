@@ -1,22 +1,36 @@
-import Transition from '@/components/Transition'
 import { useStore } from '@/store'
-import { Back } from '@icon-park/react'
-import { useToggle } from 'ahooks'
 import styles from './css.module.css'
 import CuIcon from '@/components/cuIcon'
+import { DeleteThree, Star } from '@icon-park/react'
+import { Form } from 'antd'
 
 export default () => {
   const { store, setValueStore } = useStore()
-  const [isLinkShow, { toggle: isLinkShowtoggle }] = useToggle(false)
+  const [formRef] = Form.useForm()
+
+  const formfinish = () => {
+    console.log(formRef.getFieldsValue())
+  }
 
   const AddDrawerFooter = (
     <>
       <div className='flex-fdc-aic-juc'>
-        <Button type='primary' className='w-100'>
+        <Button
+          type='primary'
+          block
+          htmlType='submit'
+          onClick={() => formfinish()}
+        >
           添加
         </Button>
-        <Button danger type='primary' className='mt-10 w-100'>
-          删除
+        <Button
+          danger
+          type='primary'
+          block
+          className='mt-10'
+          onClick={() => setValueStore({ isAddDrawer: !store.isAddDrawer })}
+        >
+          返回
         </Button>
       </div>
     </>
@@ -31,31 +45,76 @@ export default () => {
       footer={AddDrawerFooter}
       height='90vh'
     >
-      <Form layout='vertical'>
-        <Form.Item>
-          <Radio.Group defaultValue='a' className='flex'>
-            <Radio value='a' className='w-100'>
-              小说
-            </Radio>
-            <Radio value='b' className='w-100'>
-              推荐
-            </Radio>
+      <Form
+        layout='vertical'
+        form={formRef}
+        initialValues={{
+          recommended: 0,
+          duwan: 0
+        }}
+      >
+        <Form.Item name='recommended'>
+          <Radio.Group className='flex'>
+            <Radio.Button
+              value={0}
+              className='w-100'
+            >
+              <div className='flex-ai-c'>
+                <Star
+                  theme='outline'
+                  size='16'
+                  className='mr-10'
+                />
+                小说
+              </div>
+            </Radio.Button>
+            <Radio.Button
+              value={1}
+              className='w-100'
+            >
+              <div
+                className='flex-ai-c'
+                style={{
+                  justifyContent: 'flex-end'
+                }}
+              >
+                推荐
+                <Star
+                  theme='outline'
+                  size='16'
+                  className='ml-10'
+                />
+              </div>
+            </Radio.Button>
           </Radio.Group>
         </Form.Item>
 
-        <Form.Item label='名：'>
-          <Input placeholder='名' allowClear size='large' />
+        <Form.Item
+          name='title'
+          label='小说名：'
+        >
+          <Input
+            placeholder='名'
+            allowClear
+            size='large'
+          />
         </Form.Item>
 
-        <Form.Item label='节：'>
-          <Space.Compact size='large'>
+        <Form.Item
+          name='chapter'
+          label='章节：'
+        >
+          <Space.Compact
+            size='large'
+            className='w-100'
+          >
             <Input
               addonBefore='第'
               placeholder='0'
-              addonAfter='-'
               className='text-align'
               allowClear
             />
+            <div className={styles.zj}></div>
             <Input
               allowClear
               addonAfter='章'
@@ -65,123 +124,100 @@ export default () => {
           </Space.Compact>
         </Form.Item>
 
-        <Form.Item label='读完：'>
-          <Radio.Group defaultValue='a' className='flex'>
-            <Radio.Button value='a' className='w-100'>
-              小说
+        <Form.Item
+          name='duwan'
+          label='读完：'
+        >
+          <Radio.Group className='flex'>
+            <Radio.Button
+              value={0}
+              className='w-100'
+            >
+              未读完
             </Radio.Button>
-            <Radio.Button value='b' className='w-100'>
-              推荐
+            <Radio.Button
+              value={1}
+              className='w-100'
+            >
+              读完
             </Radio.Button>
           </Radio.Group>
         </Form.Item>
 
-        <Form.Item label='首链接：'>
-          <Input placeholder='首链接' allowClear size='large' />
-        </Form.Item>
-
-        <Form.Item label='后续链接：'>
-          <Input placeholder='后续链接' allowClear size='large' />
-        </Form.Item>
-
-        {/*     <Form.Item
-          label='新链接'
-          style={{ position: 'relative' }}
+        <Form.Item
+          name='link'
+          label='首链接：'
         >
           <Input
-            addonBefore='链接名：'
-            placeholder='...'
+            placeholder='首链接'
+            allowClear
+            size='large'
           />
+        </Form.Item>
+
+        <Form.Item
+          name='linkback'
+          label='后续链接：'
+        >
           <Input
-            addonBefore='URL：&emsp;'
-            placeholder='URL'
-            className='mt-10'
+            placeholder='后续链接'
+            allowClear
+            size='large'
           />
-          <CloseCircleOutlined className={styles.addLinkClose} />
-        </Form.Item> */}
+        </Form.Item>
 
-        <Transition show={isLinkShow}>
-          {isLinkShow ? (
-            <Button
-              className='w-100'
-              type='dashed'
-              icon={<CuIcon icon='add' />}
-              onClick={isLinkShowtoggle}
-            >
-              添加链接
-            </Button>
-          ) : (
-            <>
-              <div className={styles.addLinkForm}>
-                <Form.List name='users'>
-                  {(fields, { add, remove }) => (
-                    <>
-                      {fields.map(({ key, name, ...restField }) => (
-                        <Form.Item
-                          label='新链接'
-                          {...restField}
-                          name={[name, 'first']}
-                          style={{ position: 'relative' }}
-                        >
-                          <Input
-                            allowClear
-                            addonBefore='链接名：'
-                            placeholder='名'
-                          />
-                          <Input
-                            addonBefore='URL：'
-                            placeholder='URL'
-                            className='mt-10'
-                            allowClear
-                          />
-                          <CloseCircleOutlined
-                            className={styles.addLinkClose}
-                            onClick={() => remove(name)}
-                          />
-                        </Form.Item>
-                      ))}
-                      <Form.Item>
-                        <Button
-                          type='dashed'
-                          onClick={() => add()}
-                          block
-                          icon={<CuIcon icon='add' />}
-                        >
-                          添加新链接
-                        </Button>
-                      </Form.Item>
-                    </>
-                  )}
-                </Form.List>
-
-                <Button
-                  className='w-100'
-                  icon={<Back theme='outline' size='14' />}
-                  onClick={isLinkShowtoggle}
-                >
-                  返回
-                </Button>
-                {/* <Card>
-                  <Form.Item label='添加Link：'>
-                    <Input placeholder='' />
-                  </Form.Item>
-                  <Form.Item label='添加Link：'>
-                    <Input placeholder='' />
-                  </Form.Item>
-                  <Button
-                    className='w-100'
-                    type='dashed'
-                    danger
-                    icon={<SwapOutlined />}
-                    onClick={isLinkShowtoggle}
+        <div className={styles.addLinkForm}>
+          <Form.List name='links'>
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map(({ key, name, ...restField }) => (
+                  <div
+                    style={{ position: 'relative' }}
+                    key={key}
                   >
-                    返回
+                    <Form.Item
+                      label={`新链接 - ${key} ：`}
+                      {...restField}
+                      name={[name, 'linkName']}
+                    >
+                      <Input
+                        allowClear
+                        addonBefore='链接名：'
+                        placeholder='名'
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      {...restField}
+                      name={[name, 'linkitem']}
+                    >
+                      <Input
+                        addonBefore='URL：'
+                        placeholder='URL'
+                        allowClear
+                      />
+                    </Form.Item>
+                    <DeleteThree
+                      theme='outline'
+                      size='16'
+                      className={styles.addLinkClose}
+                      onClick={() => remove(name)}
+                    />
+                  </div>
+                ))}
+                <Form.Item>
+                  <Button
+                    type='dashed'
+                    onClick={() => add()}
+                    block
+                    icon={<CuIcon icon='add' />}
+                  >
+                    添加新链接
                   </Button>
-                </Card> */}
-              </div>
-            </>
-          )}
-        </Transition>
+                </Form.Item>
+              </>
+            )}
+          </Form.List>
+        </div>
       </Form>
     </Drawer>
   )

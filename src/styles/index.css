@@ -20,6 +20,7 @@
   left: 0;
   width: 100vw;
   z-index: 999;
+  box-shadow: 0 0px 12px rgb(0 0 0 / 18%);
 }
 
 .header-current {
@@ -54,6 +55,7 @@
     box-shadow: 0 0px 12px rgb(0 0 0 / 18%);
     height: 67px;
     background: var(--body-back-color);
+    z-index: 9;
   }
 
   .header-rigth {

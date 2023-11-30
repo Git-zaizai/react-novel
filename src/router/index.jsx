@@ -1,4 +1,4 @@
-import { createRef, lazy, Suspense } from 'react'
+import { createRef, lazy, Suspense, memo } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Layouts from '@/layouts'
 import Index from '@/views/index'
@@ -12,32 +12,32 @@ const LazyImport = (fn) => {
   )
 }
 
+const Layout = memo(Layouts)
+
 export const routes = [
   {
     path: '/',
-    element: <Layouts />,
+    element: <Layout />,
     children: [
       {
         index: true,
-        element: <Index />,
-        nodeRef: createRef()
+        element: <Index />
       }
     ]
   },
   {
     path: '/icon',
-    element: <Layouts />,
+    element: <Layout />,
     children: [
       {
         path: 'Cuicons',
-        element: LazyImport(() => import('@/views/cuicons')),
-        nodeRef: createRef()
+        element: LazyImport(() => import('@/views/cuicons'))
       }
     ]
   },
   {
     path: '/test-view',
-    element: <Layouts />,
+    element: <Layout />,
     children: [
       {
         index: true,

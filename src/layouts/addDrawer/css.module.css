@@ -7,8 +7,26 @@
 .addLinkClose {
   position: absolute;
   right: 10px;
-  top: -25px;
+  top: 6px;
   font-size: 15px;
+}
+
+.zj {
+  width: 60px;
+  height: 37px;
+  border: 2px solid var(--border-color);
+  margin: 0 10px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.zj::before {
+  content: ' ';
+  width: 12px;
+  height: 2px;
+  background: var(--text-color-2);
+  position: absolute;
+  transform: translate(9px, 18px);
 }
 
 :global(.ant-drawer .ant-drawer-body) {
