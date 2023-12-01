@@ -31,15 +31,6 @@ export default (props) => {
               setValueStore({ isAddDrawer: !store.isAddDrawer })
             }}
           />
-          <CuIcon
-            icon='search'
-            className='ml-20'
-            size='34'
-            color='var(--success-color)'
-            onClick={() => {
-              setValueStore({ isSearch: !store.isSearch })
-            }}
-          />
         </div>
         <Transition show={store.theme}>
           {store.theme ? (

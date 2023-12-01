@@ -3,11 +3,9 @@ import { useState } from 'react'
 import { setRootCss } from '@/styles/cssVars'
 import { checkIsDarkMode, getThemeToken } from '@/utlis/themeColor'
 
-const windowTheme = checkIsDarkMode()
-
 const [useAccountStore, getAccountStore] = createGlobalStore(() => {
   const [state, setState] = useState({
-    theme: windowTheme,
+    theme: checkIsDarkMode(),
     themeToken: {
       colorPrimary: '#18a058',
       colorInfo: '#18a058',
@@ -16,7 +14,6 @@ const [useAccountStore, getAccountStore] = createGlobalStore(() => {
     isAddDrawer: false,
     nprogress: false,
     mainScroll: false,
-    isSearch: false,
     isSettingTwo: false
   })
 

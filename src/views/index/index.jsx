@@ -2,13 +2,14 @@ import CuIcon from '@/components/cuIcon'
 import { CardSkeletons } from '@/components/cardSkeleton'
 import { LinkTwo } from '@icon-park/react'
 import { randomHexColor } from '@/utlis/themeColor'
-import { Space, Input } from 'antd'
+import { Space } from 'antd'
 import { useStore } from '@/store'
+import { memo } from 'react'
+import http from '@/utlis/http'
+import { useRequest } from 'ahooks'
 
 import styles from './index.module.css'
-import { memo } from 'react'
 
-const { Search } = Input
 
 function Introduction({ txt }) {
   const [isText, { toggle }] = useToggle('nowrap', 'normal')
@@ -26,7 +27,11 @@ function Introduction({ txt }) {
 function Tabs({ tablist }) {
   tablist = [1, 2, 3, 4, 5]
   return tablist.map((_, i) => (
-    <Tag color={randomHexColor()} key={i} className='mt-10 mb-10'>
+    <Tag
+      color={randomHexColor()}
+      key={i}
+      className='mt-10 mb-10'
+    >
       {randomHexColor()}
     </Tag>
   ))
@@ -36,10 +41,13 @@ const TabsMemo = memo(Tabs)
 
 export default () => {
   const { store } = useStore()
-  const [loading, setLoading] = useState(true)
-  const onChange = checked => {
-    setLoading(!checked)
-  }
+
+  const { data, error, loading } = useRequest(() =>
+    http.post('http://localhost:7373/getjson/', {
+      ph: 'rootConfig.json'
+    })
+  )
+
 
   const arr = Array.from({ length: 3 }).map((_, i) => {
     return (
@@ -47,7 +55,12 @@ export default () => {
         type='dashed'
         className={styles.cardbut}
         key={i}
-        icon={<LinkTwo theme='outline' size='15' />}
+        icon={
+          <LinkTwo
+            theme='outline'
+            size='15'
+          />
+        }
         onClick={() => {
           window.$message.success('复制链接')
         }}
@@ -57,11 +70,6 @@ export default () => {
     )
   })
 
-  useEffect(() => {
-    setTimeout(() => setLoading(!loading), 550)
-  }, [])
-
-  const onSearch = e => {}
 
   const onDel = async () => {
     const modalRes = await window.$modal.confirm({
@@ -78,13 +86,6 @@ export default () => {
   return (
     <>
       <CardSkeletons show={loading}>
-        {store.isSearch && (
-          <div className={styles.search}>
-            <div className={styles.searchPr}>
-              <Search placeholder='小说名' allowClear onSearch={onSearch} />
-            </div>
-          </div>
-        )}
         <div className={styles.view}>
           {Array.from({ length: 30 }).map((_, i) => (
             <Card
@@ -109,7 +110,11 @@ export default () => {
               extra={<h4>第1035-205789章</h4>}
             >
               <h4>链接：</h4>
-              <Space size={[14, 7]} wrap className='mt-10'>
+              <Space
+                size={[14, 7]}
+                wrap
+                className='mt-10'
+              >
                 {arr}
               </Space>
               <div className='mt-5'>

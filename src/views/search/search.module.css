@@ -1,0 +1,62 @@
+.search {
+  width: 95vw;
+  margin: 0 auto;
+  z-index: 10;
+  position: fixed;
+  top: 75px;
+  left: calc((100vw - 95vw) / 2);
+}
+
+@media screen and (max-width: 980px) {
+  .searchcard :global(.ant-card-body) {
+    padding: 10px;
+  }
+
+  .searchcard :global(.ant-card-head) {
+    padding: 0 5px;
+    min-height: 53px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .searchScroll {
+    overflow-y: scroll;
+    margin-top: 25px;
+    height: calc(100vh - (28vh + 25px));
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .cardindex {
+    width: 23.5%;
+    margin: 0 10px 20px 10px;
+  }
+
+  .carppeizhu {
+    background-color: var(--tag-color);
+    margin-top: 10px;
+    border-radius: 3px;
+    padding: 5px;
+    color: var(--text-color-2);
+  }
+
+  .cardtitle {
+    width: 80%;
+  }
+
+  .cardindex {
+    width: 95vw;
+  }
+
+  .cardbut {
+    margin-bottom: 5px;
+  }
+
+  .cardItem :global(.ant-card-body) {
+    padding: 5px 10px 10px 10px;
+  }
+
+  .cardItem :global(.ant-card-head) {
+    padding: 0 10px;
+  }
+}

@@ -33,17 +33,6 @@
     /* margin-right: 15px; */
   }
 
-  .search {
-    position: relative;
-    height: 45px;
-  }
-
-  .searchPr {
-    position: fixed;
-    width: 80vw;
-    left: calc(50vw - 40vw);
-  }
-
   :global(.ant-card .ant-card-body) {
     padding: 5px 10px 10px 10px;
   }

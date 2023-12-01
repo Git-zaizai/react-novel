@@ -221,7 +221,7 @@ export const lightCssVars = {
 export function setRootCss(ioCss) {
   const root = document.documentElement
   let result = null
-  console.log(ioCss);
+  // console.log(ioCss);
   if (ioCss === 'dark') {
     root.className = 'global__style--dark'
     result = darkCssVars

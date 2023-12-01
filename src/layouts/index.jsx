@@ -9,7 +9,6 @@ import { debounce } from '@/utlis'
 import Transition from '@/components/Transition'
 import AddDrawer from './addDrawer/addDrawer'
 import SettingTwo from './SettingTwo/SettingTwo'
-import { routes } from '@/router'
 
 const { Header, Content, Footer } = Layout
 
@@ -52,8 +51,6 @@ export default () => {
   })
 
   useEffect(() => {
-    setThemeToggle()
-    setThemeToggle()
     document.querySelector('.zaiView').addEventListener(
       'scroll',
       debounce(e => {})

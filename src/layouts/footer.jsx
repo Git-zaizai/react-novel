@@ -31,6 +31,19 @@ export default () => {
           </dir>
           <dir
             className='zf-item flex-fdc-aic-juc'
+            onClick={() => navigate('/search')}
+            style={{
+              color: getColor('/search')
+            }}
+          >
+            <CuIcon
+              icon='search'
+              size='30'
+            />
+            <h4>icon</h4>
+          </dir>
+          <dir
+            className='zf-item flex-fdc-aic-juc'
             onClick={() => navigate('/icon/Cuicons')}
             style={{
               color: getColor('/icon/Cuicons')
