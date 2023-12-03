@@ -1,5 +1,3 @@
-
-
 // 第一个参数是需要进行防抖处理的函数，第二个参数是延迟时间，默认为1秒钟
 // 这里多传一个参数，immediate用来决定是否要第一次立即执行, 默认为false
 export function debounce(fn, delay = 200, immediate = false, resultCb) {
@@ -48,6 +46,58 @@ export function isMobile() {
 }
 
 export const copyStr = data => {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(data).then(
+      function () {
+        message('复制成功')
+      },
+      function () {
+        copy2(data)
+      }
+    )
+  } else {
+    copy2(data)
+  }
+
+  function copy2(text) {
+    const input = document.querySelector('#copyinuput')
+    input.value = text
+    if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i)) {
+      input.setSelectionRange(0, text.length)
+      input.focus()
+    } else {
+      input.select()
+    }
+    if (document.execCommand('copy')) {
+      message('复制成功')
+    } else {
+      message('复制失败')
+    }
+    input.blur()
+  }
+}
+
+export function exportJsonFile(list) {
+  const strlist = []
+  list.forEach(item => {
+    strlist.push(JSON.stringify(item))
+    strlist.push(',')
+  })
+  const blob = new Blob(['[', ...strlist, ']'], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const el = document.createElement('a')
+  el.download = 'export.json'
+  el.href = url
+  el.id = 'download'
+  document.body.appendChild(el)
+  el.click()
+  setTimeout(() => {
+    document.querySelector('#download').remove()
+    URL.revokeObjectURL(url)
+  }, 1000)
+}
+
+export function copyText(data) {
   if (navigator.clipboard) {
     navigator.clipboard.writeText(data).then(
       function () {

@@ -7,6 +7,7 @@ import CuIcon from '@/components/cuIcon'
 import { useAsyncEffect, useLocalStorageState } from 'ahooks'
 import http from '@/utlis/http'
 import { useState } from 'react'
+import { exportJsonFile } from '@/utlis'
 
 const CheckboxGroup = Checkbox.Group
 
@@ -83,6 +84,19 @@ export default () => {
     setCheckedList(locals)
   }
 
+  async function exportSql() {
+    try {
+      const response = await http.get('/novel')
+      exportJsonFile(response)
+    } catch {
+      window.$message.error('获取数据库数据失败！')
+    }
+  }
+
+  function exportLocal() {
+    
+  }
+
   return (
     <Drawer
       title='设置'
@@ -126,10 +140,20 @@ export default () => {
           className='mt-20'
           style={{ display: 'flex' }}
         >
-          <Button block type='dashed' icon={<CuIcon icon='down' />}>
+          <Button
+            block
+            type='dashed'
+            icon={<CuIcon icon='down' />}
+            onClick={exportSql}
+          >
             导出数据库表
           </Button>
-          <Button block type='dashed' icon={<CuIcon icon='down' />}>
+          <Button
+            block
+            type='dashed'
+            icon={<CuIcon icon='down' />}
+            onClick={exportLocal}
+          >
             导出本地数据
           </Button>
         </Space>
