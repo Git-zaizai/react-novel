@@ -28,7 +28,7 @@ export default () => {
   console.log('layouts')
   const location = useLocation()
   const currentOutlet = useOutlet()
-  const { store, setValueStore, setThemeToggle, nprogressToggle } = useStore()
+  const { store, setValueStore, nprogressToggle } = useStore()
 
   const drawerStyles = {
     mask: {

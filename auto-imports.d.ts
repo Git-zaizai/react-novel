@@ -9,6 +9,7 @@ declare global {
   const Card: typeof import('antd')['Card']
   const Checkbox: typeof import('antd')['Checkbox']
   const Col: typeof import('antd')['Col']
+  const Divider: typeof import('antd')['Divider']
   const Drawer: typeof import('antd')['Drawer']
   const Flex: typeof import('antd')['Flex']
   const Form: typeof import('antd')['Form']

@@ -9,7 +9,7 @@ import http from '@/utlis/http'
 import { useRequest } from 'ahooks'
 
 import styles from './index.module.css'
-
+import { useMount } from 'ahooks'
 
 function Introduction({ txt }) {
   const [isText, { toggle }] = useToggle('nowrap', 'normal')
@@ -27,11 +27,7 @@ function Introduction({ txt }) {
 function Tabs({ tablist }) {
   tablist = [1, 2, 3, 4, 5]
   return tablist.map((_, i) => (
-    <Tag
-      color={randomHexColor()}
-      key={i}
-      className='mt-10 mb-10'
-    >
+    <Tag color={randomHexColor()} key={i} className='mt-10 mb-10'>
       {randomHexColor()}
     </Tag>
   ))
@@ -42,12 +38,14 @@ const TabsMemo = memo(Tabs)
 export default () => {
   const { store } = useStore()
 
-  const { data, error, loading } = useRequest(() =>
-    http.post('http://localhost:7373/getjson/', {
-      ph: 'rootConfig.json'
+  const { data, loading, runAsync } = useRequest(() => http.get('/show-dbs'), {
+    manual: true
+  })
+  useMount(() => {
+    runAsync().then(() => {
+      window.$message.success('请求')
     })
-  )
-
+  })
 
   const arr = Array.from({ length: 3 }).map((_, i) => {
     return (
@@ -55,12 +53,7 @@ export default () => {
         type='dashed'
         className={styles.cardbut}
         key={i}
-        icon={
-          <LinkTwo
-            theme='outline'
-            size='15'
-          />
-        }
+        icon={<LinkTwo theme='outline' size='15' />}
         onClick={() => {
           window.$message.success('复制链接')
         }}
@@ -69,7 +62,6 @@ export default () => {
       </Button>
     )
   })
-
 
   const onDel = async () => {
     const modalRes = await window.$modal.confirm({
@@ -110,11 +102,7 @@ export default () => {
               extra={<h4>第1035-205789章</h4>}
             >
               <h4>链接：</h4>
-              <Space
-                size={[14, 7]}
-                wrap
-                className='mt-10'
-              >
+              <Space size={[14, 7]} wrap className='mt-10'>
                 {arr}
               </Space>
               <div className='mt-5'>

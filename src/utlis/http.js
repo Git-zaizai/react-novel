@@ -35,6 +35,11 @@ async function request(options) {
     config.headers = { 'Content-Type': 'multipart/form-data' }
   }
 
+  const token = localStorage.getItem('token')
+  if (token) {
+    config.headers['token'] = token
+  }
+
   if (method === 'get') {
     config.url = config.url + jsonToUrlParam(data)
   } else {
@@ -43,14 +48,17 @@ async function request(options) {
 
   try {
     const response = await fetch(config.url, config)
+    if (response.status !== 200) {
+      const txt = await response.text()
+      return Promise.reject(txt)
+    }
     const responseData = await response.json()
     if (responseData.code === 200) {
       return responseData.data
     }
     return responseData
   } catch (error) {
-    console.error(`请求 Request Config:`, config)
-    console.error(error)
+    window.$message.error('网络连接错误')
     return Promise.reject(error)
   }
 }
