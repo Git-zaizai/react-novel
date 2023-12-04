@@ -41,6 +41,7 @@ async function request(options) {
   }
 
   if (method === 'get') {
+    console.log('jsonToUrlParam(data)', jsonToUrlParam(data), data)
     config.url = config.url + jsonToUrlParam(data)
   } else {
     config.body = JSON.stringify(data)

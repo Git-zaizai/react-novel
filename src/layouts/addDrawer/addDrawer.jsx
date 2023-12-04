@@ -2,14 +2,110 @@ import { useStore } from '@/store'
 import styles from './css.module.css'
 import CuIcon from '@/components/cuIcon'
 import { DeleteThree, Star } from '@icon-park/react'
-import { Form } from 'antd'
+import { Form, Input } from 'antd'
+import { useState } from 'react'
+import http from '@/utlis/http'
+
+const { TextArea } = Input
 
 export default () => {
-  const { store, setValueStore } = useStore()
+  console.log('addDrawer')
+  const { store, setValueStore, novelStore, setNovelStore } = useStore()
   const [formRef] = Form.useForm()
+  const [titleRules, setTitleRules] = useState({
+    validateStatus: '',
+    message: '',
+    hasFeedback: false
+  })
 
-  const formfinish = () => {
-    console.log(formRef.getFieldsValue())
+  const bindtitleBlur = (e) => {
+    if (e.target.value === '') {
+      setTitleRules({
+        validateStatus: 'error',
+        message: '名不能为空',
+        hasFeedback: false
+      })
+    } else {
+      setTitleRules({
+        validateStatus: '',
+        message: '',
+        hasFeedback: true
+      })
+    }
+  }
+
+  const formfinish = async () => {
+    const formdata = await formRef.validateFields()
+    console.log(formdata)
+    if (!formdata.title) {
+      setTitleRules({
+        validateStatus: 'error',
+        message: '名不能为空',
+        hasFeedback: false
+      })
+      return
+    }
+    setTitleRules({
+      validateStatus: 'validating',
+      message: '',
+      hasFeedback: true
+    })
+
+    const verifyTitle = await http
+      .post('/curd-mongo/find/novel', {
+        where: {
+          title: formdata.title
+        },
+        ops: {
+          many: true
+        }
+      })
+      .catch((error) => {
+        setTimeout(() => {
+          setTitleRules({
+            validateStatus: 'error',
+            message: '验证失败，请重新尝试',
+            hasFeedback: false
+          })
+        }, 1000)
+        return Promise.reject(error)
+      })
+
+    if (verifyTitle.length) {
+      setTimeout(() => {
+        setTitleRules({
+          validateStatus: 'error',
+          message: '名，已有',
+          hasFeedback: false
+        })
+      }, 500)
+      return
+    }
+    setTimeout(() => {
+      setTitleRules({
+        validateStatus: '',
+        message: '',
+        hasFeedback: true
+      })
+    }, 500)
+
+    const url = novelStore.action === 'updata' ? 'update' : 'add'
+    const response = await http
+      .post(`/curd-mongo/${url}/novel`, {
+        where: { title: formdata.title },
+        data: formdata
+      })
+      .catch((err) => {
+        window.$message.error('添加失败')
+        return Promise.reject(err)
+      })
+    console.log(response)
+    setNovelStore((v) => ({
+      ...v,
+      novelList: [...v.novelList, { _id: response.insertedId, ...formdata }]
+    }))
+    setValueStore({ isAddDrawer: !store.isAddDrawer })
+    window.$message.success('添加成功')
   }
 
   const AddDrawerFooter = (
@@ -21,7 +117,7 @@ export default () => {
           htmlType='submit'
           onClick={() => formfinish()}
         >
-          添加
+          {novelStore.action === 'updata' ? '修改' : '添加'}
         </Button>
         <Button
           danger
@@ -38,7 +134,7 @@ export default () => {
 
   return (
     <Drawer
-      title='添加 Novel'
+      title={novelStore.action === 'updata' ? '修改 Record' : '添加 Record'}
       placement='bottom'
       open={store.isAddDrawer}
       onClose={() => setValueStore({ isAddDrawer: !store.isAddDrawer })}
@@ -53,85 +149,154 @@ export default () => {
           duwan: 0
         }}
       >
-        <Form.Item name='recommended'>
-          <Radio.Group className='flex'>
-            <Radio.Button value={0} className='w-100'>
-              <div className='flex-ai-c'>
-                <Star theme='outline' size='16' className='mr-10' />
-                小说
-              </div>
-            </Radio.Button>
-            <Radio.Button value={1} className='w-100'>
-              <div
-                className='flex-ai-c'
-                style={{
-                  justifyContent: 'flex-end'
-                }}
-              >
-                推荐
-                <Star theme='outline' size='16' className='ml-10' />
-              </div>
-            </Radio.Button>
-          </Radio.Group>
+        <Form.Item
+          name='recordtype'
+          label='记录类型：'
+          rules={[
+            {
+              required: true,
+              message: '请选择一个'
+            }
+          ]}
+        >
+          <Checkbox.Group>
+            <Row>
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Checkbox
+                  key={i}
+                  value={i}
+                  style={{ lineHeight: '32px' }}
+                >
+                  {`${i * i}阿啊`}
+                </Checkbox>
+              ))}
+            </Row>
+          </Checkbox.Group>
         </Form.Item>
 
-        <Form.Item name='title' label='小说名：'>
-          <Input placeholder='名' allowClear size='large' />
+        <Form.Item
+          name='title'
+          label='名：'
+          hasFeedback={titleRules.hasFeedback}
+          validateStatus={titleRules.validateStatus}
+          help={titleRules.message}
+        >
+          <Input
+            placeholder='名'
+            allowClear
+            size='large'
+            onBlur={bindtitleBlur}
+          />
         </Form.Item>
 
-        <Form.Item name='chapter' label='章节：'>
-          <Space.Compact size='large' className='w-100'>
-            <Input
-              addonBefore='第'
-              placeholder='0'
-              className='text-align'
-              allowClear
-            />
+        <Form.Item label='章节：'>
+          <Space.Compact
+            size='large'
+            className='w-100'
+          >
+            <Form.Item name='start'>
+              <Input
+                addonBefore='第'
+                placeholder='0'
+                className='text-align'
+                allowClear
+              />
+            </Form.Item>
             <div className={styles.zj + ' flex-fdc-aic-juc'}></div>
-            <Input
-              allowClear
-              addonAfter='章'
-              placeholder='*'
-              className='text-align'
-            />
+            <Form.Item name='finish'>
+              <Input
+                allowClear
+                addonAfter='章'
+                placeholder='*'
+                className='text-align'
+              />
+            </Form.Item>
           </Space.Compact>
         </Form.Item>
 
-        <Form.Item name='duwan' label='读完：'>
+        <Form.Item
+          name='duwan'
+          label='读完：'
+        >
           <Radio.Group className='flex'>
-            <Radio.Button value={0} className='w-100'>
+            <Radio.Button
+              value={0}
+              className='w-100'
+            >
               <div className='flex-ai-c'>
-                <CuIcon icon='tag' className='mr-10' />
+                <CuIcon
+                  icon='tag'
+                  className='mr-10'
+                />
                 未读完
               </div>
             </Radio.Button>
-            <Radio.Button value={1} className='w-100'>
-              <div className='flex-ai-c' style={{ justifyContent: 'flex-end' }}>
+            <Radio.Button
+              value={1}
+              className='w-100'
+            >
+              <div
+                className='flex-ai-c'
+                style={{ justifyContent: 'flex-end' }}
+              >
                 读完
-                <CuIcon icon='medal' className='ml-10' />
+                <CuIcon
+                  icon='medal'
+                  className='ml-10'
+                />
               </div>
             </Radio.Button>
           </Radio.Group>
         </Form.Item>
 
-        <Form.Item name='link' label='首链接：'>
-          <Input placeholder='首链接' allowClear size='large' />
+        <Form.Item
+          name='link'
+          label='首链接：'
+        >
+          <Input
+            placeholder='首链接'
+            allowClear
+            size='large'
+          />
         </Form.Item>
 
-        <Form.Item name='linkback' label='后续链接：'>
-          <Input placeholder='后续链接' allowClear size='large' />
+        <Form.Item
+          name='linkback'
+          label='后续链接：'
+        >
+          <Input
+            placeholder='后续链接'
+            allowClear
+            size='large'
+          />
         </Form.Item>
 
-        <Form.Item name='tabs' label='标签：'>
+        <Form.Item
+          name='beizhu'
+          label='备注：'
+        >
+          <TextArea
+            allowClear
+            placeholder='备注'
+            autoSize={{ minRows: 1, maxRows: 7 }}
+          />
+        </Form.Item>
+
+        <Form.Item
+          name='tabs'
+          label='标签：'
+        >
           <Checkbox.Group>
             <Row>
-              <Col>
-                {Array.from({ length: 10 }).map((_, i) => (
-                  <Checkbox key={i} value={i} style={{ lineHeight: '32px' }}>
-                    {`${i * i}`}
-                  </Checkbox>
-                ))}
-              </Col>
+              {Array.from({ length: 10 }).map((_, i) => (
+                <Checkbox
+                  key={i}
+                  value={i}
+                  style={{ lineHeight: '32px' }}
+                >
+                  {`${i * i}`}
+                </Checkbox>
+              ))}
             </Row>
           </Checkbox.Group>
         </Form.Item>
@@ -141,7 +306,10 @@ export default () => {
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name, ...restField }) => (
-                  <div style={{ position: 'relative' }} key={key}>
+                  <div
+                    style={{ position: 'relative' }}
+                    key={key}
+                  >
                     <Form.Item
                       label={`新链接 - ${key} ：`}
                       {...restField}
@@ -153,8 +321,15 @@ export default () => {
                         placeholder='名'
                       />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, 'linkitem']}>
-                      <Input addonBefore='URL：' placeholder='URL' allowClear />
+                    <Form.Item
+                      {...restField}
+                      name={[name, 'linkitem']}
+                    >
+                      <Input
+                        addonBefore='URL：'
+                        placeholder='URL'
+                        allowClear
+                      />
                     </Form.Item>
                     <DeleteThree
                       theme='outline'

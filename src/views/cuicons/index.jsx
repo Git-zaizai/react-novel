@@ -1,9 +1,9 @@
 import CuIcon, { cuicons } from '@/components/cuIcon'
 import styles from './css.module.css'
-import { useStore } from '@/store'
+import { getStore } from '@/store'
 
 export default () => {
-  const { store } = useStore()
+  const store = getStore()
   const copyfun = (str) => {
     navigator.clipboard.writeText(str).then(
       function () {

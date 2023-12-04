@@ -4,7 +4,7 @@ import { setRootCss } from '@/styles/cssVars'
 import { checkIsDarkMode, getThemeToken } from '@/utlis/themeColor'
 
 const [useAccountStore, getAccountStore] = createGlobalStore(() => {
-  const [state, setState] = useState({
+  const [laoutState, setlaoutState] = useState({
     theme: checkIsDarkMode(),
     themeToken: {
       colorPrimary: '#18a058',
@@ -18,11 +18,11 @@ const [useAccountStore, getAccountStore] = createGlobalStore(() => {
   })
 
   function setValueStore(obj) {
-    setState((v) => ({ ...v, ...obj }))
+    setlaoutState((v) => ({ ...v, ...obj }))
   }
 
   function setThemeToggle(value) {
-    setState((v) => {
+    setlaoutState((v) => {
       const res = { ...v, theme: value ?? !v.theme }
       res.themeToken = getThemeToken(v.theme)
       setRootCss(res.theme ? 'light' : 'dark')
@@ -31,10 +31,24 @@ const [useAccountStore, getAccountStore] = createGlobalStore(() => {
   }
 
   function nprogressToggle() {
-    setState((v) => ({ ...v, nprogress: !v.nprogress }))
+    setlaoutState((v) => ({ ...v, nprogress: !v.nprogress }))
   }
 
-  return { store: state, setValueStore, setThemeToggle, nprogressToggle }
+  const [user, setUser] = useState({})
+  const [novel, setNovel] = useState({
+    action: false,
+    data: {},
+    novelList: []
+  })
+
+  return {
+    store: laoutState,
+    setValueStore,
+    setThemeToggle,
+    nprogressToggle,
+    novelStore: novel,
+    setNovelStore: setNovel
+  }
 })
 
 export const useStore = useAccountStore

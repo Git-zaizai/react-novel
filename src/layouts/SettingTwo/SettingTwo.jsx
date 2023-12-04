@@ -12,11 +12,11 @@ import { exportJsonFile } from '@/utlis'
 const CheckboxGroup = Checkbox.Group
 
 export default () => {
-  const { store, setValueStore, nprogressToggle } = useStore()
+  const { store, setValueStore } = useStore()
   const [token, setToken] = useLocalStorageState('token')
   const [isLogin, { toggle }] = useToggle(true)
-  const [pad, setPad] = useState('')
-  const { runAsync } = useRequest(() => http.post('/input', { pad }), {
+  const [pwd, setPwd] = useState('')
+  const { runAsync } = useRequest(() => http.post('/input', { pwd }), {
     manual: true
   })
 
@@ -24,7 +24,7 @@ export default () => {
     if (token) {
       await http.post('/verify')
       toggle()
-      setPad('token')
+      setPwd('token')
     }
   }, [])
 
@@ -36,7 +36,7 @@ export default () => {
 
   async function login() {
     try {
-      if (!pad) {
+      if (!pwd) {
         window.$message.error('请输入秘钥')
         return
       }
@@ -53,7 +53,7 @@ export default () => {
 
   function removeToken() {
     setToken(undefined)
-    setPad('')
+    setPwd('')
     toggle()
   }
 
@@ -110,8 +110,8 @@ export default () => {
           size='large'
           allowClear
           placeholder='秘钥'
-          value={pad}
-          onChange={e => setPad(e.target.value)}
+          value={pwd}
+          onChange={e => setPwd(e.target.value)}
           iconRender={visible =>
             visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
           }
