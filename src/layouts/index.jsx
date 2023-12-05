@@ -25,7 +25,7 @@ const WinConfig = () => {
 }
 
 export default () => {
-  console.log('layouts')
+  console.log('layout 布局')
   const location = useLocation()
   const currentOutlet = useOutlet()
   const { store, setValueStore, nprogressToggle } = useStore()
@@ -53,13 +53,16 @@ export default () => {
   useEffect(() => {
     document.querySelector('.zaiView').addEventListener(
       'scroll',
-      debounce(e => {})
+      debounce((e) => {})
     )
   }, [])
 
   return (
     <>
-      <Nprogress isAnimating={store.nprogress} key={location.key} />
+      <Nprogress
+        isAnimating={store.nprogress}
+        key={location.key}
+      />
       <ConfigProvider
         drawer={{
           styles: drawerStyles

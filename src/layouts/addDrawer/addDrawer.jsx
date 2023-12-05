@@ -9,7 +9,7 @@ import http from '@/utlis/http'
 const { TextArea } = Input
 
 export default () => {
-  console.log('addDrawer')
+  console.log('addDrawer 全局添加组件')
   const { store, setValueStore, novelStore, setNovelStore } = useStore()
   const [formRef] = Form.useForm()
   const [titleRules, setTitleRules] = useState({
@@ -36,7 +36,6 @@ export default () => {
 
   const formfinish = async () => {
     const formdata = await formRef.validateFields()
-    console.log(formdata)
     if (!formdata.title) {
       setTitleRules({
         validateStatus: 'error',

@@ -57,7 +57,85 @@ const items = [
 ]
 
 function NovelItem({ data, onDelNovel, onUpdataNovel }) {
-  return <div className='w-100 mt-20'>{data && data._id}</div>
+  console.log('NovelItem 组件', data)
+  const dropClick = useCallback(({ key }) => {
+    console.log(key)
+    if (key === '1') {
+      onUpdataNovel(data)
+    } else {
+      onDelNovel(data)
+    }
+  }, [])
+
+  // const tabsEl = useMemo(() => {
+  //   return <Tabs tablist={data.tabs} />
+  // }, [data.tabs])
+
+  return (
+    <Card
+      className={styles.cardindex}
+      bordered={false}
+      hoverable
+      title={
+        <div className='flex'>
+          <Dropdown
+            menu={{ items, onClick: dropClick }}
+            placement='bottomLeft'
+            arrow={{ pointAtCenter: true }}
+          >
+            <CuIcon
+              icon='hot'
+              size='22'
+              color='var(--primary-color)'
+              className='mr-10'
+            />
+          </Dropdown>
+          <h4 className={styles.cardtitle + ' singe-line'}>
+            啊实打实大萨达萨达啊撒大声地asdasd
+          </h4>
+        </div>
+      }
+      // extra={<h4>第1035-205789章</h4>}
+    >
+      <h4>链接：</h4>
+      <Space
+        size={[14, 7]}
+        wrap
+        className='mt-10'
+      >
+        {Array.from({ length: 3 }).map((_, i) => {
+          return (
+            <Button
+              type='dashed'
+              className={styles.cardbut}
+              key={i}
+              icon={
+                <LinkTwo
+                  theme='outline'
+                  size='15'
+                />
+              }
+              onClick={() => {
+                window.$message.success('复制链接')
+              }}
+            >
+              复制 {'i =' + i}
+            </Button>
+          )
+        })}
+      </Space>
+      <div className='mt-5'>
+        <h4>标签：</h4>
+        {/* {tabsEl} */}
+        <TabsMemo tablist={[1, 2, 3, 4]} />
+      </div>
+      <Introduction txt='' />
+    </Card>
+  )
+}
+
+function NovelItem({ data, onDelNovel, onUpdataNovel }) {
+  return <div>{data && data._id}</div>
 }
 
 export default () => {
