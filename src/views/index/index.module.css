@@ -19,10 +19,6 @@
 }
 
 @media screen and (max-width: 980px) {
-  .cardtitle {
-    width: 80%;
-  }
-
   .cardindex {
     width: 100%;
     min-width: 80%;
@@ -31,6 +27,10 @@
   .cardbut {
     margin-bottom: 5px;
     /* margin-right: 15px; */
+  }
+
+  .cardExtra{
+    line-height: 3;
   }
 
   :global(.ant-card .ant-card-body) {

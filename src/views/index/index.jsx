@@ -1,16 +1,16 @@
 import CuIcon from '@/components/cuIcon'
 import { CardSkeletons } from '@/components/cardSkeleton'
-import { LinkTwo } from '@icon-park/react'
+import { LinkTwo, TagOne } from '@icon-park/react'
 import { randomHexColor } from '@/utlis/themeColor'
 import { Space } from 'antd'
 import { useStore } from '@/store'
-import { memo } from 'react'
+import { memo, useCallback, useMemo } from 'react'
 import http from '@/utlis/http'
-import { useRequest, useMount } from 'ahooks'
+import { useRequest, useToggle } from 'ahooks'
+import { copyText } from '@/utlis'
 
 import styles from './index.module.css'
-import { useCallback } from 'react'
-import { useMemo } from 'react'
+import { useMount } from 'ahooks'
 
 function Introduction({ txt }) {
   const [isText, { toggle }] = useToggle('nowrap', 'normal')
@@ -23,27 +23,60 @@ function Introduction({ txt }) {
       style={{ whiteSpace: isText }}
       className={styles.carppeizhu + ' singe-line mt-15'}
     >
+      <span style={{ color: 'var(--text-color-3)' }}>备注：</span>
       {txt}
     </div>
   )
 }
 
-function Tabs({ tablist }) {
-  if (!tablist?.length) {
+function Tabs({ txt }) {
+  return (
+    txt && (
+      <Tag
+        color={randomHexColor()}
+        className='mt-10 mb-10'
+      >
+        {txt}
+      </Tag>
+    )
+  )
+}
+
+function CardExtra({ start, finish }) {
+  if (!start && !finish) {
     return
   }
-  return tablist.map((_, i) => (
-    <Tag
-      color={randomHexColor()}
-      key={i}
-      className='mt-10 mb-10'
-    >
-      {randomHexColor()}
-    </Tag>
-  ))
+  return (
+    <h4 className={styles.cardExtra}>
+      第{start || '???'}-{finish || '???'}章
+    </h4>
+  )
 }
 
 const TabsMemo = memo(Tabs)
+
+function LinkButton({ link }) {
+  if (!link.urli) {
+    return
+  }
+  return (
+    <Button
+      type='dashed'
+      className={styles.cardbut}
+      icon={
+        <LinkTwo
+          theme='outline'
+          size='15'
+        />
+      }
+      onClick={() => {
+        copyText(link.urli, (msg) => window.$message.success(msg))
+      }}
+    >
+      {link.linkName}
+    </Button>
+  )
+}
 
 const items = [
   {
@@ -56,66 +89,148 @@ const items = [
   }
 ]
 
-function NovelItem({ data, onDelNovel, onUpdataNovel }) {
-  return <div className='w-100 mt-20'>{data && data._id}</div>
+function NovelItem({ data, onUpdataNovel }) {
+  const dropClick = useCallback(async ({ key }) => {
+    if (key === '1') {
+      onUpdataNovel(data)
+    } else {
+      const modalRes = await window.$modal.confirm({
+        okText: '删除',
+        okType: 'danger',
+        maskClosable: true,
+        centered: true,
+        cancelText: '取消',
+        title: '删除小说',
+        content: '是否将（删除）'
+      })
+      console.log(modalRes)
+    }
+  }, [])
+
+  return (
+    <Card
+      className={styles.cardindex}
+      bordered={false}
+      hoverable
+      title={
+        <div className='flex'>
+          <Dropdown
+            menu={{ items, onClick: dropClick }}
+            placement='bottomLeft'
+            arrow={{ pointAtCenter: true }}
+          >
+            <CuIcon
+              icon='hot'
+              size='22'
+              color='var(--primary-color)'
+              className='mr-10'
+            />
+          </Dropdown>
+          <h4 className='w-100 singe-line'>{data.title}</h4>
+        </div>
+      }
+      extra={
+        <CardExtra
+          start={data.start}
+          finish={data.finish}
+        />
+      }
+    >
+      <h4 className='flex-ai-c'>
+        <LinkTwo
+          theme='outline'
+          size='18'
+          fill='var(--success-color)'
+          className='mr-5'
+        />
+        链接：
+      </h4>
+      <Space
+        size={[14, 7]}
+        wrap
+        className='mt-10'
+      >
+        <LinkButton link={{ linkName: '首链接', urli: data.link }} />
+        <LinkButton link={{ linkName: '后续链接', urli: data.linkback }} />
+        {data?.links &&
+          data.links.map((v, i) => (
+            <LinkButton
+              link={v}
+              key={i}
+            />
+          ))}
+      </Space>
+      <div className='mt-5'>
+        <h4 className='flex-ai-c'>
+          <TagOne
+            theme='outline'
+            size='18'
+            fill='var(--success-color)'
+            className='mr-5 el-transition-color'
+          />
+          标签：
+        </h4>
+        {Array.isArray(data?.tabs) &&
+          data.tabs.map((v, i) => (
+            <TabsMemo
+              txt={`Tab：${v}`}
+              key={i}
+            />
+          ))}
+      </div>
+      <Introduction txt={data.beizhu} />
+    </Card>
+  )
 }
 
 export default () => {
   console.log('index 路由页面')
   console.log('\n')
   const { store, setValueStore, setNovelStore, novelStore } = useStore()
-  const { data, loading, run, runAsync, mutate } = useRequest(
+
+  const { data = [], loading } = useRequest(
     () => http.post('/curd-mongo/find/novel', { ops: { many: true } }),
     {
-      manual: true,
-      loadingDelay: 2000
+      loadingDelay: 1000,
+      onSuccess: (resdata) => {
+        setNovelStore({ novelList: resdata })
+      }
     }
   )
 
+  /*const [loading, { toggle: loadingToggle }] = useToggle(true)
+
+  async function initRequest() {
+    const result = await http
+      .post('/curd-mongo/find/novel', { ops: { many: true } })
+      .catch((e) => {
+        return Promise.reject(e)
+      })
+    setNovelStore({ novelList: result })
+    setTimeout(() => loadingToggle(), 1500)
+  }
+
   useMount(() => {
-    runAsync().then((res) => {
-      setNovelStore((v) => ({ ...v, novelList: res }))
-      return res
-    })
-  })
+    initRequest()
+  }) */
 
-  const onDel = async () => {
-    const modalRes = await window.$modal.confirm({
-      okText: '删除',
-      okType: 'danger',
-      maskClosable: true,
-      centered: true,
-      cancelText: '取消',
-      title: '删除小说',
-      content: '是否将（删除）'
-    })
-  }
-
-  const onUpdataNovel = () => {
+  const onUpdataNovel = useCallback((data) => {
     setValueStore({ isAddDrawer: !store.isAddDrawer })
-    setNovelStore((v) => ({ ...v, action: 'updata' }))
-  }
+    setNovelStore({ action: 'updata', data })
+  }, [])
 
   const novelItemEl = useMemo(() => {
-    console.log('length', novelStore.novelList.length)
-    return novelStore.novelList.map((item, i) => (
+    return novelStore.novelList.map((item) => (
       <NovelItem
         key={item._id}
         data={item}
-        onDelNovel={onDel}
         onUpdataNovel={onUpdataNovel}
       />
     ))
-  }, [data])
+  }, [novelStore.novelList])
 
   return (
     <>
-      {/*  <div className={styles.view}>
-        {Array.isArray(data) &&
-          data.map((_, i) => {
-            return <NovelItem key={i}></NovelItem>
-          })}
-      </div> */}
       <CardSkeletons show={loading}>
         <div className={styles.view}>{novelItemEl}</div>
       </CardSkeletons>

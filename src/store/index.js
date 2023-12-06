@@ -41,13 +41,17 @@ const [useAccountStore, getAccountStore] = createGlobalStore(() => {
     novelList: []
   })
 
+  function setNovelStore(obj) {
+    setNovel((v) => ({ ...v, ...obj }))
+  }
+
   return {
     store: laoutState,
     setValueStore,
     setThemeToggle,
     nprogressToggle,
     novelStore: novel,
-    setNovelStore: setNovel
+    setNovelStore
   }
 })
 

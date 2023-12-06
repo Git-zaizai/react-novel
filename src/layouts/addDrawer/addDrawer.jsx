@@ -5,11 +5,33 @@ import { DeleteThree, Star } from '@icon-park/react'
 import { Form, Input } from 'antd'
 import { useState } from 'react'
 import http from '@/utlis/http'
+import { useEffect } from 'react'
 
 const { TextArea } = Input
 
 export default () => {
   console.log('addDrawer 全局添加组件')
+
+  let initialValues = {
+    beizhu: Math.random().toString(36).slice(2, 12),
+    start: (Math.random() * 10).toFixed(), // 开始章节
+    finish: (Math.random() * 10 * 10).toFixed(), // 结束章节
+    duwan: 0, // 是否读完
+    isdel: 1, // 软删除
+    link: Math.random().toString(36).slice(2, 12), //首链接
+    linkback: Math.random().toString(36).slice(2, 12), //后续链接
+    recordtype: [1], // 记录的是什么
+    title: Math.random().toString(36).slice(2, 12),
+    links: [
+      {
+        linkName: Math.random().toString(36).slice(2, 12),
+        urli: Math.random().toString(36).slice(2, 12)
+      }
+    ], // 链接
+    tabs: [Number((Math.random() * 10).toFixed())], // 标签列表
+    rate: [(Math.random() * 10).toFixed()] // 评分
+  }
+
   const { store, setValueStore, novelStore, setNovelStore } = useStore()
   const [formRef] = Form.useForm()
   const [titleRules, setTitleRules] = useState({
@@ -17,6 +39,12 @@ export default () => {
     message: '',
     hasFeedback: false
   })
+
+  useEffect(() => {
+    if (novelStore.action === 'updata') {
+      formRef.setFieldsValue(novelStore.data)
+    }
+  }, [novelStore.action])
 
   const bindtitleBlur = (e) => {
     if (e.target.value === '') {
@@ -36,6 +64,7 @@ export default () => {
 
   const formfinish = async () => {
     const formdata = await formRef.validateFields()
+
     if (!formdata.title) {
       setTitleRules({
         validateStatus: 'error',
@@ -44,67 +73,70 @@ export default () => {
       })
       return
     }
-    setTitleRules({
-      validateStatus: 'validating',
-      message: '',
-      hasFeedback: true
-    })
 
-    const verifyTitle = await http
-      .post('/curd-mongo/find/novel', {
-        where: {
-          title: formdata.title
-        },
-        ops: {
-          many: true
-        }
-      })
-      .catch((error) => {
-        setTimeout(() => {
-          setTitleRules({
-            validateStatus: 'error',
-            message: '验证失败，请重新尝试',
-            hasFeedback: false
-          })
-        }, 1000)
-        return Promise.reject(error)
-      })
-
-    if (verifyTitle.length) {
-      setTimeout(() => {
-        setTitleRules({
-          validateStatus: 'error',
-          message: '名，已有',
-          hasFeedback: false
-        })
-      }, 500)
-      return
-    }
-    setTimeout(() => {
+    if (novelStore.action === 'add') {
       setTitleRules({
-        validateStatus: '',
+        validateStatus: 'validating',
         message: '',
         hasFeedback: true
       })
-    }, 500)
+
+      const verifyTitle = await http
+        .post('/curd-mongo/find/novel', {
+          where: {
+            title: formdata.title
+          },
+          ops: {
+            many: true
+          }
+        })
+        .catch((error) => {
+          setTimeout(() => {
+            setTitleRules({
+              validateStatus: 'error',
+              message: '验证失败，请重新尝试',
+              hasFeedback: false
+            })
+          }, 1000)
+          return Promise.reject(error)
+        })
+
+      if (verifyTitle.length) {
+        setTimeout(() => {
+          setTitleRules({
+            validateStatus: 'error',
+            message: '名，已有',
+            hasFeedback: false
+          })
+        }, 500)
+        return
+      }
+      setTimeout(() => {
+        setTitleRules({
+          validateStatus: '',
+          message: '',
+          hasFeedback: true
+        })
+      }, 500)
+    }
 
     const url = novelStore.action === 'updata' ? 'update' : 'add'
     const response = await http
-      .post(`/curd-mongo/${url}/novel`, {
-        where: { title: formdata.title },
-        data: formdata
-      })
+      .post(`/react/novel/${url}`, Object.assign(novelStore.data, formdata))
       .catch((err) => {
-        window.$message.error('添加失败')
         return Promise.reject(err)
       })
-    console.log(response)
-    setNovelStore((v) => ({
-      ...v,
-      novelList: [...v.novelList, { _id: response.insertedId, ...formdata }]
-    }))
-    setValueStore({ isAddDrawer: !store.isAddDrawer })
-    window.$message.success('添加成功')
+    if (response.data === 1) {
+      setNovelStore({
+        novelList: [{ _id: response.insertedId, ...formdata }].concat(
+          novelStore.novelList
+        )
+      })
+      setValueStore({ isAddDrawer: !store.isAddDrawer })
+      window.$message.success('操作成功')
+    } else {
+      window.$message.success('操作失败')
+    }
   }
 
   const AddDrawerFooter = (
@@ -143,10 +175,7 @@ export default () => {
       <Form
         layout='vertical'
         form={formRef}
-        initialValues={{
-          recommended: 0,
-          duwan: 0
-        }}
+        initialValues={initialValues}
       >
         <Form.Item
           name='recordtype'
@@ -310,7 +339,7 @@ export default () => {
                     key={key}
                   >
                     <Form.Item
-                      label={`新链接 - ${key} ：`}
+                      label={`新链接 - ${key} - ${name}：`}
                       {...restField}
                       name={[name, 'linkName']}
                     >
@@ -322,7 +351,7 @@ export default () => {
                     </Form.Item>
                     <Form.Item
                       {...restField}
-                      name={[name, 'linkitem']}
+                      name={[name, 'urli']}
                     >
                       <Input
                         addonBefore='URL：'

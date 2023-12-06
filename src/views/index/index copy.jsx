@@ -152,7 +152,7 @@ export default () => {
 
   useMount(() => {
     runAsync().then((res) => {
-      setNovelStore((v) => ({ ...v, novelList: res }))
+      setNovelStore({ ...v, novelList: res })
       return res
     })
   })
@@ -171,7 +171,7 @@ export default () => {
 
   const onUpdataNovel = () => {
     setValueStore({ isAddDrawer: !store.isAddDrawer })
-    setNovelStore((v) => ({ ...v, action: 'updata' }))
+    setNovelStore({ action: 'updata' })
   }
 
   const novelItemEl = useMemo(() => {

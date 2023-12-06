@@ -9,7 +9,7 @@
 
 @media screen and (max-width: 980px) {
   .searchcard :global(.ant-card-body) {
-    padding: 10px;
+    padding: 5px;
   }
 
   .searchcard :global(.ant-card-head) {
