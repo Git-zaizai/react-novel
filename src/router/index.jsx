@@ -1,16 +1,6 @@
-import { lazy, Suspense, memo } from 'react'
+import { memo } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-
-const LazyImport = (fn) => {
-  const LazyComponent = lazy(fn)
-  return (
-    <Suspense>
-      <LazyComponent />
-    </Suspense>
-  )
-}
-
-const Layout = LazyImport(() => import('@/layouts/index'))
+import { LazyImport, Layout } from './content'
 
 export const tabsRoutes = [
   {
@@ -55,7 +45,9 @@ export const tabsRoutes = [
   }
 ]
 
-export const routes = [...tabsRoutes]
+import adminRoute from './admin/index'
+
+export const routes = [...tabsRoutes, ...adminRoute]
 
 export const router = createBrowserRouter(routes)
 

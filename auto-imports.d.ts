@@ -15,6 +15,7 @@ declare global {
   const Flex: typeof import('antd')['Flex']
   const Form: typeof import('antd')['Form']
   const Input: typeof import('antd')['Input']
+  const Layout: typeof import('antd')['Layout']
   const Link: typeof import('react-router-dom')['Link']
   const NavLink: typeof import('react-router-dom')['NavLink']
   const Navigate: typeof import('react-router-dom')['Navigate']

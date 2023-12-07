@@ -16,9 +16,12 @@ export default () => {
   const [token, setToken] = useLocalStorageState('token')
   const [isLogin, { toggle }] = useToggle(true)
   const [pwd, setPwd] = useState('')
-  const { runAsync } = useRequest(() => http.post('/input', { pwd }), {
-    manual: true
-  })
+  const { runAsync } = useRequest(
+    (data) => http.post('/secretkey', { pwd: data }),
+    {
+      manual: true
+    }
+  )
 
   useAsyncEffect(async () => {
     if (token) {
@@ -40,14 +43,14 @@ export default () => {
         window.$message.error('请输入秘钥')
         return
       }
-      const result = await runAsync()
+      const result = await runAsync(pwd)
       setToken(result)
       toggle()
       setCheckedList(checkedList.concat('token'))
-      setCheckd(v => ({ ...v, plainOptions: checkedList }))
+      setCheckd((v) => ({ ...v, plainOptions: checkedList }))
       window.$message.success('获取秘钥成功')
     } catch (error) {
-      window.$message.error(error)
+      window.$message.error('获取秘钥失败')
     }
   }
 
@@ -57,14 +60,14 @@ export default () => {
     toggle()
   }
 
-  const onChange = list => {
+  const onChange = (list) => {
     setCheckedList(list)
-    setCheckd(v => ({
+    setCheckd((v) => ({
       ...v,
       checkAll: list > 0 && list < checkd.plainOptions.length
     }))
   }
-  const onCheckAllChange = e => {
+  const onCheckAllChange = (e) => {
     setCheckedList(e.target.checked ? checkd.plainOptions : [])
     setCheckd({
       plainOptions: checkd.plainOptions,
@@ -73,7 +76,7 @@ export default () => {
   }
 
   function removeLocal() {
-    checkedList.forEach(key => {
+    checkedList.forEach((key) => {
       localStorage.removeItem(key)
     })
     const locals = Object.keys(localStorage)
@@ -93,9 +96,7 @@ export default () => {
     }
   }
 
-  function exportLocal() {
-    
-  }
+  function exportLocal() {}
 
   return (
     <Drawer
@@ -111,14 +112,19 @@ export default () => {
           allowClear
           placeholder='秘钥'
           value={pwd}
-          onChange={e => setPwd(e.target.value)}
-          iconRender={visible =>
+          onChange={(e) => setPwd(e.target.value)}
+          iconRender={(visible) =>
             visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
           }
         />
         <Transition show={isLogin}>
           {isLogin ? (
-            <Button type='primary' className='mt-10' block onClick={login}>
+            <Button
+              type='primary'
+              className='mt-10'
+              block
+              onClick={login}
+            >
               获取秘钥
             </Button>
           ) : (
@@ -160,7 +166,10 @@ export default () => {
 
         <div style={{ marginTop: 'auto' }}>
           <div>
-            <Checkbox onChange={onCheckAllChange} checked={checkd.checkAll}>
+            <Checkbox
+              onChange={onCheckAllChange}
+              checked={checkd.checkAll}
+            >
               选择所有
             </Checkbox>
           </div>

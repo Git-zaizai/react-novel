@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { setRootCss } from '@/styles/cssVars'
 import { checkIsDarkMode, getThemeToken } from '@/utlis/themeColor'
 
+
 const [useAccountStore, getAccountStore] = createGlobalStore(() => {
   const [laoutState, setlaoutState] = useState({
     theme: checkIsDarkMode(),
@@ -34,7 +35,12 @@ const [useAccountStore, getAccountStore] = createGlobalStore(() => {
     setlaoutState((v) => ({ ...v, nprogress: !v.nprogress }))
   }
 
-  const [user, setUser] = useState({})
+  const [user, setUser] = useState({
+    admin: false
+  })
+  function setUserStore(obj) {
+    setUser((v) => ({ ...v, ...obj }))
+  }
   const [novel, setNovel] = useState({
     action: false,
     data: {},
@@ -51,7 +57,9 @@ const [useAccountStore, getAccountStore] = createGlobalStore(() => {
     setThemeToggle,
     nprogressToggle,
     novelStore: novel,
-    setNovelStore
+    setNovelStore,
+    userStore: user,
+    setUserStore
   }
 })
 

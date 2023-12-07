@@ -35,7 +35,7 @@ async function request(options) {
     config.headers = { 'Content-Type': 'multipart/form-data' }
   }
 
-  const token = localStorage.getItem('token')
+  const token = JSON.parse(localStorage.getItem('token'))
   if (token) {
     config.headers['token'] = token
   }

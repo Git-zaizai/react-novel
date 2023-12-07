@@ -1,95 +1,242 @@
-import styles from './search.module.css'
-
+import CuIcon from '@/components/cuIcon'
+import { HamburgerButton, LinkTwo, TagOne } from '@icon-park/react'
+import { randomHexColor } from '@/utlis/themeColor'
+import { Card, Form, Input, Space } from 'antd'
+import { useStore } from '@/store'
+import { memo, useCallback, useMemo } from 'react'
+import http from '@/utlis/http'
 import { useToggle } from 'ahooks'
-import { HamburgerButton } from '@icon-park/react'
-import { Input, Card, Form } from 'antd'
+import { copyText } from '@/utlis'
 import Transition from '@/components/Transition'
 
-import CuIcon from '@/components/cuIcon'
-import { CardSkeletons } from '@/components/cardSkeleton'
-import { LinkTwo } from '@icon-park/react'
-import { randomHexColor } from '@/utlis/themeColor'
-import { Space } from 'antd'
-import { useStore } from '@/store'
-import { memo } from 'react'
-import http from '@/utlis/http'
-import { useRequest } from 'ahooks'
-
-const { Search } = Input
+import styles from './search.module.css'
 
 function Introduction({ txt }) {
   const [isText, { toggle }] = useToggle('nowrap', 'normal')
+  if (!txt) {
+    return
+  }
   return (
     <div
       onClick={toggle}
       style={{ whiteSpace: isText }}
       className={styles.carppeizhu + ' singe-line mt-15'}
     >
+      <span style={{ color: 'var(--text-color-3)' }}>备注：</span>
       {txt}
     </div>
   )
 }
 
-function Tabs({ tablist }) {
-  tablist = [1, 2, 3, 4, 5]
-  return tablist.map((_, i) => (
-    <Tag
-      color={randomHexColor()}
-      key={i}
-      className='mt-10 mb-10'
-    >
-      {randomHexColor()}
-    </Tag>
-  ))
+function Tabs({ txt }) {
+  return (
+    txt && (
+      <Tag
+        color={randomHexColor()}
+        className='mt-10 mb-10'
+      >
+        {txt}
+      </Tag>
+    )
+  )
+}
+
+function CardExtra({ start, finish }) {
+  if (!start && !finish) {
+    return
+  }
+  return (
+    <h4 className={styles.cardExtra + ' ml-10'}>
+      第{start || '???'}-{finish || '???'}章
+    </h4>
+  )
 }
 
 const TabsMemo = memo(Tabs)
 
+function LinkButton({ link }) {
+  if (!link.urli) {
+    return
+  }
+  return (
+    <Button
+      type='dashed'
+      className={styles.cardbut}
+      icon={
+        <LinkTwo
+          theme='outline'
+          size='15'
+        />
+      }
+      onClick={() => {
+        copyText(link.urli, (msg) => window.$message.success(msg))
+      }}
+    >
+      {link.linkName}
+    </Button>
+  )
+}
+
+const items = [
+  {
+    key: '1',
+    label: <h4 className='text-align'>修改</h4>
+  },
+  {
+    key: '2',
+    label: <h4 className='text-align'>删除</h4>
+  }
+]
+
+function NovelItem({ data, onUpdataNovel, onDelNovel, index }) {
+  const dropClick = useCallback(async ({ key }) => {
+    if (key === '1') {
+      onUpdataNovel(data)
+    } else {
+      const modalRes = await window.$modal.confirm({
+        okText: '删除',
+        okType: 'danger',
+        maskClosable: true,
+        centered: true,
+        cancelText: '取消',
+        title: '删除小说',
+        content: '是否将（删除）'
+      })
+      if (modalRes) {
+        const response = await http
+          .post('/react/novel/update', {
+            _id: data._id,
+            isdel: 0
+          })
+          .catch((err) => {
+            window.$message.error('删除失败')
+            return Promise.reject(err)
+          })
+
+        if (response) {
+          onDelNovel(index, data)
+          window.$message.success('删除成功')
+        }
+      }
+    }
+  }, [])
+
+  return (
+    <Card
+      className={styles.cardindex}
+      bordered={false}
+      hoverable
+      title={
+        <div className='flex'>
+          <Dropdown
+            menu={{ items, onClick: dropClick }}
+            placement='bottomLeft'
+            arrow={{ pointAtCenter: true }}
+          >
+            <CuIcon
+              icon='hot'
+              size='22'
+              color='var(--primary-color)'
+              className='mr-10'
+            />
+          </Dropdown>
+          <h4
+            className='wax-100 singe-line'
+            onClick={() =>
+              copyText(data.title, (msg) => window.$message.success('复制成功'))
+            }
+          >
+            {data.title}
+          </h4>
+        </div>
+      }
+      extra={
+        <CardExtra
+          start={data.start}
+          finish={data.finish}
+        />
+      }
+    >
+      <h4 className='flex-ai-c'>
+        <LinkTwo
+          theme='outline'
+          size='18'
+          fill='var(--success-color)'
+          className='mr-5'
+        />
+        链接：
+      </h4>
+      <Space
+        size={[14, 7]}
+        wrap
+        className='mt-10'
+      >
+        <LinkButton link={{ linkName: '首链接', urli: data.link }} />
+        <LinkButton link={{ linkName: '后续链接', urli: data.linkback }} />
+        {data?.links &&
+          data.links.map((v, i) => (
+            <LinkButton
+              link={v}
+              key={i}
+            />
+          ))}
+      </Space>
+      <div className='mt-5'>
+        <h4 className='flex-ai-c'>
+          <TagOne
+            theme='outline'
+            size='18'
+            fill='var(--success-color)'
+            className='mr-5 el-transition-color'
+          />
+          标签：
+        </h4>
+        {Array.isArray(data?.tabs) &&
+          data.tabs.map((v, i) => (
+            <TabsMemo
+              txt={`Tab：${v}`}
+              key={i}
+            />
+          ))}
+      </div>
+      <Introduction txt={data.beizhu} />
+    </Card>
+  )
+}
+
+const { Search } = Input
+
 export default () => {
-  const { store } = useStore()
+  console.log('search 路由页面')
+  console.log('\n')
+
+  const { store, setValueStore, setNovelStore, novelStore } = useStore()
   const [formRef] = Form.useForm()
   const [isCheckboxShow, { toggle }] = useToggle(true)
 
   const onSearch = () => {}
 
-  const { data, error, loading } = useRequest(() =>
-    http.post('http://localhost:7373/getjson/', {
-      ph: 'rootConfig.json'
-    })
-  )
+  const onUpdataNovel = useCallback((data) => {
+    setValueStore({ isAddDrawer: !store.isAddDrawer })
+    setNovelStore({ action: 'updata', data })
+  }, [])
 
-  const arr = Array.from({ length: 3 }).map((_, i) => {
-    return (
-      <Button
-        type='dashed'
-        className={styles.cardbut}
-        key={i}
-        icon={
-          <LinkTwo
-            theme='outline'
-            size='15'
-          />
-        }
-        onClick={() => {
-          window.$message.success('复制链接')
-        }}
-      >
-        复制 {'i =' + i}
-      </Button>
-    )
-  })
+  const onDelNovel = useCallback((index) => {
+    novelStore.novelList.splice(index, 1)
+    setNovelStore({ novelList: [].concat(novelStore.novelList) })
+  }, [])
 
-  const onDel = async () => {
-    const modalRes = await window.$modal.confirm({
-      okText: '删除',
-      okType: 'danger',
-      maskClosable: true,
-      centered: true,
-      cancelText: '取消',
-      title: '删除小说',
-      content: '是否将（删除）'
-    })
-  }
+  const novelItemEl = useMemo(() => {
+    return novelStore.novelList.map((item) => (
+      <NovelItem
+        key={item._id}
+        data={item}
+        onUpdataNovel={onUpdataNovel}
+        onDelNovel={onDelNovel}
+      />
+    ))
+  }, [novelStore.novelList])
+
   return (
     <div>
       <div style={{ height: 100 }}></div>
@@ -160,45 +307,7 @@ export default () => {
         </Transition>
       </Card>
 
-      <div className={styles.searchScroll}>
-        {Array.from({ length: 30 }).map((_, i) => (
-          <Card
-            key={i}
-            className={[styles.cardindex, styles.cardItem]}
-            bordered={false}
-            hoverable
-            title={
-              <div className='flex'>
-                <CuIcon
-                  icon='hot'
-                  size='22'
-                  color='var(--primary-color)'
-                  className='mr-10'
-                  onClick={onDel}
-                />
-                <h4 className={styles.cardtitle + ' singe-line'}>
-                  啊实打实大萨达萨达啊撒大声地asdasd
-                </h4>
-              </div>
-            }
-            extra={<h4>第1035-205789章</h4>}
-          >
-            <h4>链接：</h4>
-            <Space
-              size={[14, 7]}
-              wrap
-              className='mt-10'
-            >
-              {arr}
-            </Space>
-            <div className='mt-5'>
-              <h4>标签：</h4>
-              <TabsMemo />
-            </div>
-            <Introduction txt='阿斯达大师大师大阿斯达大师大师大数据库等哈手机卡老大哈拉萨科技大好啦卡机手打数据库等哈手机卡老大哈拉萨科技大好啦卡机手打' />
-          </Card>
-        ))}
-      </div>
+      <div className={styles.searchScroll}>{novelItemEl}</div>
     </div>
   )
 }
