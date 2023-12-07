@@ -5,7 +5,8 @@ export default [
     path: '/admin/tab',
     element: Layout,
     meta: {
-      footerText: '标签'
+      footerText: '标签',
+      icon:'tag'
     },
     children: [
       {

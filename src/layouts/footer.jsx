@@ -21,7 +21,7 @@ export default () => {
   async function isUserAdmin() {
     if (!localStorage.getItem('token')) return
 
-    const response = await http.get('/verifyUser').catch((err) => {
+    const response = await http.get('/verifyUser').catch(err => {
       window.$message.error(err)
     })
 
@@ -31,28 +31,6 @@ export default () => {
   }
 
   useMount(() => isUserAdmin())
-
-  const AdminFooter = useMemo(() => {
-    if (userStore.admin) {
-      return adminRoute.map((v) => (
-        <div
-          key={v.path}
-          className='zf-item flex-fdc-aic-juc'
-          onClick={() => navigate(v.path)}
-          style={{
-            color: getColor(v.path)
-          }}
-        >
-          <CuIcon
-            icon='hot'
-            size='30'
-          />
-          <h4>{v.meta.footerText}</h4>
-        </div>
-      ))
-    }
-    return []
-  }, [userStore.admin])
 
   return (
     isMobile() && (
@@ -65,10 +43,7 @@ export default () => {
               color: getColor('/')
             }}
           >
-            <CuIcon
-              icon='hot'
-              size='30'
-            />
+            <CuIcon icon='hot' size='30' />
             <h4>首页</h4>
           </dir>
           <dir
@@ -78,10 +53,7 @@ export default () => {
               color: getColor('/search')
             }}
           >
-            <CuIcon
-              icon='search'
-              size='30'
-            />
+            <CuIcon icon='search' size='30' />
             <h4>icon</h4>
           </dir>
           <dir
@@ -91,10 +63,7 @@ export default () => {
               color: getColor('/icon/Cuicons')
             }}
           >
-            <CuIcon
-              icon='favor'
-              size='30'
-            />
+            <CuIcon icon='favor' size='30' />
             <h4>icon</h4>
           </dir>
           <div
@@ -104,13 +73,22 @@ export default () => {
               color: getColor('/test-view')
             }}
           >
-            <CuIcon
-              icon='repair'
-              size='30'
-            />
+            <CuIcon icon='repair' size='30' />
             <h4>icon</h4>
           </div>
-          {AdminFooter}
+          {adminRoute.map(v => (
+            <div
+              key={v.path}
+              className='zf-item flex-fdc-aic-juc'
+              onClick={() => navigate(v.path)}
+              style={{
+                color: getColor(v.path)
+              }}
+            >
+              <CuIcon icon={v.meta.icon} size='30' />
+              <h4>{v.meta.footerText}</h4>
+            </div>
+          ))}
         </footer>
       </>
     )

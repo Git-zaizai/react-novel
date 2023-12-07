@@ -55,7 +55,7 @@
 .w-100 {
   width: 100%;
 }
-.wax-100{
+.wax-100 {
   max-width: 100%;
 }
 .h-100 {
@@ -87,6 +87,9 @@
 }
 .mr-20 {
   margin-right: 20px;
+}
+.mb-20 {
+  margin-bottom: 20px;
 }
 .text-align {
   text-align: center;

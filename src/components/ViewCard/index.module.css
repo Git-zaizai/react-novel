@@ -1,0 +1,18 @@
+@media screen and (max-width: 980px) {
+  .viewcard {
+    width: 96vw;
+    margin: 0 auto;
+  }
+
+  .cardExtra {
+    line-height: 3;
+  }
+
+  .viewcard :global(.ant-card-body) {
+    padding: 5px 10px 10px 10px;
+  }
+
+  .viewcard :global(.ant-card-head) {
+    padding: 0 10px;
+  }
+}

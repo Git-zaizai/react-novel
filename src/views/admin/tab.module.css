@@ -1,0 +1,17 @@
+.view {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+  padding: 15px;
+  background-color: var(--body-color);
+  width: 96vw;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 980px) {
+  .addForm {
+    margin-top: 20px;
+    margin-bottom: 0px;
+  }
+}
