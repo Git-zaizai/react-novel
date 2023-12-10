@@ -11,7 +11,7 @@ export default [
     children: [
       {
         index: true,
-        element: LazyImport(() => import('@/views/admin/tab'))
+        element: LazyImport(() => import('@/views/admin/tab/tab'))
       }
     ]
   }

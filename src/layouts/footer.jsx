@@ -32,6 +32,7 @@ export default () => {
 
   useMount(() => isUserAdmin())
 
+
   return (
     isMobile() && (
       <>
@@ -76,19 +77,20 @@ export default () => {
             <CuIcon icon='repair' size='30' />
             <h4>icon</h4>
           </div>
-          {adminRoute.map(v => (
-            <div
-              key={v.path}
-              className='zf-item flex-fdc-aic-juc'
-              onClick={() => navigate(v.path)}
-              style={{
-                color: getColor(v.path)
-              }}
-            >
-              <CuIcon icon={v.meta.icon} size='30' />
-              <h4>{v.meta.footerText}</h4>
-            </div>
-          ))}
+          {userStore.admin &&
+            adminRoute.map(v => (
+              <div
+                key={v.path}
+                className='zf-item flex-fdc-aic-juc'
+                onClick={() => navigate(v.path)}
+                style={{
+                  color: getColor(v.path)
+                }}
+              >
+                <CuIcon icon={v.meta.icon} size='30' />
+                <h4>{v.meta.footerText}</h4>
+              </div>
+            ))}
         </footer>
       </>
     )

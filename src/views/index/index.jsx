@@ -32,10 +32,7 @@ function Introduction({ txt }) {
 function Tabs({ txt }) {
   return (
     txt && (
-      <Tag
-        color={randomHexColor()}
-        className='mt-10 mb-10'
-      >
+      <Tag color={randomHexColor()} className='mt-10 mb-10'>
         {txt}
       </Tag>
     )
@@ -63,14 +60,9 @@ function LinkButton({ link }) {
     <Button
       type='dashed'
       className={styles.cardbut}
-      icon={
-        <LinkTwo
-          theme='outline'
-          size='15'
-        />
-      }
+      icon={<LinkTwo theme='outline' size='15' />}
       onClick={() => {
-        copyText(link.urli, (msg) => window.$message.success(msg))
+        copyText(link.urli, msg => window.$message.success(msg))
       }}
     >
       {link.linkName}
@@ -109,7 +101,7 @@ function NovelItem({ data, onUpdataNovel, onDelNovel, index }) {
             _id: data._id,
             isdel: 0
           })
-          .catch((err) => {
+          .catch(err => {
             window.$message.error('删除失败')
             return Promise.reject(err)
           })
@@ -144,19 +136,14 @@ function NovelItem({ data, onUpdataNovel, onDelNovel, index }) {
           <h4
             className='wax-100 singe-line'
             onClick={() =>
-              copyText(data.title, (msg) => window.$message.success('复制成功'))
+              copyText(data.title, msg => window.$message.success('复制成功'))
             }
           >
             {data.title}
           </h4>
         </div>
       }
-      extra={
-        <CardExtra
-          start={data.start}
-          finish={data.finish}
-        />
-      }
+      extra={<CardExtra start={data.start} finish={data.finish} />}
     >
       <h4 className='flex-ai-c'>
         <LinkTwo
@@ -167,20 +154,11 @@ function NovelItem({ data, onUpdataNovel, onDelNovel, index }) {
         />
         链接：
       </h4>
-      <Space
-        size={[14, 7]}
-        wrap
-        className='mt-10'
-      >
+      <Space size={[14, 7]} wrap className='mt-10'>
         <LinkButton link={{ linkName: '首链接', urli: data.link }} />
         <LinkButton link={{ linkName: '后续链接', urli: data.linkback }} />
         {data?.links &&
-          data.links.map((v, i) => (
-            <LinkButton
-              link={v}
-              key={i}
-            />
-          ))}
+          data.links.map((v, i) => <LinkButton link={v} key={i} />)}
       </Space>
       <div className='mt-5'>
         <h4 className='flex-ai-c'>
@@ -193,12 +171,7 @@ function NovelItem({ data, onUpdataNovel, onDelNovel, index }) {
           标签：
         </h4>
         {Array.isArray(data?.tabs) &&
-          data.tabs.map((v, i) => (
-            <TabsMemo
-              txt={`Tab：${v}`}
-              key={i}
-            />
-          ))}
+          data.tabs.map((v, i) => <TabsMemo txt={`Tab：${v}`} key={i} />)}
       </div>
       <Introduction txt={data.beizhu} />
     </Card>
@@ -214,24 +187,24 @@ export default () => {
     () => http.post('/curd-mongo/find/novel', { ops: { many: true } }),
     {
       loadingDelay: 1000,
-      onSuccess: (resdata) => {
+      onSuccess: resdata => {
         setNovelStore({ novelList: resdata })
       }
     }
   )
 
-  const onUpdataNovel = useCallback((data) => {
+  const onUpdataNovel = useCallback(data => {
     setValueStore({ isAddDrawer: !store.isAddDrawer })
     setNovelStore({ action: 'updata', data })
   }, [])
 
-  const onDelNovel = useCallback((index) => {
+  const onDelNovel = useCallback(index => {
     novelStore.novelList.splice(index, 1)
     setNovelStore({ novelList: [].concat(novelStore.novelList) })
   }, [])
 
   const novelItemEl = useMemo(() => {
-    return novelStore.novelList.map((item) => (
+    return novelStore.novelList.map(item => (
       <NovelItem
         key={item._id}
         data={item}

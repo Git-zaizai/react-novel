@@ -8,7 +8,7 @@ export default props => {
   const { className, style, extrah } = props
   return (
     <Card
-      className={className ?? styles.viewcard}
+      className={styles.viewcard + ' mb-20 ' + className}
       style={style}
       bordered={false}
       hoverable

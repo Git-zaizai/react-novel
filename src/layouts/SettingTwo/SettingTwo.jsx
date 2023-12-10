@@ -12,12 +12,12 @@ import { exportJsonFile } from '@/utlis'
 const CheckboxGroup = Checkbox.Group
 
 export default () => {
-  const { store, setValueStore } = useStore()
+  const { store, setValueStore, setUserStore } = useStore()
   const [token, setToken] = useLocalStorageState('token')
   const [isLogin, { toggle }] = useToggle(true)
   const [pwd, setPwd] = useState('')
   const { runAsync } = useRequest(
-    (data) => http.post('/secretkey', { pwd: data }),
+    data => http.post('/secretkey', { pwd: data }),
     {
       manual: true
     }
@@ -25,13 +25,18 @@ export default () => {
 
   useAsyncEffect(async () => {
     if (token) {
-      await http.post('/verify')
-      toggle()
+      await http.post('/verify').catch(e => {
+        setToken()
+        return Promise.reject(e)
+      })
       setPwd('token')
+      toggle()
     }
   }, [])
 
+  // 选中的checke
   const [checkedList, setCheckedList] = useState(Object.keys(localStorage))
+  // chechke 配置
   const [checkd, setCheckd] = useState({
     plainOptions: checkedList,
     checkAll: !!checkedList.length
@@ -45,9 +50,10 @@ export default () => {
       }
       const result = await runAsync(pwd)
       setToken(result)
+      setCheckedList(Object.keys(localStorage))
+      setCheckd(v => ({ ...v, plainOptions: Object.keys(localStorage) }))
+      setUserStore({ admin: true })
       toggle()
-      setCheckedList(checkedList.concat('token'))
-      setCheckd((v) => ({ ...v, plainOptions: checkedList }))
       window.$message.success('获取秘钥成功')
     } catch (error) {
       window.$message.error('获取秘钥失败')
@@ -55,19 +61,28 @@ export default () => {
   }
 
   function removeToken() {
-    setToken(undefined)
+    setToken()
     setPwd('')
+    setCheckedList(['token'])
+    const locals = Object.keys(localStorage)
+    setCheckd({
+      plainOptions: locals,
+      checkAll: true
+    })
+    setCheckedList(locals)
+    setUserStore({ admin: false })
     toggle()
   }
 
-  const onChange = (list) => {
+  const onChange = list => {
     setCheckedList(list)
-    setCheckd((v) => ({
+    setCheckd(v => ({
       ...v,
       checkAll: list > 0 && list < checkd.plainOptions.length
     }))
   }
-  const onCheckAllChange = (e) => {
+  
+  const onCheckAllChange = e => {
     setCheckedList(e.target.checked ? checkd.plainOptions : [])
     setCheckd({
       plainOptions: checkd.plainOptions,
@@ -76,13 +91,13 @@ export default () => {
   }
 
   function removeLocal() {
-    checkedList.forEach((key) => {
+    checkedList.forEach(key => {
       localStorage.removeItem(key)
     })
     const locals = Object.keys(localStorage)
     setCheckd({
       plainOptions: locals,
-      checkAll: false
+      checkAll: true
     })
     setCheckedList(locals)
   }
@@ -112,19 +127,14 @@ export default () => {
           allowClear
           placeholder='秘钥'
           value={pwd}
-          onChange={(e) => setPwd(e.target.value)}
-          iconRender={(visible) =>
+          onChange={e => setPwd(e.target.value)}
+          iconRender={visible =>
             visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
           }
         />
         <Transition show={isLogin}>
           {isLogin ? (
-            <Button
-              type='primary'
-              className='mt-10'
-              block
-              onClick={login}
-            >
+            <Button type='primary' className='mt-10' block onClick={login}>
               获取秘钥
             </Button>
           ) : (
@@ -166,10 +176,7 @@ export default () => {
 
         <div style={{ marginTop: 'auto' }}>
           <div>
-            <Checkbox
-              onChange={onCheckAllChange}
-              checked={checkd.checkAll}
-            >
+            <Checkbox onChange={onCheckAllChange} checked={checkd.checkAll}>
               选择所有
             </Checkbox>
           </div>
