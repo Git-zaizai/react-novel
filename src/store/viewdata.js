@@ -3,7 +3,6 @@ import { createGlobalStore } from 'hox'
 import { useState } from 'react'
 import http from '@/utlis/http'
 import { randomHexColor } from '@/utlis/themeColor'
-import { useToggle } from 'ahooks'
 
 const [viewdata, getViewData] = createGlobalStore(() => {
   const [recordtypes, setRecordtype] = useState([])

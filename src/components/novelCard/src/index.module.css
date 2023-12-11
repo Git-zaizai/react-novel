@@ -1,0 +1,31 @@
+.novelCard {
+  width: 23.5%;
+  margin: 0 10px 20px 10px;
+}
+
+.novelCardPeizhu {
+  background-color: var(--tag-color);
+  margin-top: 10px;
+  border-radius: 3px;
+  padding: 5px;
+  color: var(--text-color-2);
+}
+
+@media screen and (max-width: 980px) {
+  .novelCard {
+    width: 100%;
+    min-width: 80%;
+  }
+
+  .novelCardLinkBut {
+    margin-bottom: 5px;
+  }
+
+  .novelCard :global(.ant-card-body) {
+    padding: 5px 10px 10px 10px;
+  }
+
+  .novelCard :global(.ant-card-head) {
+    padding: 0 10px;
+  }
+}

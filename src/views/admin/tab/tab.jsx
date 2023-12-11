@@ -329,7 +329,7 @@ export default () => {
                 color='var(--primary-color)'
                 className='mr-10'
               />
-              <h4 className='wax-100 singe-line'>申请的便签</h4>
+              <h4 className='wax-100 singe-line'>申请的便签(暂时先不做，需求没到)</h4>
             </div>
           }
         >

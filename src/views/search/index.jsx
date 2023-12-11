@@ -5,11 +5,14 @@ import { Card, Form, Input, Space } from 'antd'
 import { useStore } from '@/store'
 import { memo, useCallback, useMemo } from 'react'
 import http from '@/utlis/http'
-import { useToggle } from 'ahooks'
+import { useToggle, useMount } from 'ahooks'
 import { copyText } from '@/utlis'
 import Transition from '@/components/Transition'
+import { useViewDataStore } from '@/store/viewdata'
 
 import styles from './search.module.css'
+
+import NovelCard from '@/components/novelCard'
 
 function Introduction({ txt }) {
   const [isText, { toggle }] = useToggle('nowrap', 'normal')
@@ -214,6 +217,8 @@ export default () => {
   const [formRef] = Form.useForm()
   const [isCheckboxShow, { toggle }] = useToggle(true)
 
+  const { tabs, recordtypes } = useViewDataStore()
+
   const onSearch = () => {}
 
   const onUpdataNovel = useCallback((data) => {
@@ -236,6 +241,74 @@ export default () => {
       />
     ))
   }, [novelStore.novelList])
+
+  const DropdownClick = useCallback(async ({ key }) => {
+    if (key === '1') {
+      onUpdataNovel(data)
+    } else {
+      const modalRes = await window.$modal.confirm({
+        okText: '删除',
+        okType: 'danger',
+        maskClosable: true,
+        centered: true,
+        cancelText: '取消',
+        title: '删除小说',
+        content: '是否将（删除）'
+      })
+      if (modalRes) {
+        const response = await http
+          .post('/react/novel/update', {
+            _id: data._id,
+            isdel: 0
+          })
+          .catch((err) => {
+            window.$message.error('删除失败')
+            return Promise.reject(err)
+          })
+
+        if (response) {
+          onDelNovel(index, data)
+          window.$message.success('删除成功')
+        }
+      }
+    }
+  }, [])
+
+  const NovelCardList = new Array(5)
+    .fill({
+      _id: '656ff21467d6079de2c6cb7c',
+      beizhu: 'blpbxqk8e4',
+      start: '6',
+      finish: '24',
+      duwan: 0,
+      id: null,
+      isdel: 1,
+      recordtype: [1],
+      link: '8zzxwu8zsa',
+      linkback: 'e1kv3gfaln',
+      links: [
+        {
+          linkName: '1z20lg00pk',
+          urli: 'nwedyfklfz'
+        }
+      ],
+      tabs: tabs.slice(0, 5),
+      addDate: '2023-12-06T04:01:24.387Z',
+      update: '2023-12-06T04:01:24.387Z',
+      finishtime: null,
+      rate: [],
+      title: 'sf8gepvy3aS对方水电费第三方'
+    })
+    .map((item, i) => {
+      item._id = item._id + i
+      return (
+        <NovelCard
+          key={i}
+          data={item}
+          DropdownClick={DropdownClick}
+        />
+      )
+    })
 
   return (
     <div>
@@ -268,28 +341,48 @@ export default () => {
               onClick={toggle}
             />
           ) : (
-            <Form>
-              <Form.Item
-                name='tabs'
-                label='标签：'
-                from={formRef}
-              >
-                <Checkbox.Group>
-                  <Row>
-                    <Col>
-                      {Array.from({ length: 10 }).map((_, i) => (
+            <>
+              <Form className={styles.searchFormItem}>
+                <Form.Item
+                  name='Recordtype'
+                  from={formRef}
+                  label='所有标签'
+                  style={{
+                    marginBottom: '10px'
+                  }}
+                >
+                  <Checkbox.Group>
+                    {recordtypes.length &&
+                      recordtypes.map((item) => (
                         <Checkbox
-                          key={i}
-                          value={i}
+                          key={item.tab}
+                          value={item.tab}
                           style={{ lineHeight: '32px' }}
                         >
-                          {`${i * i}`}
+                          <Tag color={item.color}>{item.tab}</Tag>
                         </Checkbox>
                       ))}
-                    </Col>
-                  </Row>
-                </Checkbox.Group>
-              </Form.Item>
+                  </Checkbox.Group>
+                </Form.Item>
+
+                <Form.Item
+                  name='tabs'
+                  from={formRef}
+                >
+                  <Checkbox.Group>
+                    {tabs.length &&
+                      tabs.map((item) => (
+                        <Checkbox
+                          key={item.tab}
+                          value={item.tab}
+                          style={{ lineHeight: '32px' }}
+                        >
+                          <Tag color={item.color}>{item.tab}</Tag>
+                        </Checkbox>
+                      ))}
+                  </Checkbox.Group>
+                </Form.Item>
+              </Form>
               <Button
                 block
                 type='text'
@@ -302,12 +395,12 @@ export default () => {
                 }
                 onClick={toggle}
               />
-            </Form>
+            </>
           )}
         </Transition>
       </Card>
 
-      <div className={styles.searchScroll}>{novelItemEl}</div>
+      <div className={styles.searchScroll}>{NovelCardList}</div>
     </div>
   )
 }

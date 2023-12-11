@@ -59,4 +59,8 @@
   .cardItem :global(.ant-card-head) {
     padding: 0 10px;
   }
+
+  .searchFormItem :global(.ant-form-item) {
+    margin-bottom: 0px;
+  }
 }

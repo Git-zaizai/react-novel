@@ -6,6 +6,7 @@ import { Form, Input } from 'antd'
 import { useState } from 'react'
 import http from '@/utlis/http'
 import { useEffect } from 'react'
+import { useViewDataStore } from '@/store/viewdata'
 
 const { TextArea } = Input
 
@@ -18,9 +19,10 @@ export default () => {
     finish: (Math.random() * 10 * 10).toFixed(), // 结束章节
     duwan: 0, // 是否读完
     isdel: 1, // 软删除
+    wanjie: 1,
     link: Math.random().toString(36).slice(2, 12), //首链接
     linkback: Math.random().toString(36).slice(2, 12), //后续链接
-    recordtype: [1], // 记录的是什么
+    recordtype: ["有生之年", "其他"], // 记录的是什么
     title: Math.random().toString(36).slice(2, 12),
     links: [
       {
@@ -28,10 +30,11 @@ export default () => {
         urli: Math.random().toString(36).slice(2, 12)
       }
     ], // 链接
-    tabs: [Number((Math.random() * 10).toFixed())], // 标签列表
+    tabs: ["小说", "推荐", "漫画", "动漫", "有声小说", "一口气看完", "其他"], // 标签列表
     rate: [(Math.random() * 10).toFixed()] // 评分
   }
 
+  const { recordtypes, tabs, initHttp } = useViewDataStore()
   const { store, setValueStore, novelStore, setNovelStore } = useStore()
   const [formRef] = Form.useForm()
   const [titleRules, setTitleRules] = useState({
@@ -41,9 +44,11 @@ export default () => {
   })
 
   useEffect(() => {
-    if (novelStore.action === 'updata') {
-      formRef.setFieldsValue(novelStore.data)
-    }
+    initHttp().finally(() => {
+      if (novelStore.action === 'updata') {
+        formRef.setFieldsValue(novelStore.data)
+      }
+    })
   }, [novelStore.action])
 
   const bindtitleBlur = (e) => {
@@ -189,15 +194,16 @@ export default () => {
         >
           <Checkbox.Group>
             <Row>
-              {Array.from({ length: 6 }).map((_, i) => (
-                <Checkbox
-                  key={i}
-                  value={i}
-                  style={{ lineHeight: '32px' }}
-                >
-                  {`${i * i}阿啊`}
-                </Checkbox>
-              ))}
+              {recordtypes.length &&
+                recordtypes.map((item) => (
+                  <Checkbox
+                    key={item.tab}
+                    value={item.tab}
+                    style={{ lineHeight: '32px' }}
+                  >
+                    {item.tab}
+                  </Checkbox>
+                ))}
             </Row>
           </Checkbox.Group>
         </Form.Item>
@@ -316,17 +322,53 @@ export default () => {
         >
           <Checkbox.Group>
             <Row>
-              {Array.from({ length: 10 }).map((_, i) => (
-                <Checkbox
-                  key={i}
-                  value={i}
-                  style={{ lineHeight: '32px' }}
-                >
-                  {`${i * i}`}
-                </Checkbox>
-              ))}
+              {tabs.length &&
+                tabs.map((item) => (
+                  <Checkbox
+                    key={item.tab}
+                    value={item.tab}
+                    style={{ lineHeight: '32px' }}
+                  >
+                    {item.tab}
+                  </Checkbox>
+                ))}
             </Row>
           </Checkbox.Group>
+        </Form.Item>
+
+        <Form.Item
+          name='wanjie'
+          label='完结：'
+        >
+          <Radio.Group className='flex'>
+            <Radio.Button
+              value={1}
+              className='w-100'
+            >
+              <div className='flex-ai-c'>
+                <CuIcon
+                  icon='medal'
+                  className='mr-10'
+                />
+                完结
+              </div>
+            </Radio.Button>
+            <Radio.Button
+              value={0}
+              className='w-100'
+            >
+              <div
+                className='flex-ai-c'
+                style={{ justifyContent: 'flex-end' }}
+              >
+                连载
+                <CuIcon
+                  icon='tag'
+                  className='ml-10'
+                />
+              </div>
+            </Radio.Button>
+          </Radio.Group>
         </Form.Item>
 
         <div className={styles.addLinkForm}>

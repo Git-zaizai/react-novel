@@ -1,0 +1,16 @@
+
+.chapter {
+  width: 60px;
+  height: 37px;
+  border: 2px solid var(--border-color);
+  margin: 0 10px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.chapter::before {
+  content: ' ';
+  width: 12px;
+  height: 2px;
+  background: var(--text-color-2);
+}

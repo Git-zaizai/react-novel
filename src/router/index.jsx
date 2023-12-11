@@ -39,7 +39,7 @@ export const tabsRoutes = [
     children: [
       {
         index: true,
-        element: LazyImport(() => import('@/views/test.view'))
+        element: LazyImport(() => import('@/views/test/test.view'))
       }
     ]
   }
