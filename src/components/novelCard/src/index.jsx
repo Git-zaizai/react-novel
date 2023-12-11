@@ -36,14 +36,9 @@ function LinkButton({ link }) {
     <Button
       type='dashed'
       className={styles.novelCardLinkBut}
-      icon={
-        <LinkTwo
-          theme='outline'
-          size='15'
-        />
-      }
+      icon={<LinkTwo theme='outline' size='15' />}
       onClick={() => {
-        copyText(link.urli, (msg) => window.$message.success(msg))
+        copyText(link.urli, msg => window.$message.success(msg))
       }}
     >
       {link.linkName}
@@ -62,14 +57,8 @@ const Dropdowns = [
   }
 ]
 
-export default ({ data, DropdownClick }) => {
-  const [componentsShow, setComponentsShow] = useState({
-    chapter: false
-  })
-
-  const chapterToggle = useCallback(() => {
-    setComponentsShow((v) => ({ ...v, chapter: !componentsShow.chapter }))
-  })
+export default props => {
+  const { data, DropdownClick, updateChapter } = props
 
   return (
     <Card
@@ -93,12 +82,19 @@ export default ({ data, DropdownClick }) => {
           <h4
             className='wax-100 singe-line'
             onClick={() =>
-              copyText(data.title, (msg) => window.$message.success(msg))
+              copyText(data.title, msg => window.$message.success(msg))
             }
           >
             {data.title}
           </h4>
         </div>
+      }
+      extra={
+        data.duwan === 1 && (
+          <Tag color='var(--success-color)' className='ml-auto'>
+            {data.duwan ? '读完' : '未读完'}
+          </Tag>
+        )
       }
     >
       <div className='flex-ai-c'>
@@ -109,33 +105,27 @@ export default ({ data, DropdownClick }) => {
           className='mr-5 el-transition-color'
         />
         类型：
-        {data.recordtype.map((item) => (
-          <Tag
-            key={item.tab}
-            color={item.color}
-            className='mt-10 mb-10'
-          >
+        {data.recordtype.map(item => (
+          <Tag key={item.tab} color={item.color} className='mt-10 mb-10'>
             {item.tab}
           </Tag>
         ))}
       </div>
 
-      <div
-        className='flex-ai-c mt-10'
-        onClick={chapterToggle}
-      >
+      <div className='flex-ai-c mt-10'>
         <Asterisk
           theme='outline'
           size='18'
           fill='var(--success-color)'
+          onClick={() => updateChapter && updateChapter(data)}
         />
-        <h4 className={styles.cardExtra + ' ml-10'}>
+        <h4
+          className={styles.cardExtra + ' ml-10'}
+          onClick={() => updateChapter && updateChapter(data)}
+        >
           第 {data.start || '???'}&ensp;-&ensp;{data.finish || '???'} 章
         </h4>
-        <Tag
-          color={randomHexColor()}
-          className='ml-auto'
-        >
+        <Tag color={randomHexColor()} className='ml-auto'>
           完结
         </Tag>
       </div>
@@ -148,12 +138,8 @@ export default ({ data, DropdownClick }) => {
           className='mr-5 el-transition-color'
         />
         标签：
-        {data.tabs.map((item) => (
-          <Tag
-            key={item.tab}
-            color={item.color}
-            className='mt-10 mb-10'
-          >
+        {data.tabs.map(item => (
+          <Tag key={item.tab} color={item.color} className='mt-10 mb-10'>
             {item.tab}
           </Tag>
         ))}
@@ -168,28 +154,14 @@ export default ({ data, DropdownClick }) => {
         />
         链接：
       </h4>
-      <Space
-        size={[14, 7]}
-        wrap
-      >
+      <Space size={[14, 7]} wrap>
         <LinkButton link={{ linkName: '首链接', urli: data.link }} />
         <LinkButton link={{ linkName: '后续链接', urli: data.linkback }} />
         {data?.links &&
-          data.links.map((v, i) => (
-            <LinkButton
-              link={v}
-              key={i}
-            />
-          ))}
+          data.links.map((v, i) => <LinkButton link={v} key={i} />)}
       </Space>
 
       <Introduction txt={data.beizhu} />
-      <Chapter
-        show={componentsShow.chapter}
-        toggle={chapterToggle}
-        start={data.start}
-        finish={data.finish}
-      />
     </Card>
   )
 }

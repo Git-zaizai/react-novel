@@ -22,7 +22,7 @@ export default () => {
     wanjie: 1,
     link: Math.random().toString(36).slice(2, 12), //首链接
     linkback: Math.random().toString(36).slice(2, 12), //后续链接
-    recordtype: ["有生之年", "其他"], // 记录的是什么
+    recordtype: ['有生之年', '其他'], // 记录的是什么
     title: Math.random().toString(36).slice(2, 12),
     links: [
       {
@@ -30,12 +30,13 @@ export default () => {
         urli: Math.random().toString(36).slice(2, 12)
       }
     ], // 链接
-    tabs: ["小说", "推荐", "漫画", "动漫", "有声小说", "一口气看完", "其他"], // 标签列表
+    tabs: ['小说', '推荐', '漫画', '动漫', '有声小说', '一口气看完', '其他'], // 标签列表
     rate: [(Math.random() * 10).toFixed()] // 评分
   }
 
-  const { recordtypes, tabs, initHttp } = useViewDataStore()
-  const { store, setValueStore, novelStore, setNovelStore } = useStore()
+  const { recordtypes, tabs, initHttp, novel, setNovelStore } =
+    useViewDataStore()
+  const { store, setValueStore } = useStore()
   const [formRef] = Form.useForm()
   const [titleRules, setTitleRules] = useState({
     validateStatus: '',
@@ -45,13 +46,13 @@ export default () => {
 
   useEffect(() => {
     initHttp().finally(() => {
-      if (novelStore.action === 'updata') {
-        formRef.setFieldsValue(novelStore.data)
+      if (novel.action === 'updata') {
+        formRef.setFieldsValue(novel.data)
       }
     })
-  }, [novelStore.action])
+  }, [novel.action])
 
-  const bindtitleBlur = (e) => {
+  const bindtitleBlur = e => {
     if (e.target.value === '') {
       setTitleRules({
         validateStatus: 'error',
@@ -79,7 +80,7 @@ export default () => {
       return
     }
 
-    if (novelStore.action === 'add') {
+    if (novel.action === 'add') {
       setTitleRules({
         validateStatus: 'validating',
         message: '',
@@ -95,7 +96,7 @@ export default () => {
             many: true
           }
         })
-        .catch((error) => {
+        .catch(error => {
           setTimeout(() => {
             setTitleRules({
               validateStatus: 'error',
@@ -125,22 +126,23 @@ export default () => {
       }, 500)
     }
 
-    const url = novelStore.action === 'updata' ? 'update' : 'add'
+    const url = novel.action === 'updata' ? 'update' : 'add'
     const response = await http
-      .post(`/react/novel/${url}`, Object.assign(novelStore.data, formdata))
-      .catch((err) => {
+      .post(`/react/novel/${url}`, Object.assign(novel.data, formdata))
+      .catch(err => {
         return Promise.reject(err)
       })
-    if (response.data === 1) {
+    console.log(response)
+    if (response.acknowledged) {
       setNovelStore({
         novelList: [{ _id: response.insertedId, ...formdata }].concat(
-          novelStore.novelList
+          novel.novelList
         )
       })
       setValueStore({ isAddDrawer: !store.isAddDrawer })
       window.$message.success('操作成功')
     } else {
-      window.$message.success('操作失败')
+      window.$message.error('操作失败')
     }
   }
 
@@ -153,7 +155,7 @@ export default () => {
           htmlType='submit'
           onClick={() => formfinish()}
         >
-          {novelStore.action === 'updata' ? '修改' : '添加'}
+          {novel.action === 'updata' ? '修改' : '添加'}
         </Button>
         <Button
           danger
@@ -170,18 +172,14 @@ export default () => {
 
   return (
     <Drawer
-      title={novelStore.action === 'updata' ? '修改 Record' : '添加 Record'}
+      title={novel.action === 'updata' ? '修改 Record' : '添加 Record'}
       placement='bottom'
       open={store.isAddDrawer}
       onClose={() => setValueStore({ isAddDrawer: !store.isAddDrawer })}
       footer={AddDrawerFooter}
       height='90vh'
     >
-      <Form
-        layout='vertical'
-        form={formRef}
-        initialValues={initialValues}
-      >
+      <Form layout='vertical' form={formRef} initialValues={initialValues}>
         <Form.Item
           name='recordtype'
           label='记录类型：'
@@ -195,7 +193,7 @@ export default () => {
           <Checkbox.Group>
             <Row>
               {recordtypes.length &&
-                recordtypes.map((item) => (
+                recordtypes.map(item => (
                   <Checkbox
                     key={item.tab}
                     value={item.tab}
@@ -224,10 +222,7 @@ export default () => {
         </Form.Item>
 
         <Form.Item label='章节：'>
-          <Space.Compact
-            size='large'
-            className='w-100'
-          >
+          <Space.Compact size='large' className='w-100'>
             <Form.Item name='start'>
               <Input
                 addonBefore='第'
@@ -248,67 +243,32 @@ export default () => {
           </Space.Compact>
         </Form.Item>
 
-        <Form.Item
-          name='duwan'
-          label='读完：'
-        >
+        <Form.Item name='duwan' label='读完：'>
           <Radio.Group className='flex'>
-            <Radio.Button
-              value={0}
-              className='w-100'
-            >
+            <Radio.Button value={0} className='w-100'>
               <div className='flex-ai-c'>
-                <CuIcon
-                  icon='tag'
-                  className='mr-10'
-                />
+                <CuIcon icon='tag' className='mr-10' />
                 未读完
               </div>
             </Radio.Button>
-            <Radio.Button
-              value={1}
-              className='w-100'
-            >
-              <div
-                className='flex-ai-c'
-                style={{ justifyContent: 'flex-end' }}
-              >
+            <Radio.Button value={1} className='w-100'>
+              <div className='flex-ai-c' style={{ justifyContent: 'flex-end' }}>
                 读完
-                <CuIcon
-                  icon='medal'
-                  className='ml-10'
-                />
+                <CuIcon icon='medal' className='ml-10' />
               </div>
             </Radio.Button>
           </Radio.Group>
         </Form.Item>
 
-        <Form.Item
-          name='link'
-          label='首链接：'
-        >
-          <Input
-            placeholder='首链接'
-            allowClear
-            size='large'
-          />
+        <Form.Item name='link' label='首链接：'>
+          <Input placeholder='首链接' allowClear size='large' />
         </Form.Item>
 
-        <Form.Item
-          name='linkback'
-          label='后续链接：'
-        >
-          <Input
-            placeholder='后续链接'
-            allowClear
-            size='large'
-          />
+        <Form.Item name='linkback' label='后续链接：'>
+          <Input placeholder='后续链接' allowClear size='large' />
         </Form.Item>
 
-        <Form.Item
-          name='beizhu'
-          label='备注：'
-        >
+        <Form.Item name='beizhu' label='备注：'>
           <TextArea
             allowClear
             placeholder='备注'
@@ -316,14 +276,11 @@ export default () => {
           />
         </Form.Item>
 
-        <Form.Item
-          name='tabs'
-          label='标签：'
-        >
+        <Form.Item name='tabs' label='标签：'>
           <Checkbox.Group>
             <Row>
               {tabs.length &&
-                tabs.map((item) => (
+                tabs.map(item => (
                   <Checkbox
                     key={item.tab}
                     value={item.tab}
@@ -336,36 +293,18 @@ export default () => {
           </Checkbox.Group>
         </Form.Item>
 
-        <Form.Item
-          name='wanjie'
-          label='完结：'
-        >
+        <Form.Item name='wanjie' label='完结：'>
           <Radio.Group className='flex'>
-            <Radio.Button
-              value={1}
-              className='w-100'
-            >
+            <Radio.Button value={1} className='w-100'>
               <div className='flex-ai-c'>
-                <CuIcon
-                  icon='medal'
-                  className='mr-10'
-                />
+                <CuIcon icon='medal' className='mr-10' />
                 完结
               </div>
             </Radio.Button>
-            <Radio.Button
-              value={0}
-              className='w-100'
-            >
-              <div
-                className='flex-ai-c'
-                style={{ justifyContent: 'flex-end' }}
-              >
+            <Radio.Button value={0} className='w-100'>
+              <div className='flex-ai-c' style={{ justifyContent: 'flex-end' }}>
                 连载
-                <CuIcon
-                  icon='tag'
-                  className='ml-10'
-                />
+                <CuIcon icon='tag' className='ml-10' />
               </div>
             </Radio.Button>
           </Radio.Group>
@@ -376,10 +315,7 @@ export default () => {
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name, ...restField }) => (
-                  <div
-                    style={{ position: 'relative' }}
-                    key={key}
-                  >
+                  <div style={{ position: 'relative' }} key={key}>
                     <Form.Item
                       label={`新链接 - ${key} - ${name}：`}
                       {...restField}
@@ -391,15 +327,8 @@ export default () => {
                         placeholder='名'
                       />
                     </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, 'urli']}
-                    >
-                      <Input
-                        addonBefore='URL：'
-                        placeholder='URL'
-                        allowClear
-                      />
+                    <Form.Item {...restField} name={[name, 'urli']}>
+                      <Input addonBefore='URL：' placeholder='URL' allowClear />
                     </Form.Item>
                     <DeleteThree
                       theme='outline'

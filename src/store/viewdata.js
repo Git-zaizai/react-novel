@@ -8,14 +8,24 @@ const [viewdata, getViewData] = createGlobalStore(() => {
   const [recordtypes, setRecordtype] = useState([])
   const [tabs, setTabs] = useState([])
 
+  const [novel, setNovel] = useState({
+    action: false,
+    data: {},
+    novelList: []
+  })
+
+  function setNovelStore(obj) {
+    setNovel(v => ({ ...v, ...obj }))
+  }
+
   const initHttp = async () => {
     try {
       const response = await Promise.all([
         http.get('/json-get', { ph: 'Recordtype.json' }),
         http.get('/json-get', { ph: 'tabs.json' })
       ])
-      const tabsdata = response.map((mv) =>
-        mv.map((mmv) => ({
+      const tabsdata = response.map(mv =>
+        mv.map(mmv => ({
           tab: mmv,
           color: randomHexColor()
         }))
@@ -30,7 +40,15 @@ const [viewdata, getViewData] = createGlobalStore(() => {
   useMount(() => {
     initHttp()
   })
-  return { recordtypes, setRecordtype, tabs, setTabs, initHttp }
+  return {
+    recordtypes,
+    setRecordtype,
+    tabs,
+    setTabs,
+    initHttp,
+    novel,
+    setNovelStore
+  }
 })
 
 export const useViewDataStore = viewdata

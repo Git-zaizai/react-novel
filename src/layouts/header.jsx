@@ -2,16 +2,15 @@ import { useStore } from '@/store'
 import { SunOne, Moon } from '@icon-park/react'
 import Transition from '@/components/Transition'
 import CuIcon from '@/components/cuIcon'
+import { useViewDataStore } from '@/store/viewdata'
 
-export default (props) => {
+export default props => {
   const { store, setThemeToggle, setValueStore } = useStore()
+  const { novel, setNovelStore } = useViewDataStore()
 
   return (
     <>
-      <header
-        className='zaiheader'
-        style={props.style}
-      >
+      <header className='zaiheader' style={props.style}>
         <CuIcon
           icon='cascades'
           size='34'
@@ -29,6 +28,7 @@ export default (props) => {
             color='var(--success-color)'
             onClick={() => {
               setValueStore({ isAddDrawer: !store.isAddDrawer })
+              setNovelStore({ action: 'add' })
             }}
           />
         </div>
