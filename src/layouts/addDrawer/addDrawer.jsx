@@ -11,8 +11,6 @@ import { useViewDataStore } from '@/store/viewdata'
 const { TextArea } = Input
 
 export default () => {
-  console.log('addDrawer 全局添加组件')
-
   let initialValues = {
     beizhu: Math.random().toString(36).slice(2, 12),
     start: (Math.random() * 10).toFixed(), // 开始章节
@@ -52,7 +50,7 @@ export default () => {
     })
   }, [novel.action])
 
-  const bindtitleBlur = e => {
+  const bindtitleBlur = (e) => {
     if (e.target.value === '') {
       setTitleRules({
         validateStatus: 'error',
@@ -96,7 +94,7 @@ export default () => {
             many: true
           }
         })
-        .catch(error => {
+        .catch((error) => {
           setTimeout(() => {
             setTitleRules({
               validateStatus: 'error',
@@ -127,17 +125,25 @@ export default () => {
     }
 
     const url = novel.action === 'updata' ? 'update' : 'add'
+    const body =
+      novel.action === 'add' ? formdata : Object.assign(novel.data, formdata)
     const response = await http
-      .post(`/react/novel/${url}`, Object.assign(novel.data, formdata))
-      .catch(err => {
+      .post(`/react/novel/${url}`, body)
+      .catch((err) => {
         return Promise.reject(err)
       })
-    console.log(response)
-    if (response.acknowledged) {
-      setNovelStore({
-        novelList: [{ _id: response.insertedId, ...formdata }].concat(
-          novel.novelList
+
+    if (response?.acknowledged) {
+      if (novel.action === 'add') {
+        body._id = response.insertedId
+        body.recordtype = body.recordtype.map((v) =>
+          recordtypes.find((fv) => fv.tab === v)
         )
+        body.tabs = body.tabs.map((mmv) => tabs.find((fv) => fv.tab === mmv))
+      }
+
+      setNovelStore({
+        novelList: [body].concat(novel.novelList)
       })
       setValueStore({ isAddDrawer: !store.isAddDrawer })
       window.$message.success('操作成功')
@@ -179,7 +185,11 @@ export default () => {
       footer={AddDrawerFooter}
       height='90vh'
     >
-      <Form layout='vertical' form={formRef} initialValues={initialValues}>
+      <Form
+        layout='vertical'
+        form={formRef}
+        initialValues={initialValues}
+      >
         <Form.Item
           name='recordtype'
           label='记录类型：'
@@ -193,13 +203,13 @@ export default () => {
           <Checkbox.Group>
             <Row>
               {recordtypes.length &&
-                recordtypes.map(item => (
+                recordtypes.map((item) => (
                   <Checkbox
                     key={item.tab}
                     value={item.tab}
                     style={{ lineHeight: '32px' }}
                   >
-                    {item.tab}
+                    <Tag color={item.color}>{item.tab}</Tag>
                   </Checkbox>
                 ))}
             </Row>
@@ -222,7 +232,10 @@ export default () => {
         </Form.Item>
 
         <Form.Item label='章节：'>
-          <Space.Compact size='large' className='w-100'>
+          <Space.Compact
+            size='large'
+            className='w-100'
+          >
             <Form.Item name='start'>
               <Input
                 addonBefore='第'
@@ -243,32 +256,67 @@ export default () => {
           </Space.Compact>
         </Form.Item>
 
-        <Form.Item name='duwan' label='读完：'>
+        <Form.Item
+          name='duwan'
+          label='读完：'
+        >
           <Radio.Group className='flex'>
-            <Radio.Button value={0} className='w-100'>
+            <Radio.Button
+              value={0}
+              className='w-100'
+            >
               <div className='flex-ai-c'>
-                <CuIcon icon='tag' className='mr-10' />
+                <CuIcon
+                  icon='tag'
+                  className='mr-10'
+                />
                 未读完
               </div>
             </Radio.Button>
-            <Radio.Button value={1} className='w-100'>
-              <div className='flex-ai-c' style={{ justifyContent: 'flex-end' }}>
+            <Radio.Button
+              value={1}
+              className='w-100'
+            >
+              <div
+                className='flex-ai-c'
+                style={{ justifyContent: 'flex-end' }}
+              >
                 读完
-                <CuIcon icon='medal' className='ml-10' />
+                <CuIcon
+                  icon='medal'
+                  className='ml-10'
+                />
               </div>
             </Radio.Button>
           </Radio.Group>
         </Form.Item>
 
-        <Form.Item name='link' label='首链接：'>
-          <Input placeholder='首链接' allowClear size='large' />
+        <Form.Item
+          name='link'
+          label='首链接：'
+        >
+          <Input
+            placeholder='首链接'
+            allowClear
+            size='large'
+          />
         </Form.Item>
 
-        <Form.Item name='linkback' label='后续链接：'>
-          <Input placeholder='后续链接' allowClear size='large' />
+        <Form.Item
+          name='linkback'
+          label='后续链接：'
+        >
+          <Input
+            placeholder='后续链接'
+            allowClear
+            size='large'
+          />
         </Form.Item>
 
-        <Form.Item name='beizhu' label='备注：'>
+        <Form.Item
+          name='beizhu'
+          label='备注：'
+        >
           <TextArea
             allowClear
             placeholder='备注'
@@ -276,35 +324,56 @@ export default () => {
           />
         </Form.Item>
 
-        <Form.Item name='tabs' label='标签：'>
+        <Form.Item
+          name='tabs'
+          label='标签：'
+        >
           <Checkbox.Group>
             <Row>
               {tabs.length &&
-                tabs.map(item => (
+                tabs.map((item) => (
                   <Checkbox
                     key={item.tab}
                     value={item.tab}
                     style={{ lineHeight: '32px' }}
                   >
-                    {item.tab}
+                    <Tag color={item.color}>{item.tab}</Tag>
                   </Checkbox>
                 ))}
             </Row>
           </Checkbox.Group>
         </Form.Item>
 
-        <Form.Item name='wanjie' label='完结：'>
+        <Form.Item
+          name='wanjie'
+          label='完结：'
+        >
           <Radio.Group className='flex'>
-            <Radio.Button value={1} className='w-100'>
+            <Radio.Button
+              value={1}
+              className='w-100'
+            >
               <div className='flex-ai-c'>
-                <CuIcon icon='medal' className='mr-10' />
+                <CuIcon
+                  icon='medal'
+                  className='mr-10'
+                />
                 完结
               </div>
             </Radio.Button>
-            <Radio.Button value={0} className='w-100'>
-              <div className='flex-ai-c' style={{ justifyContent: 'flex-end' }}>
+            <Radio.Button
+              value={0}
+              className='w-100'
+            >
+              <div
+                className='flex-ai-c'
+                style={{ justifyContent: 'flex-end' }}
+              >
                 连载
-                <CuIcon icon='tag' className='ml-10' />
+                <CuIcon
+                  icon='tag'
+                  className='ml-10'
+                />
               </div>
             </Radio.Button>
           </Radio.Group>
@@ -315,7 +384,10 @@ export default () => {
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name, ...restField }) => (
-                  <div style={{ position: 'relative' }} key={key}>
+                  <div
+                    style={{ position: 'relative' }}
+                    key={key}
+                  >
                     <Form.Item
                       label={`新链接 - ${key} - ${name}：`}
                       {...restField}
@@ -327,8 +399,15 @@ export default () => {
                         placeholder='名'
                       />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, 'urli']}>
-                      <Input addonBefore='URL：' placeholder='URL' allowClear />
+                    <Form.Item
+                      {...restField}
+                      name={[name, 'urli']}
+                    >
+                      <Input
+                        addonBefore='URL：'
+                        placeholder='URL'
+                        allowClear
+                      />
                     </Form.Item>
                     <DeleteThree
                       theme='outline'

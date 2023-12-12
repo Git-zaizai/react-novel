@@ -15,17 +15,20 @@ const [viewdata, getViewData] = createGlobalStore(() => {
   })
 
   function setNovelStore(obj) {
-    setNovel(v => ({ ...v, ...obj }))
+    setNovel((v) => ({ ...v, ...obj }))
   }
 
   const initHttp = async () => {
+    if (tabs.length || recordtypes.length) {
+      return
+    }
     try {
       const response = await Promise.all([
         http.get('/json-get', { ph: 'Recordtype.json' }),
         http.get('/json-get', { ph: 'tabs.json' })
       ])
-      const tabsdata = response.map(mv =>
-        mv.map(mmv => ({
+      const tabsdata = response.map((mv) =>
+        mv.map((mmv) => ({
           tab: mmv,
           color: randomHexColor()
         }))

@@ -75,7 +75,7 @@ export default () => {
             }}
           >
             <CuIcon icon='repair' size='30' />
-            <h4>icon</h4>
+            <h4>test-view</h4>
           </div>
           {userStore.admin &&
             adminRoute.map(v => (
