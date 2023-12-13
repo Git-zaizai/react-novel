@@ -64,7 +64,7 @@ const Dropdowns = [
 
 export default (props) => {
   const { data, updateChapter, updateDuwan } = props
-  const { setValueStore } = useStore()
+  const { store, setValueStore } = useStore()
   const { setNovelStore } = useViewDataStore()
 
   const click = useCallback((callback) => {

@@ -22,25 +22,18 @@ export default (props) => {
 
   const updateChapter = async () => {
     const response = await http
-      .post('/curd-mongo/update/novel', {
-        where: {
-          _id: id
-        },
-        data: {
-          $set: {
-            start: val.start,
-            finish: val.finish
-          }
-        }
+      .post('/react/novel/update', {
+        _id: id,
+        start: val.start,
+        finish: val.finish
       })
       .catch((e) => {
         window.$message.error('修改失败')
         return Promise.reject(e)
       })
-    if (response?.acknowledged) {
+    if (response) {
       change &&
         change(({ novel }, setNovel) => {
-          console.log(novel, setNovel)
           const findindex = novel.novelList.findIndex((fv) => fv._id === id)
           novel.novelList[findindex].start = val.start
           novel.novelList[findindex].finish = val.finish

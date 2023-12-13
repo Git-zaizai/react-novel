@@ -3,9 +3,9 @@ import { LazyImport, Layout } from '../content'
 export default [
   {
     path: '/admin/tab',
-    element: Layout,
+    element: LazyImport(() => import('@/layouts/index')),
     meta: {
-      footerText: '标签',
+      footerText: '',
       icon:'tag'
     },
     children: [

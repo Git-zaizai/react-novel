@@ -2,10 +2,12 @@ import styles from './search.module.css'
 
 import Transition from '@/components/Transition'
 import CuIcon from '@/components/cuIcon'
-import NovelCard, { Chapter, useNovelCardComp } from '@/components/novelCard'
+import NovelCardList from '@/components/novelCard'
 import { useViewDataStore } from '@/store/viewdata'
 import { HamburgerButton } from '@icon-park/react'
 import { useState } from 'react'
+import { Form } from 'antd'
+import http from '@/utlis/http'
 
 const { Search } = Input
 
@@ -16,33 +18,36 @@ export default () => {
   const [isCheckboxShow, { toggle }] = useToggle(true)
   const { recordtypes, tabs } = useViewDataStore()
   const [searchlist, setSearchlist] = useState([])
-  
-  const onSearch = () => {}
 
-  /**
-   * @module 修改章节
-   */
-  const {
-    show: chapterShow,
-    toggle: chapterToggle,
-    toggleOnSetData,
-    data,
-    updateNovelList
-  } = useNovelCardComp()
+  const onSearch = async (value) => {
+    const formdata = formRef.getFieldsValue()
+    console.log(formdata)
+    const and = []
 
-  const NovelCardList = useMemo(() => {
-    if (!searchlist.length) {
-      return null
+    if (value) {
+      and.push({ title: value })
     }
-    return searchlist.map((item) => (
-      <NovelCard
-        key={item._id}
-        data={item}
-        DropdownClick={DropdownClick}
-        updateChapter={toggleOnSetData}
-      />
-    ))
-  }, [searchlist])
+
+    for (const key in formdata) {
+      if (formdata[key]) {
+        and.push({ [key]: formdata[key] })
+      }
+    }
+
+    const body = {
+      $and: and
+    }
+    const response = await http
+      .post('/curd-mongo/find/novel', {
+        ops: { many: true },
+        where: body
+      })
+      .catch((e) => {
+        window.$message.error('搜索不出东西')
+        return Promise.reject(e)
+      })
+    setSearchlist(response)
+  }
 
   return (
     <>
@@ -76,10 +81,12 @@ export default () => {
             />
           ) : (
             <>
-              <Form className={styles.searchFormItem}>
+              <Form
+                className={styles.searchFormItem}
+                form={formRef}
+              >
                 <Form.Item
-                  name='Recordtype'
-                  from={formRef}
+                  name='recordtype'
                   label='所有标签'
                   style={{
                     padding: 0
@@ -99,10 +106,7 @@ export default () => {
                   </Checkbox.Group>
                 </Form.Item>
 
-                <Form.Item
-                  name='tabs'
-                  from={formRef}
-                >
+                <Form.Item name='tabs'>
                   <Checkbox.Group>
                     {tabs.length &&
                       tabs.map((item) => (
@@ -117,10 +121,7 @@ export default () => {
                   </Checkbox.Group>
                 </Form.Item>
 
-                <Form.Item
-                  name='wanjie'
-                  label='完结：'
-                >
+                <Form.Item name='wanjie'>
                   <Radio.Group className='flex'>
                     <Radio.Button
                       value={1}
@@ -152,6 +153,7 @@ export default () => {
                   </Radio.Group>
                 </Form.Item>
               </Form>
+
               <Button
                 block
                 type='text'
@@ -169,15 +171,9 @@ export default () => {
         </Transition>
       </Card>
 
-      <div className={styles.searchScroll}>{NovelCardList}</div>
-      <Chapter
-        show={chapterShow}
-        toggle={chapterToggle}
-        start={data.start}
-        finish={data.finish}
-        change={updateNovelList}
-        id={data._id}
-      />
+      <div className={styles.searchScroll}>
+        <NovelCardList data={searchlist} />
+      </div>
     </>
   )
 }

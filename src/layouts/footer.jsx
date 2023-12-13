@@ -1,7 +1,6 @@
 import CuIcon from '@/components/cuIcon'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { isMobile } from '@/utlis'
-import { useMemo } from 'react'
 import { useStore } from '@/store'
 import http from '@/utlis/http'
 import adminRoute from '@/router/admin'
@@ -21,7 +20,7 @@ export default () => {
   async function isUserAdmin() {
     if (!localStorage.getItem('token')) return
 
-    const response = await http.get('/verifyUser').catch(err => {
+    const response = await http.get('/verifyUser').catch((err) => {
       window.$message.error(err)
     })
 
@@ -32,65 +31,79 @@ export default () => {
 
   useMount(() => isUserAdmin())
 
-
   return (
     isMobile() && (
       <>
         <footer className='zaifooter flex'>
-          <dir
-            className='zf-item flex-fdc-aic-juc'
+          <div
+            className='zf-item flex-fdc-aic-juc h-100'
             onClick={() => navigate('/')}
             style={{
               color: getColor('/')
             }}
           >
-            <CuIcon icon='hot' size='30' />
-            <h4>首页</h4>
-          </dir>
-          <dir
-            className='zf-item flex-fdc-aic-juc'
+            <CuIcon
+              icon='hot'
+              size='30'
+            />
+            <h4></h4>
+          </div>
+          <div
+            className='zf-item flex-fdc-aic-juc h-100'
             onClick={() => navigate('/search')}
             style={{
               color: getColor('/search')
             }}
           >
-            <CuIcon icon='search' size='30' />
-            <h4>icon</h4>
-          </dir>
-          <dir
-            className='zf-item flex-fdc-aic-juc'
+            <CuIcon
+              icon='search'
+              size='30'
+            />
+            <h4></h4>
+          </div>
+          {userStore.admin &&
+            adminRoute.map((v) => (
+              <div
+                key={v.path}
+                className='zf-item flex-fdc-aic-juc h-100'
+                onClick={() => navigate(v.path)}
+                style={{
+                  color: getColor(v.path)
+                }} 
+              >
+                <CuIcon
+                  icon={v.meta.icon}
+                  size='30'
+                />
+                <h4>{v.meta.footerText}</h4>
+              </div>
+            ))}
+          <div
+            className='zf-item flex-fdc-aic-juc h-100'
             onClick={() => navigate('/icon/Cuicons')}
             style={{
               color: getColor('/icon/Cuicons')
             }}
           >
-            <CuIcon icon='favor' size='30' />
+            <CuIcon
+              icon='favor'
+              size='30'
+            />
             <h4>icon</h4>
-          </dir>
+          </div>
           <div
-            className='zf-item flex-fdc-aic-juc'
+            className='zf-item flex-fdc-aic-juc h-100'
             onClick={() => navigate('/test-view')}
             style={{
               color: getColor('/test-view')
             }}
           >
-            <CuIcon icon='repair' size='30' />
+            <CuIcon
+              icon='repair'
+              size='30'
+            />
             <h4>test-view</h4>
           </div>
-          {userStore.admin &&
-            adminRoute.map(v => (
-              <div
-                key={v.path}
-                className='zf-item flex-fdc-aic-juc'
-                onClick={() => navigate(v.path)}
-                style={{
-                  color: getColor(v.path)
-                }}
-              >
-                <CuIcon icon={v.meta.icon} size='30' />
-                <h4>{v.meta.footerText}</h4>
-              </div>
-            ))}
         </footer>
       </>
     )

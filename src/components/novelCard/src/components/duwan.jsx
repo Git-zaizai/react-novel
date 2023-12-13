@@ -6,7 +6,7 @@ import http from '@/utlis/http'
 import { useUpdateEffect } from 'ahooks'
 
 export default (props) => {
-  const { show = false, toggle, change, id } = props
+  const { show = false, toggle, change, id, title } = props
 
   const [val, setval] = useState({
     start: '',
@@ -57,10 +57,7 @@ export default (props) => {
       open={show}
       onOk={toggle}
       onCancel={toggle}
-      centered
-      closeIcon={false}
       title='是否读完：'
-      footer={null}
     >
       
     </Modal>

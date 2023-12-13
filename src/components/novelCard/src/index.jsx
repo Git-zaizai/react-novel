@@ -2,6 +2,7 @@ import NovelCard from './novelCard'
 import Chapter from './components/chapter'
 import useNovelCardComp from './useNovelCardComp'
 import { useCallback } from 'react'
+import http from '@/utlis/http'
 
 export default ({ data }) => {
   /**
@@ -20,8 +21,27 @@ export default ({ data }) => {
   /**
    * @module 读完
    */
-
-  const { show: duwanShow, toggle: duwanToggle } = useNovelCardComp()
+  const updateDuwan = async (noval) => {
+    const xduwan = Number(!noval.duwan)
+    const response = await http.post('/react/novel/update', {
+      _id: noval._id,
+      duwan: xduwan
+    })
+    if (response) {
+      updateNovelList(({ novel }, setNovel) => {
+        const findindex = novel.novelList.findIndex(
+          (fv) => fv._id === noval._id
+        )
+        novel.novelList[findindex].duwan = xduwan
+        setNovel((v) => ({ ...v, novelList: [].concat(novel.novelList) }))
+        setTimeout(() => {
+          novel.novelList[findindex]
+        }, 1000)
+      })
+    } else {
+      window.$message.error('失败')
+    }
+  }
 
   const novelCardList = useMemo(() => {
     if (!Array.isArray(data) || !data.length) {
@@ -33,6 +53,7 @@ export default ({ data }) => {
           key={item._id}
           data={item}
           updateChapter={updateChapter}
+          updateDuwan={updateDuwan}
         />
       )
     })

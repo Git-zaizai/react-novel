@@ -127,6 +127,8 @@ export default () => {
     const url = novel.action === 'updata' ? 'update' : 'add'
     const body =
       novel.action === 'add' ? formdata : Object.assign(novel.data, formdata)
+    body.start = Number(body.start)
+    body.finish = Number(body.finish)
     const response = await http
       .post(`/react/novel/${url}`, body)
       .catch((err) => {

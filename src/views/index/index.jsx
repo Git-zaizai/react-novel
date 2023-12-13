@@ -28,7 +28,6 @@ export default () => {
           mv.tabs = mv.tabs.map((mmv) => tabs.find((fv) => fv.tab === mmv))
           return mv
         })
-
         setNovelStore({ novelList: resdata })
       }
     }
