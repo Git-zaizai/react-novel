@@ -5,9 +5,10 @@ import CuIcon from '@/components/cuIcon'
 import NovelCardList from '@/components/novelCard'
 import { useViewDataStore } from '@/store/viewdata'
 import { HamburgerButton } from '@icon-park/react'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Form } from 'antd'
 import http from '@/utlis/http'
+import { CheckboxGroupList } from './CheckboxGroup'
 
 const { Search } = Input
 
@@ -37,7 +38,7 @@ export default () => {
     const body = {
       $and: and
     }
-    const response = await http
+    let response = await http
       .post('/curd-mongo/find/novel', {
         ops: { many: true },
         where: body
@@ -46,6 +47,13 @@ export default () => {
         window.$message.error('搜索不出东西')
         return Promise.reject(e)
       })
+    response = response.map((mv) => {
+      mv.recordtype = mv.recordtype.map((v) =>
+        recordtypes.find((fv) => fv.tab === v)
+      )
+      mv.tabs = mv.tabs.map((mmv) => tabs.find((fv) => fv.tab === mmv))
+      return mv
+    })
     setSearchlist(response)
   }
 
@@ -121,7 +129,10 @@ export default () => {
                   </Checkbox.Group>
                 </Form.Item>
 
-                <Form.Item name='wanjie'>
+                <Form.Item
+                  name='wanjie'
+                  className='mt-10'
+                >
                   <Radio.Group className='flex'>
                     <Radio.Button
                       value={1}
@@ -156,6 +167,7 @@ export default () => {
 
               <Button
                 block
+                className='mt-10'
                 type='text'
                 icon={
                   <HamburgerButton
@@ -170,6 +182,8 @@ export default () => {
           )}
         </Transition>
       </Card>
+
+      <CheckboxGroupList onChange={(v) => console.log(v)} />
 
       <div className={styles.searchScroll}>
         <NovelCardList data={searchlist} />
