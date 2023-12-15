@@ -1,11 +1,10 @@
-import { useEffect } from 'react'
-import { ConfigProvider, App, Layout, theme, Drawer } from 'antd'
+import { ConfigProvider, App, Layout, theme } from 'antd'
 import { useLocation, useOutlet } from 'react-router-dom'
 import { useStore } from '@/store'
 import Nprogress from '@/components/Nprogress'
 import ZaiHeader from './header'
 import ZaiFooter from './footer'
-import { debounce } from '@/utlis'
+import { debounce, isMobile } from '@/utlis'
 import Transition from '@/components/Transition'
 import AddDrawer from './addDrawer/addDrawer'
 import SettingTwo from './SettingTwo/SettingTwo'
@@ -50,12 +49,12 @@ export default () => {
     }
   })
 
-  useEffect(() => {
-    document.querySelector('.zaiView').addEventListener(
-      'scroll',
-      debounce((e) => {})
-    )
-  }, [])
+  /* useEffect(() => { */
+  /*   document.querySelector('.zaiView').addEventListener( */
+  /*     'scroll', */
+  /*     debounce((e) => {}) */
+  /*   ) */
+  /* }, []) */
 
   return (
     <>
@@ -96,6 +95,7 @@ export default () => {
                   >
                     {() => <div>{currentOutlet}</div>}
                   </Transition>
+                  {isMobile() && <div style={{ height: '70px' }}></div>}
                 </div>
               </Content>
               <ZaiFooter />

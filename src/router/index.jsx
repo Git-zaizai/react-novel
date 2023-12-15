@@ -24,6 +24,16 @@ export const tabsRoutes = [
     ]
   },
   {
+    path: '/circle',
+    element: Layout,
+    children: [
+      {
+        index: true,
+        element: LazyImport(() => import('@/views/circle'))
+      }
+    ]
+  },
+  {
     path: '/icon',
     element: Layout,
     children: [

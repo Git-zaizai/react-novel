@@ -61,6 +61,19 @@ export default () => {
             />
             <h4></h4>
           </div>
+          <div
+            className='zf-item flex-fdc-aic-juc h-100'
+            onClick={() => navigate('/circle')}
+            style={{
+              color: getColor('/circle')
+            }}
+          >
+            <CuIcon
+              icon='circle'
+              size='30'
+            />
+            <h4></h4>
+          </div>
           {userStore.admin &&
             adminRoute.map((v) => (
               <div
@@ -69,7 +82,7 @@ export default () => {
                 onClick={() => navigate(v.path)}
                 style={{
                   color: getColor(v.path)
-                }} 
+                }}
               >
                 <CuIcon
                   icon={v.meta.icon}

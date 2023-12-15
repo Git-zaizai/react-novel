@@ -6,7 +6,7 @@ import { useViewDataStore } from '@/store/viewdata'
 
 export default props => {
   const { store, setThemeToggle, setValueStore } = useStore()
-  const { novel, setNovelStore } = useViewDataStore()
+  const { setNovelStore } = useViewDataStore()
 
   return (
     <>

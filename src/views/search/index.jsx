@@ -1,16 +1,41 @@
 import styles from './search.module.css'
 
+import ButtonCheckboxGroup from '@/components/buttonCheckboxGroup'
 import Transition from '@/components/Transition'
 import CuIcon from '@/components/cuIcon'
 import NovelCardList from '@/components/novelCard'
 import { useViewDataStore } from '@/store/viewdata'
 import { HamburgerButton } from '@icon-park/react'
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { Form } from 'antd'
 import http from '@/utlis/http'
-import { CheckboxGroupList } from './CheckboxGroup'
 
 const { Search } = Input
+
+const typeOptions = [
+  {
+    icon: (
+      <CuIcon
+        icon='medal'
+        className='mr-10'
+        isTransiton={false}
+      />
+    ),
+    align: 'left',
+    txt: '完结'
+  },
+  {
+    icon: (
+      <CuIcon
+        icon='tag'
+        className='ml-10'
+        isTransiton={false}
+      />
+    ),
+    align: 'right',
+    txt: '连载'
+  }
+]
 
 export default () => {
   console.log('index 路由页面')
@@ -133,35 +158,7 @@ export default () => {
                   name='wanjie'
                   className='mt-10'
                 >
-                  <Radio.Group className='flex'>
-                    <Radio.Button
-                      value={1}
-                      className='w-100'
-                    >
-                      <div className='flex-ai-c'>
-                        <CuIcon
-                          icon='medal'
-                          className='mr-10'
-                        />
-                        完结
-                      </div>
-                    </Radio.Button>
-                    <Radio.Button
-                      value={0}
-                      className='w-100'
-                    >
-                      <div
-                        className='flex-ai-c'
-                        style={{ justifyContent: 'flex-end' }}
-                      >
-                        连载
-                        <CuIcon
-                          icon='tag'
-                          className='ml-10'
-                        />
-                      </div>
-                    </Radio.Button>
-                  </Radio.Group>
+                  <ButtonCheckboxGroup options={typeOptions} />
                 </Form.Item>
               </Form>
 
@@ -182,8 +179,6 @@ export default () => {
           )}
         </Transition>
       </Card>
-
-      <CheckboxGroupList onChange={(v) => console.log(v)} />
 
       <div className={styles.searchScroll}>
         <NovelCardList data={searchlist} />

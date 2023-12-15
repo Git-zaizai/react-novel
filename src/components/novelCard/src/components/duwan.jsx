@@ -37,7 +37,7 @@ export default (props) => {
         window.$message.error('修改失败')
         return Promise.reject(e)
       })
-    if (response?.acknowledged) {
+    if (response?.deletedCount) {
       change &&
         change(({ novel }, setNovel) => {
           console.log(novel, setNovel)

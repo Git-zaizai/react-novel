@@ -191,6 +191,7 @@ export default () => {
         layout='vertical'
         form={formRef}
         initialValues={initialValues}
+        requiredMark={false}
       >
         <Form.Item
           name='recordtype'

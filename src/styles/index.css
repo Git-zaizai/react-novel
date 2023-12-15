@@ -13,7 +13,8 @@
   flex: 0 0 auto;
   padding: 0 10px;
   color: var(--text-color-1);
-  background: var(--body-back-color);
+  /* background: var(--body-back-color); */
+  backdrop-filter: blur(18px);
   justify-content: space-between;
   position: fixed;
   top: 0;
@@ -44,7 +45,8 @@
   .zaiView {
     overflow-y: scroll;
     width: 100%;
-    height: calc(100vh - (19px + 24px * 2));
+    /* height: calc(100vh - (19px + 24px * 2)); */
+    height: 100vh;
     min-height: calc(100vh - (19px + 24px * 2));
   }
 
@@ -52,10 +54,26 @@
     width: 100vw;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 0px 12px rgb(0 0 0 / 18%);
+    /* box-shadow: 0px -5px 10px -5px rgb(0 0 0 / 18%); */
     height: 67px;
-    background: var(--body-back-color);
-    z-index: 9;
+    backdrop-filter: blur(13px);
+    /* background: var(--body-back-color); */
+    position: fixed;
+    z-index: 999;
+    bottom: 0;
+    left: 0;
+  }
+
+  .zaifooter::after {
+    content: ' ';
+    width: 100vw;
+    position: fixed;
+    height: 1px;
+    background: rgb(0 0 0 / 5%);
+    /* box-shadow: 0px -5px 10px -5px rgb(0 0 0 / 18%); */
+    left: 0;
+    bottom: 67px;
+    z-index: 1;
   }
 
   .header-rigth {
@@ -64,6 +82,6 @@
 
   .zf-item {
     flex: 1;
-    background: var(--body-color);
+    /* background: var(--body-color); */
   }
 }

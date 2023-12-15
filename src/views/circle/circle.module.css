@@ -1,0 +1,7 @@
+.view {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+  padding: 0 10px;
+}
