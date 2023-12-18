@@ -62,10 +62,14 @@
   height: 100%;
 }
 
+.flex-1 {
+  flex: 1;
+}
+
 .ml-auto {
   margin-left: auto;
 }
-.mr-auto{
+.mr-auto {
   margin-right: auto;
 }
 .ml-10 {

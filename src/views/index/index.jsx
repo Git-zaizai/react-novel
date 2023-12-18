@@ -9,29 +9,37 @@ import { useViewDataStore } from '@/store/viewdata'
 export default () => {
   console.log('index 路由页面')
 
-  const { recordtypes, tabs, initHttp, novel, setNovelStore } =
-    useViewDataStore()
+  const { recordtypes, tabs, initHttp, novel, setNovelStore } = useViewDataStore()
 
-  const { loading } = useRequest(
-    () => http.post('/curd-mongo/find/novel', { ops: { many: true } }),
-    {
-      loadingDelay: 1000,
-      onSuccess: async (resdata) => {
-        if (!tabs.length) {
-          await initHttp()
-        }
-
-        resdata = resdata.map((mv) => {
-          mv.recordtype = mv.recordtype.map((v) =>
-            recordtypes.find((fv) => fv.tab === v)
-          )
-          mv.tabs = mv.tabs.map((mmv) => tabs.find((fv) => fv.tab === mmv))
-          return mv
-        })
-        setNovelStore({ novelList: resdata })
+  const { loading } = useRequest(() => http.post('/curd-mongo/find/novel', { ops: { many: true } }), {
+    loadingDelay: 1000,
+    onSuccess: async resdata => {
+      if (!tabs.length) {
+        await initHttp()
       }
+
+      resdata = resdata.map(mv => {
+        mv.recordtype = mv.recordtype.map(v => {
+          const find = recordtypes.find(fv => fv.tab === v)
+          if (find) return find
+          return {
+            tab: v,
+            color: randomHexColor()
+          }
+        })
+        mv.tabs = mv.tabs.map(mmv => {
+          const find = tabs.find(fv => fv.tab === mmv)
+          if (find) return find
+          return {
+            tab: mmv,
+            color: randomHexColor()
+          }
+        })
+        return mv
+      })
+      setNovelStore({ novelList: resdata })
     }
-  )
+  })
 
   return (
     <>
