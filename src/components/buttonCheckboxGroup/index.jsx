@@ -16,7 +16,7 @@ export default ({ options = [], onChange }) => {
     })
     xlist[index].value = !val
     setList(xlist)
-    onChange && onChange(xlist)
+    onChange && onChange(xlist[index])
   })
 
   return (

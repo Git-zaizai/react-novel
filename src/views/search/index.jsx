@@ -14,24 +14,12 @@ const { Search } = Input
 
 const typeOptions = [
   {
-    icon: (
-      <CuIcon
-        icon='medal'
-        className='mr-10'
-        isTransiton={false}
-      />
-    ),
+    icon: <CuIcon icon='medal' className='mr-10' isTransiton={false} />,
     align: 'left',
     txt: '完结'
   },
   {
-    icon: (
-      <CuIcon
-        icon='tag'
-        className='ml-10'
-        isTransiton={false}
-      />
-    ),
+    icon: <CuIcon icon='tag' className='ml-10' isTransiton={false} />,
     align: 'right',
     txt: '连载'
   }
@@ -42,16 +30,20 @@ export default () => {
 
   const [formRef] = Form.useForm()
   const [isCheckboxShow, { toggle }] = useToggle(true)
-  const { recordtypes, tabs } = useViewDataStore()
+  const { tabs } = useViewDataStore()
   const [searchlist, setSearchlist] = useState([])
 
-  const onSearch = async (value) => {
+  const onSearch = async value => {
     const formdata = formRef.getFieldsValue()
     console.log(formdata)
     const and = []
 
     if (value) {
       and.push({ title: value })
+    }
+
+    if (formdata.wanjie.value) {
+      formdata.wanjie = formdata.wanjie.index
     }
 
     for (const key in formdata) {
@@ -68,15 +60,12 @@ export default () => {
         ops: { many: true },
         where: body
       })
-      .catch((e) => {
+      .catch(e => {
         window.$message.error('搜索不出东西')
         return Promise.reject(e)
       })
-    response = response.map((mv) => {
-      mv.recordtype = mv.recordtype.map((v) =>
-        recordtypes.find((fv) => fv.tab === v)
-      )
-      mv.tabs = mv.tabs.map((mmv) => tabs.find((fv) => fv.tab === mmv))
+    response = response.map(mv => {
+      mv.tabs = mv.tabs.map(mmv => tabs.find(fv => fv.tab === mmv))
       return mv
     })
     setSearchlist(response)
@@ -88,76 +77,31 @@ export default () => {
       <Card
         className={`${styles.search} ${styles.searchcard}`}
         hoverable
-        title={
-          <Search
-            placeholder='名'
-            allowClear
-            enterButton
-            size='large'
-            onSearch={onSearch}
-          />
-        }
+        title={<Search placeholder='名' allowClear enterButton size='large' onSearch={onSearch} />}
       >
         <Transition show={isCheckboxShow}>
           {isCheckboxShow ? (
             <Button
               block
               type='text'
-              icon={
-                <HamburgerButton
-                  theme='outline'
-                  size='12'
-                  fill='#333'
-                />
-              }
+              icon={<HamburgerButton theme='outline' size='12' fill='#333' />}
               onClick={toggle}
             />
           ) : (
             <>
-              <Form
-                className={styles.searchFormItem}
-                form={formRef}
-              >
-                <Form.Item
-                  name='recordtype'
-                  label='所有标签'
-                  style={{
-                    padding: 0
-                  }}
-                >
-                  <Checkbox.Group>
-                    {recordtypes.length &&
-                      recordtypes.map((item) => (
-                        <Checkbox
-                          key={item.tab}
-                          value={item.tab}
-                          style={{ lineHeight: '32px' }}
-                        >
-                          <Tag color={item.color}>{item.tab}</Tag>
-                        </Checkbox>
-                      ))}
-                  </Checkbox.Group>
-                </Form.Item>
-
+              <Form className={styles.searchFormItem} form={formRef}>
                 <Form.Item name='tabs'>
                   <Checkbox.Group>
                     {tabs.length &&
-                      tabs.map((item) => (
-                        <Checkbox
-                          key={item.tab}
-                          value={item.tab}
-                          style={{ lineHeight: '32px' }}
-                        >
+                      tabs.map(item => (
+                        <Checkbox key={item.tab} value={item.tab} style={{ lineHeight: '32px' }}>
                           <Tag color={item.color}>{item.tab}</Tag>
                         </Checkbox>
                       ))}
                   </Checkbox.Group>
                 </Form.Item>
 
-                <Form.Item
-                  name='wanjie'
-                  className='mt-10'
-                >
+                <Form.Item name='wanjie' className='mt-10'>
                   <ButtonCheckboxGroup options={typeOptions} />
                 </Form.Item>
               </Form>
@@ -166,13 +110,7 @@ export default () => {
                 block
                 className='mt-10'
                 type='text'
-                icon={
-                  <HamburgerButton
-                    theme='outline'
-                    size='12'
-                    fill='#333'
-                  />
-                }
+                icon={<HamburgerButton theme='outline' size='12' fill='#333' />}
                 onClick={toggle}
               />
             </>

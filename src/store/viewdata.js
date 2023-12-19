@@ -5,7 +5,6 @@ import http from '@/utlis/http'
 import { randomHexColor } from '@/utlis/themeColor'
 
 const [viewdata, getViewData] = createGlobalStore(() => {
-  const [recordtypes, setRecordtype] = useState([])
   const [tabs, setTabs] = useState([])
 
   const [novel, setNovel] = useState({
@@ -15,26 +14,16 @@ const [viewdata, getViewData] = createGlobalStore(() => {
   })
 
   function setNovelStore(obj) {
-    setNovel((v) => ({ ...v, ...obj }))
+    setNovel(v => ({ ...v, ...obj }))
   }
 
   const initHttp = async () => {
-    if (tabs.length || recordtypes.length) {
+    if (tabs.length) {
       return
     }
     try {
-      const response = await Promise.all([
-        http.get('/json-get', { ph: 'Recordtype.json' }),
-        http.get('/json-get', { ph: 'tabs.json' })
-      ])
-      const tabsdata = response.map((mv) =>
-        mv.map((mmv) => ({
-          tab: mmv,
-          color: randomHexColor()
-        }))
-      )
-      setRecordtype(tabsdata[0])
-      setTabs(tabsdata[1])
+      const response = await http.get('/json-get', { ph: 'tabs.json' })
+      setTabs(response.map(mv => ({ tab: mv, color: randomHexColor() })))
     } catch {
       window.$message && window.$message.error('获取类型标签失败')
     }
@@ -44,8 +33,6 @@ const [viewdata, getViewData] = createGlobalStore(() => {
     initHttp()
   })
   return {
-    recordtypes,
-    setRecordtype,
     tabs,
     setTabs,
     initHttp,
