@@ -6,9 +6,11 @@ import CuIcon from '@/components/cuIcon'
 import NovelCardList from '@/components/novelCard'
 import { useViewDataStore } from '@/store/viewdata'
 import { HamburgerButton } from '@icon-park/react'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Form } from 'antd'
 import http from '@/utlis/http'
+import { useScroll } from 'ahooks'
+import { useDebounceFn } from 'ahooks'
 
 const { Search } = Input
 
@@ -30,12 +32,12 @@ export default () => {
 
   const [formRef] = Form.useForm()
   const [isCheckboxShow, { toggle }] = useToggle(true)
-  const { tabs } = useViewDataStore()
+  const { tabs, novel } = useViewDataStore()
   const [searchlist, setSearchlist] = useState([])
+  const [page, setPage] = useState(10)
 
   const onSearch = async value => {
     const formdata = formRef.getFieldsValue()
-    console.log(formdata)
     const and = []
 
     if (value) {
@@ -70,6 +72,25 @@ export default () => {
     })
     setSearchlist(response)
   }
+
+  const bindList = () => {
+    setSearchlist(novel.novelList.slice(0, 10))
+  }
+
+  const searchScrollRef = useRef()
+  const { run } = useDebounceFn(
+    val => {
+      if (page < novel.novelList.length - 1 && val.top + 20 >= searchScrollRef.current.offsetHeight) {
+        console.log('add前', page, page + 10)
+        setSearchlist(arr => arr.concat(novel.novelList.slice(page, page + 20)))
+        setPage(page + 20)
+      }
+    },
+    {
+      wait: 500
+    }
+  )
+  useScroll(searchScrollRef, run)
 
   return (
     <>
@@ -118,8 +139,14 @@ export default () => {
         </Transition>
       </Card>
 
-      <div className={styles.searchScroll}>
-        <NovelCardList data={searchlist} />
+      <div className={styles.searchScroll} ref={searchScrollRef}>
+        {searchlist.length ? (
+          <NovelCardList data={searchlist} />
+        ) : (
+          <div className='flex-fdc-aic-juc w-100-vw'>
+            <CuIcon onClick={bindList} icon='newshot' size={50} color={'var(--icon-color-disabled)'} />
+          </div>
+        )}
       </div>
     </>
   )

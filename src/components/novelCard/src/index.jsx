@@ -21,7 +21,7 @@ export default ({ data }) => {
   /**
    * @module 读完
    */
-  const updateDuwan = async (noval) => {
+  const updateDuwan = async noval => {
     const xduwan = Number(!noval.duwan)
     const response = await http.post('/react/novel/update', {
       _id: noval._id,
@@ -29,11 +29,9 @@ export default ({ data }) => {
     })
     if (response) {
       updateNovelList(({ novel }, setNovel) => {
-        const findindex = novel.novelList.findIndex(
-          (fv) => fv._id === noval._id
-        )
+        const findindex = novel.novelList.findIndex(fv => fv._id === noval._id)
         novel.novelList[findindex].duwan = xduwan
-        setNovel((v) => ({ ...v, novelList: [].concat(novel.novelList) }))
+        setNovel(v => ({ ...v, novelList: [].concat(novel.novelList) }))
         setTimeout(() => {
           novel.novelList[findindex]
         }, 1000)
@@ -42,20 +40,14 @@ export default ({ data }) => {
       window.$message.error('失败')
     }
   }
-
+  
   const novelCardList = useMemo(() => {
     if (!Array.isArray(data) || !data.length) {
       return null
     }
-    return data.map((item) => {
-      return (
-        <NovelCard
-          key={item._id}
-          data={item}
-          updateChapter={updateChapter}
-          updateDuwan={updateDuwan}
-        />
-      )
+
+    return data.map(item => {
+      return <NovelCard key={item._id} data={item} updateChapter={updateChapter} updateDuwan={updateDuwan} />
     })
   }, [data])
 

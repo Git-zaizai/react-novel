@@ -33,6 +33,11 @@
     line-height: 3;
   }
 
+  .Affixicon{
+    font-size: 22px;
+    transform: rotate(90deg);
+  }
+
   :global(.ant-card .ant-card-body) {
     padding: 5px 10px 10px 10px;
   }
