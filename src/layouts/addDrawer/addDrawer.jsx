@@ -3,10 +3,10 @@ import styles from './css.module.css'
 import CuIcon from '@/components/cuIcon'
 import { DeleteThree } from '@icon-park/react'
 import { Form, Input } from 'antd'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import http from '@/utlis/http'
-import { useEffect } from 'react'
 import { useViewDataStore } from '@/store/viewdata'
+import { isMobile } from '@/utlis'
 
 const { TextArea } = Input
 
@@ -126,7 +126,7 @@ export default () => {
     const body = novel.action === 'add' ? formdata : Object.assign(novel.data, formdata)
     body.start = Number(body.start)
     body.finish = Number(body.finish)
-    const response = await http.post(`/react/novel/${url}`, body).catch(err => {
+    const response = await http.post(`/mong/novel/${url}`, body).catch(err => {
       return Promise.reject(err)
     })
 
@@ -168,11 +168,11 @@ export default () => {
   return (
     <Drawer
       title={novel.action === 'updata' ? '修改 Record' : '添加 Record'}
-      placement='bottom'
+      placement={isMobile() ? 'bottom' : 'right'}
+      height='90vh'
       open={store.isAddDrawer}
       onClose={() => setValueStore({ isAddDrawer: !store.isAddDrawer })}
       footer={AddDrawerFooter}
-      height='90vh'
     >
       <Form layout='vertical' form={formRef} initialValues={initialValues} requiredMark={false}>
         <Form.Item

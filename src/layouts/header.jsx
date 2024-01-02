@@ -7,12 +7,12 @@ import { useViewDataStore } from '@/store/viewdata'
 export default props => {
   const { store, setThemeToggle, setValueStore } = useStore()
   const { setNovelStore } = useViewDataStore()
-
+  
   return (
     <>
       <header className='zaiheader' style={props.style}>
         <CuIcon
-          icon='cascades'
+          icon='cascades cursor-pointer'
           size='34'
           color='var(--success-color)'
           onClick={() => {
@@ -23,7 +23,7 @@ export default props => {
         <div className='header-current flex'>
           <CuIcon
             icon='roundadd'
-            className='ml-20'
+            className='ml-20 cursor-pointer'
             size='34'
             color='var(--success-color)'
             onClick={() => {
@@ -35,7 +35,7 @@ export default props => {
         <Transition show={store.theme}>
           {store.theme ? (
             <SunOne
-              className='el-transition-color header-rigth'
+              className='el-transition-color header-rigth cursor-pointer'
               theme='outline'
               size='32'
               fill='var(--success-color)'
@@ -43,7 +43,7 @@ export default props => {
             />
           ) : (
             <Moon
-              className='el-transition-color header-rigth'
+              className='el-transition-color header-rigth cursor-pointer'
               theme='outline'
               size='32'
               fill='var(--success-color)'

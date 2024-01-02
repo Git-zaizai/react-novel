@@ -1,15 +1,71 @@
 .search {
-  width: 95vw;
+  width: 97.5vw;
   margin: 0 auto;
   z-index: 10;
   position: fixed;
   top: 75px;
-  left: calc((100vw - 95vw) / 2);
+  left: 10px;
+}
+
+.searchcard :global(.ant-card-head) {
+  padding: 5px;
+}
+.searchcard :global(.ant-card-body) {
+  padding: 5px;
+}
+.searchcard :global(.ant-form-item) {
+  margin-bottom: 0px;
+}
+
+.searchScroll {
+  overflow-y: scroll;
+  margin-top: 5px;
+  height: calc(100vh - (75px + 100px + 10px));
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* 整个滚动条 */
+.searchScroll::-webkit-scrollbar {
+  width: var(--scrollbar-width); /* 滚动条的宽度 */
+  height: var(--scrollbar-height); /* 滚动条的高度，对水平滚动条有效 */
+  background-color: transparent; /* 滚动条的背景颜色 */
+}
+
+/* 滚动条轨道 */
+.searchScroll::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: transparent; /* 轨道的背景颜色 */
+}
+
+/* 滚动条滑块 */
+.searchScroll::-webkit-scrollbar-thumb {
+  border-radius: var(--scrollbar-border-radius);
+  background-color: var(--scrollbar-color); /* 滑块的背景颜色 */
+  /* border: 3px solid #e1e1e1; */ /* 滑块的边框和轨道相同的颜色，可以制造“边距”的效果 */
+}
+
+/* 滚动条滑块：悬停效果 */
+.searchScroll::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-color-hover); /* 滑块的悬停颜色 */
+}
+
+/* 滚动条滑块：激活时的效果 */
+.searchScroll ::-webkit-scrollbar-thumb:active {
+  background-color: var(--scrollbar-color-hover); /* 滑块的激活颜色 */
+}
+
+/* 滚动条按钮（上下箭头） */
+.searchScroll::-webkit-scrollbar-button {
+  display: none; /* 通常情况下不显示滚动条按钮 */
 }
 
 @media screen and (max-width: 980px) {
-  .searchcard :global(.ant-card-body) {
-    padding: 5px;
+  .search {
+    width: 95vw;
+    left: calc((100vw - 95vw) / 2);
   }
 
   .searchcard :global(.ant-card-head) {
@@ -50,14 +106,6 @@
 
   .cardbut {
     margin-bottom: 5px;
-  }
-
-  .cardItem :global(.ant-card-body) {
-    padding: 5px 10px 10px 10px;
-  }
-
-  .cardItem :global(.ant-card-head) {
-    padding: 0 10px;
   }
 
   .searchFormItem :global(.ant-form-item) {

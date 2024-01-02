@@ -42,16 +42,6 @@ export const tabsRoutes = [
         element: LazyImport(() => import('@/views/cuicons'))
       }
     ]
-  },
-  {
-    path: '/test-view',
-    element: Layout,
-    children: [
-      {
-        index: true,
-        element: LazyImport(() => import('@/views/test/test.view'))
-      }
-    ]
   }
 ]
 
@@ -59,7 +49,9 @@ import adminRoute from './admin/index'
 
 export const routes = [...tabsRoutes, ...adminRoute]
 
-export const router = createBrowserRouter(routes)
+export const router = createBrowserRouter(routes, {
+  basename: import.meta.env.VITE_GLOB_ROUTER_PREFIX ?? '/'
+})
 
 export default function Router() {
   return <RouterProvider router={router} />

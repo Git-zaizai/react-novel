@@ -49,7 +49,7 @@ async function request(options) {
   try {
     const response = await fetch(config.url, config)
 
-    console.log(response.status);
+    console.log(response.status)
 
     if (response.status === 401) {
       const txt = await response.text()
@@ -93,12 +93,14 @@ async function request(options) {
  * request:request
  * }}
  */
-export function createRequest(bacsURL) {
+export function createRequest() {
+  const { VITE_GLOB_API_URL, VITE_GLOB_API_URL_PREFIX } = import.meta.env
+  const bacsURL = VITE_GLOB_API_URL_PREFIX ? VITE_GLOB_API_URL + VITE_GLOB_API_URL_PREFIX : VITE_GLOB_API_URL
   return {
     bacsURL,
     get: function (url, data) {
       return request({
-        bacsURL: this.bacsURL,
+        bacsURL: bacsURL,
         method: 'get',
         url,
         data
@@ -106,7 +108,7 @@ export function createRequest(bacsURL) {
     },
     post: function (url, data) {
       return request({
-        bacsURL: this.bacsURL,
+        bacsURL: bacsURL,
         method: 'post',
         url,
         data
@@ -116,4 +118,4 @@ export function createRequest(bacsURL) {
   }
 }
 
-export default createRequest(import.meta.env.VITE_GLOB_API_URL)
+export default createRequest()

@@ -1,7 +1,25 @@
 .view {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  flex-direction: column;
   padding: 0 10px;
+}
+
+.circleCard {
+  width: 400px;
+}
+
+.RadioButtonIcontag {
+  margin-top: 3px;
+}
+
+.RadioButtonIconmedal {
+  margin-top: 6px;
+}
+
+@media screen and (max-width: 980px) {
+  .view {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+    padding: 0 10px;
+  }
 }

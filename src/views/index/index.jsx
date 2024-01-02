@@ -6,11 +6,12 @@ import { useMount, useToggle } from 'ahooks'
 import NovelCardList from '@/components/novelCard'
 import { useViewDataStore } from '@/store/viewdata'
 import { randomHexColor } from '@/utlis/themeColor'
-import { useState } from 'react'
-import { useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import CuIcon from '@/components/cuIcon'
+import { isMobile } from '@/utlis'
 
 function novelFilter(list) {
+  const leng = isMobile() ? 5 : 8
   let tuijian = { Affix: '推荐', data: [] }
   let xiaoshuo = { Affix: '小说', data: [] }
   for (const iterator of list) {
@@ -18,7 +19,7 @@ function novelFilter(list) {
       tuijian.data.push(iterator)
     }
 
-    if (xiaoshuo.data.length < 5 && iterator.tabs.some(sv => sv.tab === '小说')) {
+    if (xiaoshuo.data.length < leng && iterator.tabs.some(sv => sv.tab === '小说')) {
       xiaoshuo.data.push(iterator)
     }
   }
@@ -32,7 +33,6 @@ export default () => {
   const { tabs, initHttp, setNovelStore } = useViewDataStore()
   const [loading, { toggle: setloading }] = useToggle(true)
   const [list, setList] = useState([])
-  const AffixArrayRef = useRef([])
 
   useMount(() => {
     http.post('/curd-mongo/find/novel', { ops: { many: true } }).then(async resdata => {
@@ -60,26 +60,27 @@ export default () => {
     })
   })
 
+  const AffixArrayRef = useRef([])
+  const { run } = useDebounceFn(e => {}, {
+    wait: 500
+  })
+  useEffect(() => {
+    const view = document.querySelector('#zaiViewId')
+    view.addEventListener('scroll', run)
+  }, [])
+
   return (
     <>
       <CardSkeletons show={loading}>
         {list.map((item, index) => (
-          <div className={styles.view} key={index}>
-            <Affix
-              ref={ref => {
-                AffixArrayRef.current[index] = ref
-              }}
-              className='mb-5'
-              offsetTop={70}
-              target={() => document.querySelector('#zaiViewId')}
-            >
-              <div className='w-100-vw flex-jusp'>
-                <h2>&ensp;{item.Affix}</h2>
-                <CuIcon icon='play_forward_fill' color='var(--success-color)' className={styles.Affixicon + ' mr-20'} />
-              </div>
-            </Affix>
-
-            <NovelCardList data={item.data} />
+          <div key={index}>
+            <div className={'flex-ai-c mb-5 ' + styles.Affixview}  ref={val => (AffixArrayRef.current[index] = val)}>
+              <h2>&ensp;{item.Affix}</h2>
+              <CuIcon icon='play_forward_fill' color='var(--success-color)' className={styles.Affixicon + ' ml-10'} />
+            </div>
+            <div className={styles.view} key={index}>
+              <NovelCardList data={item.data} />
+            </div>
           </div>
         ))}
       </CardSkeletons>

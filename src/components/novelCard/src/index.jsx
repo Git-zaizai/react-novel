@@ -23,7 +23,7 @@ export default ({ data }) => {
    */
   const updateDuwan = async noval => {
     const xduwan = Number(!noval.duwan)
-    const response = await http.post('/react/novel/update', {
+    const response = await http.post('/mong/novel/update', {
       _id: noval._id,
       duwan: xduwan
     })
@@ -40,13 +40,13 @@ export default ({ data }) => {
       window.$message.error('失败')
     }
   }
-  
+
   const novelCardList = useMemo(() => {
     if (!Array.isArray(data) || !data.length) {
       return null
     }
 
-    return data.map(item => {
+    return data.map((item, index) => {
       return <NovelCard key={item._id} data={item} updateChapter={updateChapter} updateDuwan={updateDuwan} />
     })
   }, [data])

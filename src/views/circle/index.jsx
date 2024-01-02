@@ -14,13 +14,11 @@ export default () => {
   const [isloading, { toggle }] = useToggle()
   const { tabs } = useViewDataStore()
 
-  const onFinish = async (value) => {
+  const onFinish = async value => {
     toggle()
     try {
       if (tabs.includes(value.name)) {
-        window.$message.warning(
-          `已有 ${value.anme} ${value.type ? '记录类型' : '标签'}`
-        )
+        window.$message.warning(`已有 ${value.anme} ${value.type ? '记录类型' : '标签'}`)
         return
       }
 
@@ -65,14 +63,10 @@ export default () => {
   return (
     <div className={styles.view}>
       <ViewCard
+        className={styles.circleCard}
         title={
           <div className='flex'>
-            <CuIcon
-              icon='tag'
-              size='22'
-              color='var(--primary-color)'
-              className='mr-10'
-            />
+            <CuIcon icon='tag' size='22' color='var(--primary-color)' className='mr-10' />
             <h4 className='wax-100 singe-line'>记录类型与标签申请</h4>
           </div>
         }
@@ -86,31 +80,16 @@ export default () => {
         >
           <Form.Item name='type'>
             <Radio.Group className='flex'>
-              <Radio.Button
-                value={0}
-                className='w-100'
-              >
+              <Radio.Button value={0} className='w-100'>
                 <div className='flex-ai-c'>
-                  <CuIcon
-                    icon='tag'
-                    className='mr-10'
-                  />
+                  <CuIcon icon='tag' className={styles.RadioButtonIcontag + ' mr-10'} />
                   记录类型
                 </div>
               </Radio.Button>
-              <Radio.Button
-                value={1}
-                className='w-100'
-              >
-                <div
-                  className='flex-ai-c'
-                  style={{ justifyContent: 'flex-end' }}
-                >
+              <Radio.Button value={1} className='w-100'>
+                <div className='flex-ai-c' style={{ justifyContent: 'flex-end' }}>
                   标签
-                  <CuIcon
-                    icon='medal'
-                    className='ml-10'
-                  />
+                  <CuIcon icon='medal' className={styles.RadioButtonIconmedal + ' ml-10'} />
                 </div>
               </Radio.Button>
             </Radio.Group>
@@ -125,28 +104,12 @@ export default () => {
             ]}
             validateTrigger='onBlur'
           >
-            <Input
-              placeholder='记录类型与标签 名'
-              allowClear
-            />
+            <Input placeholder='记录类型与标签 名' allowClear />
           </Form.Item>
-          <Form.Item
-            name='txt'
-            validateTrigger='onBlur'
-          >
-            <TextArea
-              allowClear
-              placeholder='说明'
-              autoSize={{ minRows: 2, maxRows: 7 }}
-            />
+          <Form.Item name='txt' validateTrigger='onBlur'>
+            <TextArea allowClear placeholder='说明' autoSize={{ minRows: 2, maxRows: 7 }} />
           </Form.Item>
-          <Button
-            type='primary'
-            htmlType='submit'
-            className='mt-5'
-            block
-            loading={isloading}
-          >
+          <Button type='primary' htmlType='submit' className='mt-5' block loading={isloading}>
             提交
           </Button>
         </Form>

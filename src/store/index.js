@@ -40,23 +40,12 @@ const [useAccountStore, getAccountStore] = createGlobalStore(() => {
   function setUserStore(obj) {
     setUser(v => ({ ...v, ...obj }))
   }
-  const [novel, setNovel] = useState({
-    action: false,
-    data: {},
-    novelList: []
-  })
-
-  function setNovelStore(obj) {
-    setNovel(v => ({ ...v, ...obj }))
-  }
 
   return {
     store: laoutState,
     setValueStore,
     setThemeToggle,
     nprogressToggle,
-    novelStore: novel,
-    setNovelStore,
     userStore: user,
     setUserStore
   }

@@ -51,11 +51,14 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
 }
+.cursor-pointer {
+  cursor: pointer;
+}
 /****************************   *******************************/
 .w-100 {
   width: 100%;
 }
-.w-100-vw{
+.w-100-vw {
   width: 100vw;
 }
 .wax-100 {

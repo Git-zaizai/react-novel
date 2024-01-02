@@ -120,6 +120,7 @@ export default props => {
 
   return (
     <Card
+      style={props.style}
       className={styles.novelCard}
       bordered={false}
       hoverable

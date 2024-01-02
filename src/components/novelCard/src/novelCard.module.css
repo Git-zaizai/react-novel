@@ -11,9 +11,13 @@
   color: var(--text-color-2);
 }
 
-.novelCarddiwan{
+.novelCarddiwan {
   width: 40px;
   height: 40px;
+}
+
+.novelCard :global(.ant-card-body) {
+  padding: 5px 10px 10px 10px;
 }
 
 @media screen and (max-width: 980px) {
@@ -24,10 +28,6 @@
 
   .novelCardLinkBut {
     margin-bottom: 5px;
-  }
-
-  .novelCard :global(.ant-card-body) {
-    padding: 5px 10px 10px 10px;
   }
 
   .novelCard :global(.ant-card-head) {

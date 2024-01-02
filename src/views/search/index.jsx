@@ -80,14 +80,15 @@ export default () => {
   const searchScrollRef = useRef()
   const { run } = useDebounceFn(
     val => {
-      if (page < novel.novelList.length - 1 && val.top + 20 >= searchScrollRef.current.offsetHeight) {
-        console.log('add前', page, page + 10)
+      const { offsetHeight, scrollHeight } = searchScrollRef.current
+      const top = val.top + offsetHeight + 300
+      if (page < novel.novelList.length - 1 && top >= scrollHeight) {
         setSearchlist(arr => arr.concat(novel.novelList.slice(page, page + 20)))
         setPage(page + 20)
       }
     },
     {
-      wait: 500
+      wait: 300
     }
   )
   useScroll(searchScrollRef, run)
@@ -143,7 +144,7 @@ export default () => {
         {searchlist.length ? (
           <NovelCardList data={searchlist} />
         ) : (
-          <div className='flex-fdc-aic-juc w-100-vw'>
+          <div className='flex-fdc-aic-juc w-100-vw cursor-pointer'>
             <CuIcon onClick={bindList} icon='newshot' size={50} color={'var(--icon-color-disabled)'} />
           </div>
         )}
