@@ -4,15 +4,15 @@ import ButtonCheckboxGroup from '@/components/buttonCheckboxGroup'
 import Transition from '@/components/Transition'
 import CuIcon from '@/components/cuIcon'
 import NovelCardList from '@/components/novelCard'
-import { useViewDataStore } from '@/store/viewdata'
 import { HamburgerButton } from '@icon-park/react'
+import { SearchOutlined } from '@ant-design/icons'
+
+import { useViewDataStore } from '@/store/viewdata'
 import { useState, useEffect } from 'react'
 import { Form } from 'antd'
 import http from '@/utlis/http'
 import { useDebounceFn } from 'ahooks'
 import { isMobile } from '@/utlis'
-
-const { Search } = Input
 
 const typeOptions = [
   {
@@ -35,25 +35,33 @@ export default () => {
   const { tabs, novel } = useViewDataStore()
   const [searchlist, setSearchlist] = useState([])
   const [page, setPage] = useState(10)
+  const inputRef = useRef()
 
-  const onSearch = async value => {
-    const formdata = formRef.getFieldsValue()
+  const onSearch = async () => {
     const and = []
 
+    const value = inputRef.current.input.value
     if (value) {
       and.push({ title: value })
     }
 
-    if (formdata.wanjie.value) {
-      formdata.wanjie = formdata.wanjie.index
-    }
+    if (!isCheckboxShow && formRef) {
+      const formdata = formRef.getFieldsValue()
+      if (formdata.wanjie.value) {
+        formdata.wanjie = formdata.wanjie.index
+      }
 
-    for (const key in formdata) {
-      if (formdata[key]) {
-        and.push({ [key]: formdata[key] })
+      for (const key in formdata) {
+        if (formdata[key]) {
+          and.push({ [key]: formdata[key] })
+        }
       }
     }
 
+    console.log(and)
+    if (!and.length) {
+      return
+    }
     const body = {
       $and: and
     }
@@ -66,10 +74,20 @@ export default () => {
         window.$message.error('搜索不出东西')
         return Promise.reject(e)
       })
-    response = response.map(mv => {
-      mv.tabs = mv.tabs.map(mmv => tabs.find(fv => fv.tab === mmv))
+
+    let fles = response.map(mv => {
+      console.log(tabs)
+      mv.tabs = mv.tabs.map(mmv => {
+        console.log(
+          tabs.find(fv => fv.tab === mmv),
+          mmv
+        )
+        return tabs.find(fv => fv.tab === mmv)
+      })
       return mv
     })
+    console.log(fles)
+    response = fles
     setSearchlist(response)
   }
 
@@ -107,13 +125,15 @@ export default () => {
       <Card
         className={`${styles.search} ${styles.searchcard}`}
         hoverable
-        style={{
-          opacity: isCheckboxShow ? '0.5' : 1
-        }}
         title={
           <>
             <div className={styles.searchtitle + ' flex-ai-c'}>
-              <Search placeholder='名' allowClear enterButton size='large' onSearch={onSearch} />
+              <Input placeholder='名' variant='filled' type='Primary' ref={inputRef} />
+              <Button className='ml-5' onClick={onSearch}>
+                <SearchOutlined />
+              </Button>
+
+              {/* <Search placeholder='名' allowClear size='large' onSearch={onSearch} /> */}
               <Button type='text' className='ml-5' onClick={toggle}>
                 <HamburgerButton theme='outline' size='26' fill={isCheckboxShow ? '#333' : 'var(--primary-color)'} />
               </Button>

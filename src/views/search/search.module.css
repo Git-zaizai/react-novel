@@ -7,6 +7,20 @@
   left: 10px;
 }
 
+.searchtitle :global(.ant-input) {
+  padding: 8px 15px;
+}
+
+.searchtitle :global(.ant-btn:nth-child(2)) {
+  padding: 8px 15px;
+  height: 42px;
+}
+
+.searchtitle :global(.ant-btn:last-child) {
+  padding: 8px 15px;
+  height: 42px;
+}
+
 .searchcard :global(.ant-card-head) {
   padding: 5px;
 }
@@ -104,10 +118,5 @@
 
   .searchFormItem :global(.ant-form-item) {
     margin-bottom: 0px;
-  }
-
-  .searchtitle :global(.ant-btn):nth-child(2) {
-    padding: 8px 15px;
-    height: 42px;
   }
 }
