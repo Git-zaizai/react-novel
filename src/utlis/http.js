@@ -49,7 +49,6 @@ async function request(options) {
   try {
     const response = await fetch(config.url, config)
 
-    console.log(response.status)
 
     if (response.status === 401) {
       const txt = await response.text()
