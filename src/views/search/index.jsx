@@ -6,11 +6,11 @@ import CuIcon from '@/components/cuIcon'
 import NovelCardList from '@/components/novelCard'
 import { useViewDataStore } from '@/store/viewdata'
 import { HamburgerButton } from '@icon-park/react'
-import { useState, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Form } from 'antd'
 import http from '@/utlis/http'
-import { useScroll } from 'ahooks'
 import { useDebounceFn } from 'ahooks'
+import { isMobile } from '@/utlis'
 
 const { Search } = Input
 
@@ -28,7 +28,7 @@ const typeOptions = [
 ]
 
 export default () => {
-  console.log('index 路由页面')
+  console.log('search 路由页面')
 
   const [formRef] = Form.useForm()
   const [isCheckboxShow, { toggle }] = useToggle(true)
@@ -77,11 +77,10 @@ export default () => {
     setSearchlist(novel.novelList.slice(0, 10))
   }
 
-  const searchScrollRef = useRef()
   const { run } = useDebounceFn(
     val => {
-      const { offsetHeight, scrollHeight } = searchScrollRef.current
-      const top = val.top + offsetHeight + 300
+      const { scrollHeight, clientHeight, scrollTop } = val.target
+      const top = clientHeight + scrollTop + 400
       if (page < novel.novelList.length - 1 && top >= scrollHeight) {
         setSearchlist(arr => arr.concat(novel.novelList.slice(page, page + 20)))
         setPage(page + 20)
@@ -91,24 +90,40 @@ export default () => {
       wait: 300
     }
   )
-  useScroll(searchScrollRef, run)
+  useEffect(() => {
+    const view = document.querySelector('#zaiViewId')
+    view.addEventListener('scroll', run)
+
+    if (novel.novelList.length) {
+      setSearchlist(novel.novelList.slice(0, 10))
+    }
+    return () => {
+      view.removeEventListener('scroll', run)
+    }
+  }, [])
 
   return (
     <>
-      <div style={{ height: 100 }}></div>
       <Card
         className={`${styles.search} ${styles.searchcard}`}
         hoverable
-        title={<Search placeholder='名' allowClear enterButton size='large' onSearch={onSearch} />}
+        style={{
+          opacity: isCheckboxShow ? '0.5' : 1
+        }}
+        title={
+          <>
+            <div className={styles.searchtitle + ' flex-ai-c'}>
+              <Search placeholder='名' allowClear enterButton size='large' onSearch={onSearch} />
+              <Button type='text' className='ml-5' onClick={toggle}>
+                <HamburgerButton theme='outline' size='26' fill={isCheckboxShow ? '#333' : 'var(--primary-color)'} />
+              </Button>
+            </div>
+          </>
+        }
       >
         <Transition show={isCheckboxShow}>
           {isCheckboxShow ? (
-            <Button
-              block
-              type='text'
-              icon={<HamburgerButton theme='outline' size='12' fill='#333' />}
-              onClick={toggle}
-            />
+            <p></p>
           ) : (
             <>
               <Form className={styles.searchFormItem} form={formRef}>
@@ -127,25 +142,18 @@ export default () => {
                   <ButtonCheckboxGroup options={typeOptions} />
                 </Form.Item>
               </Form>
-
-              <Button
-                block
-                className='mt-10'
-                type='text'
-                icon={<HamburgerButton theme='outline' size='12' fill='#333' />}
-                onClick={toggle}
-              />
             </>
           )}
         </Transition>
       </Card>
 
-      <div className={styles.searchScroll} ref={searchScrollRef}>
+      <div className={styles.searchScroll} style={{ height: searchlist.length ? 'auto' : '60vh' }}>
+        <div style={{ width: '100vw', height: isMobile() ? '100px' : '77px' }}></div>
         {searchlist.length ? (
           <NovelCardList data={searchlist} />
         ) : (
           <div className='flex-fdc-aic-juc w-100-vw cursor-pointer'>
-            <CuIcon onClick={bindList} icon='newshot' size={50} color={'var(--icon-color-disabled)'} />
+            <CuIcon onClick={bindList} icon='refresh' size={50} color={'var(--icon-color-disabled)'} />
           </div>
         )}
       </div>

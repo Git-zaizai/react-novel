@@ -95,7 +95,7 @@ export default () => {
                   >
                     {() => <div>{currentOutlet}</div>}
                   </Transition>
-                  {isMobile() && <div style={{ height: '70px' }}></div>}
+                  {isMobile() && <div style={{ height: '60px' }}></div>}
                 </div>
               </Content>
               <ZaiFooter />

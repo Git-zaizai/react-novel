@@ -1,5 +1,6 @@
 @import './global.css';
 @import './connon.css';
+@import './icon.css';
 
 /*解决在安卓上的点击出现篮框问题*/
 * {

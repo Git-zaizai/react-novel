@@ -31,7 +31,7 @@ export default () => {
     rate: [(Math.random() * 10).toFixed()] // 评分
   }
 
-  const { tabs, initHttp, novel, setNovelStore } = useViewDataStore()
+  const { tabs, initTabs, novel, setNovelStore } = useViewDataStore()
   const { store, setValueStore } = useStore()
   const [formRef] = Form.useForm()
   const [titleRules, setTitleRules] = useState({
@@ -41,7 +41,7 @@ export default () => {
   })
 
   useEffect(() => {
-    initHttp().finally(() => {
+    initTabs().finally(() => {
       if (novel.action === 'updata') {
         formRef.setFieldsValue(novel.data)
       }

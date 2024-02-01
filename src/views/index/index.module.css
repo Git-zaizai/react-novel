@@ -23,14 +23,18 @@
   transform: rotate(90deg);
 }
 
-.Affixview{
-  width: calc(100% - 20px);
+.Affixview {
+  /* width: calc(100% - 20px); */
   padding: 0 10px;
   margin-left: 10px;
   margin-bottom: 10px;
   background: var(--card-color);
   border-radius: 8px;
   box-shadow: var(--box-shadow-4);
+}
+
+.view :global(.ant-card .ant-card-head) {
+  padding: 0 10px;
 }
 
 @media screen and (max-width: 980px) {
@@ -48,16 +52,21 @@
     line-height: 3;
   }
 
+  .Affixview {
+    width: 25vw;
+    padding: 3px 0px;
+  }
+
   .Affixicon {
     font-size: 22px;
     transform: rotate(90deg);
   }
 
-  :global(.ant-card .ant-card-body) {
+  .view :global(.ant-card .ant-card-body) {
     padding: 5px 10px 10px 10px;
   }
 
-  :global(.ant-card .ant-card-head) {
+  .view :global(.ant-card .ant-card-head) {
     padding: 0 10px;
   }
 }

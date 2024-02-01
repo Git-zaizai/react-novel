@@ -96,8 +96,6 @@ export default () => {
     )
   }
 
-  console.log('离开家啊收到了卡机十六大')
-
   return (
     <>
       <footer className='zaifooter'>
@@ -126,6 +124,16 @@ export default () => {
           onClick={() => navigate('/circle')}
           style={{
             color: getColor('/circle')
+          }}
+        >
+          <CuIcon icon='circle' size='40' />
+          <h4></h4>
+        </div>
+        <div
+          className='zf-item flex-fdc-aic-juc h-100'
+          onClick={() => navigate('/icon/Cuicons')}
+          style={{
+            color: getColor('/icon')
           }}
         >
           <CuIcon icon='circle' size='40' />

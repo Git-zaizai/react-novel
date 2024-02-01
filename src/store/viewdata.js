@@ -17,10 +17,8 @@ const [viewdata, getViewData] = createGlobalStore(() => {
     setNovel(v => ({ ...v, ...obj }))
   }
 
-  const initHttp = async () => {
-    if (tabs.length) {
-      return
-    }
+  const initTabs = async () => {
+    if (tabs.length) return
     try {
       const response = await http.get('/json-get', { ph: 'tabs.json' })
       setTabs(response.map(mv => ({ tab: mv, color: randomHexColor() })))
@@ -29,15 +27,39 @@ const [viewdata, getViewData] = createGlobalStore(() => {
     }
   }
 
+  const initNovel = async () => {
+    if (novel.novelList.length) return
+    let data = await http.post('/curd-mongo/find/novel', { ops: { many: true } })
+    data = data.map((item, index) => {
+      item.title = `*****${index}`
+      return item
+    })
+    data = data.reverse()
+    data = data.map(mv => {
+      mv.tabs = mv.tabs.map(mmv => {
+        const find = tabs.find(fv => fv.tab === mmv)
+        if (find) return find
+        return {
+          tab: mmv,
+          color: randomHexColor()
+        }
+      })
+      return mv
+    })
+    setNovelStore({ novelList: data })
+  }
+
   useMount(() => {
-    initHttp()
+    initTabs()
+    initNovel()
   })
   return {
     tabs,
     setTabs,
-    initHttp,
+    initTabs,
     novel,
-    setNovelStore
+    setNovelStore,
+    initNovel
   }
 })
 
