@@ -1,5 +1,6 @@
 .view {
   padding: 0 10px;
+  width: calc(100vw - 20px);
 }
 
 .circleCard {
@@ -21,5 +22,6 @@
     flex-wrap: wrap;
     flex-direction: column;
     padding: 0 10px;
+    width: 100%;
   }
 }

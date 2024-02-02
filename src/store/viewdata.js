@@ -30,10 +30,10 @@ const [viewdata, getViewData] = createGlobalStore(() => {
   const initNovel = async () => {
     if (novel.novelList.length) return
     let data = await http.post('/curd-mongo/find/novel', { ops: { many: true } })
-    /*  data = data.map((item, index) => {
+    data = data.map((item, index) => {
       item.title = `*****${index}`
       return item
-    }) */
+    })
     data = data.reverse()
     data = data.map(mv => {
       mv.tabs = mv.tabs.map(mmv => {

@@ -67,7 +67,7 @@ export default () => {
         title={
           <div className='flex'>
             <CuIcon icon='tag' size='22' color='var(--primary-color)' className='mr-10' />
-            <h4 className='wax-100 singe-line'>记录类型与标签申请</h4>
+            <h4 className='wax-100 singe-line'>标签添加申请</h4>
           </div>
         }
       >
@@ -78,7 +78,7 @@ export default () => {
             type: 1
           }}
         >
-          <Form.Item name='type'>
+          {/* <Form.Item name='type'>
             <Radio.Group className='flex'>
               <Radio.Button value={0} className='w-100'>
                 <div className='flex-ai-c'>
@@ -93,7 +93,7 @@ export default () => {
                 </div>
               </Radio.Button>
             </Radio.Group>
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             name='name'
             rules={[

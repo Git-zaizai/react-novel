@@ -68,7 +68,7 @@ export default () => {
           />
         )
       },
-      {
+      /* {
         key: '/icon/Cuicons',
         icon: (
           <CuIcon
@@ -79,8 +79,25 @@ export default () => {
             }}
           />
         )
-      }
+      } */
     ]
+
+    if (userStore.admin) {
+      adminRoute.forEach(item => {
+        items.push({
+          key: item.path,
+          icon: (
+            <CuIcon
+              icon={item.meta.icon}
+              size='32'
+              style={{
+                color: getColor(item.path)
+              }}
+            />
+          )
+        })
+      })
+    }
 
     const handleMenuClick = val => {
       navigate(val.key)
@@ -129,7 +146,7 @@ export default () => {
           <CuIcon icon='circle' size='40' />
           <h4></h4>
         </div>
-        <div
+        {/* <div
           className='zf-item flex-fdc-aic-juc h-100'
           onClick={() => navigate('/icon/Cuicons')}
           style={{
@@ -138,7 +155,7 @@ export default () => {
         >
           <CuIcon icon='circle' size='40' />
           <h4></h4>
-        </div>
+        </div> */}
         {userStore.admin &&
           adminRoute.map(v => (
             <div

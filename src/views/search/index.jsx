@@ -168,7 +168,7 @@ export default () => {
       </Card>
 
       <div className={styles.searchScroll} style={{ height: searchlist.length ? 'auto' : '60vh' }}>
-        <div style={{ width: '100vw', height: isMobile() ? '100px' : '77px' }}></div>
+        <div style={{ width: '100vw', height: isMobile() ? '76px' : '100px' }}></div>
         {searchlist.length ? (
           <NovelCardList data={searchlist} />
         ) : (

@@ -1,12 +1,28 @@
 .view {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  flex-direction: column;
   padding: 0 10px;
 }
 
+.circleCard {
+  width: 100%;
+}
+.circleCard :global(.ant-card-body) {
+  padding: 0px 10px;
+}
+
+.addForm {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 @media screen and (max-width: 980px) {
+  .view {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+    padding: 0 10px;
+  }
+
   .addForm {
     margin-top: 20px;
     margin-bottom: 0px;

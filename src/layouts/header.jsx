@@ -7,7 +7,7 @@ import { useViewDataStore } from '@/store/viewdata'
 export default props => {
   const { store, setThemeToggle, setValueStore } = useStore()
   const { setNovelStore } = useViewDataStore()
-  
+
   return (
     <>
       <header className='zaiheader' style={props.style}>

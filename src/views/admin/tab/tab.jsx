@@ -40,16 +40,28 @@ function TabCard() {
   }, [removeTab.length])
 
   const addTab = async () => {
+    if (!val) return
+    if (checkboxs.some(sv => sv.tab === val)) {
+      window.$message.warning(`${val} 已有`)
+      return
+    }
+    let data = checkboxs.map(mv => mv.tab).push(val)
     await http
       .post('/json-set', {
         ph: 'tabs.json',
-        data: removeTab
+        data
       })
       .catch(e => {
         window.$message.error('添加标签失败')
         return Promise.reject(e)
       })
-    setCheckoxs([...checkboxs, val])
+    setCheckoxs([
+      ...checkboxs,
+      {
+        tab: val,
+        color: randomHexColor()
+      }
+    ])
   }
 
   const removeTabClick = async () => {
@@ -84,8 +96,9 @@ function TabCard() {
 
   return (
     <ViewCard
+      className={styles.circleCard}
       title={
-        <div className='flex'>
+        <div className='flex-ai-c'>
           <CuIcon icon='tag' size='22' color='var(--primary-color)' className='mr-10' />
           <h4 className='wax-100 singe-line'>标签</h4>
         </div>
@@ -126,8 +139,6 @@ function TabCard() {
   )
 }
 
-const { Search } = Input
-
 export default () => {
   const [list, setList] = useState([])
   const { setTabs, tabs } = useViewDataStore()
@@ -165,6 +176,7 @@ export default () => {
       setList([].concat(list))
     } catch (error) {
       console.log(error)
+      window.$message.error('操作失败')
     }
   }
 

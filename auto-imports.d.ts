@@ -28,6 +28,7 @@ declare global {
   const Row: typeof import('antd')['Row']
   const Skeleton: typeof import('antd')['Skeleton']
   const Space: typeof import('antd')['Space']
+  const Tabs: typeof import('antd')['Tabs']
   const Tag: typeof import('antd')['Tag']
   const createRef: typeof import('react')['createRef']
   const forwardRef: typeof import('react')['forwardRef']
