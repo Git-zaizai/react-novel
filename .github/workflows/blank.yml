@@ -3,11 +3,11 @@ name: GitHub Actions Build and Deploy 2.0
 # 触发条件
 on:
   # 手动触发
-  workflow_dispatch:
+  #workflow_dispatch:
   # push 到指定分支
-  push:
-    branches:
-      - main
+  #push:
+    #branches:
+      #- main
     # 只在下列路径变更时触发
     #paths:
     #  - 'docs/**'
@@ -18,7 +18,7 @@ env:
   TZ: Asia/Shanghai
 
 # 任务
-jobs:
+#jobs:
   build-and-deploy:
     # 服务器环境：最新版 ubuntu
     runs-on: ubuntu-latest

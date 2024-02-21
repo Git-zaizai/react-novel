@@ -11,7 +11,7 @@ import './styles/index.css'
  * @returns {JSX.Element}
  * @constructor
  */
-function App() {
+function AppComponent() {
   useEffect(() => {
     setRootCss(checkIsDarkMode() ? 'light' : 'dark')
   }, [])
@@ -24,4 +24,4 @@ function App() {
   )
 }
 
-export default App
+export default AppComponent

@@ -49,7 +49,6 @@ async function request(options) {
   try {
     const response = await fetch(config.url, config)
 
-
     if (response.status === 401) {
       const txt = await response.text()
       return Promise.reject(txt)
@@ -65,7 +64,6 @@ async function request(options) {
     }
     return responseData
   } catch (error) {
-    window.$message.error('网络连接错误')
     return Promise.reject(error)
   }
 }

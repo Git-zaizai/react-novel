@@ -32,7 +32,7 @@ export default () => {
 
   const [formRef] = Form.useForm()
   const [isCheckboxShow, { toggle }] = useToggle(true)
-  const { tabs, novel } = useViewDataStore()
+  const { tabs, novel, initTabs, initNovel } = useViewDataStore()
   const [searchlist, setSearchlist] = useState([])
   const [page, setPage] = useState(10)
   const inputRef = useRef()
@@ -58,10 +58,8 @@ export default () => {
       }
     }
 
-    console.log(and)
-    if (!and.length) {
-      return
-    }
+    if (!and.length) return
+
     const body = {
       $and: and
     }
@@ -86,13 +84,18 @@ export default () => {
       })
       return mv
     })
-    console.log(fles)
     response = fles
     setSearchlist(response)
   }
 
   const bindList = () => {
-    setSearchlist(novel.novelList.slice(0, 10))
+    initTabs()
+      .then(initNovel)
+      .then(() => {
+        if (novel.novelList.length) {
+          setSearchlist(novel.novelList.slice(0, 10))
+        }
+      })
   }
 
   const { run } = useDebounceFn(
@@ -148,14 +151,15 @@ export default () => {
             <>
               <Form className={styles.searchFormItem} form={formRef}>
                 <Form.Item name='tabs'>
-                  <Checkbox.Group>
-                    {tabs.length &&
-                      tabs.map(item => (
+                  {tabs.length ? (
+                    <Checkbox.Group>
+                      {tabs.map(item => (
                         <Checkbox key={item.tab} value={item.tab} style={{ lineHeight: '32px' }}>
                           <Tag color={item.color}>{item.tab}</Tag>
                         </Checkbox>
                       ))}
-                  </Checkbox.Group>
+                    </Checkbox.Group>
+                  ) : null}
                 </Form.Item>
 
                 <Form.Item name='wanjie' className='mt-10'>

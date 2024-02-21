@@ -18,22 +18,22 @@ const [viewdata, getViewData] = createGlobalStore(() => {
   }
 
   const initTabs = async () => {
-    if (tabs.length) return
+    if (tabs.length) return 0
     try {
       const response = await http.get('/json-get', { ph: 'tabs.json' })
-      setTabs(response.map(mv => ({ tab: mv, color: randomHexColor() })))
-    } catch {
-      window.$message && window.$message.error('获取类型标签失败')
+      setTabs(() => response.map(mv => ({ tab: mv, color: randomHexColor() })))
+      return 1
+    } catch (e) {
+      window.$message?.error && window.$message.error('获取类型标签失败 ：' + e)
+      return Promise.reject(e)
     }
   }
 
-  const initNovel = async () => {
-    if (novel.novelList.length) return
+  const initNovel = async isleng => {
+    if (!isleng) {
+      if (!tabs.length || novel.novelList.length) return
+    }
     let data = await http.post('/curd-mongo/find/novel', { ops: { many: true } })
-    data = data.map((item, index) => {
-      item.title = `*****${index}`
-      return item
-    })
     data = data.reverse()
     data = data.map(mv => {
       mv.tabs = mv.tabs.map(mmv => {
@@ -47,12 +47,9 @@ const [viewdata, getViewData] = createGlobalStore(() => {
       return mv
     })
     setNovelStore({ novelList: data })
+    return Promise.resolve()
   }
 
-  useMount(() => {
-    initTabs()
-    initNovel()
-  })
   return {
     tabs,
     setTabs,

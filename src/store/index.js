@@ -5,7 +5,7 @@ import { checkIsDarkMode, getThemeToken } from '@/utlis/themeColor'
 
 const [useAccountStore, getAccountStore] = createGlobalStore(() => {
   const [laoutState, setlaoutState] = useState({
-    theme: checkIsDarkMode(),
+    theme: false,
     themeToken: {
       colorPrimary: '#18a058',
       colorInfo: '#18a058',
