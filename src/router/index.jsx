@@ -7,9 +7,13 @@ export const tabsRoutes = [
     path: '/',
     element: Layout,
     children: [
-      {
+      /* {
         index: true,
         element: LazyImport(() => import('@/views/index'))
+      } */
+      {
+        index: true,
+        element: LazyImport(() => import('@/views/test/test'))
       }
     ]
   },
