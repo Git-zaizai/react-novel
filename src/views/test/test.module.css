@@ -1,6 +1,7 @@
 .view {
   height: calc(100vh - 80px - 60px);
   position: relative;
+  overflow: scroll;
 }
 
 .loaderBox {
@@ -13,7 +14,7 @@
   height: 80px;
 }
 
-#loader {
+.loader {
   width: 25px;
   height: 25px;
   border: 3px solid var(--border-color);
@@ -22,15 +23,4 @@
   transform: rotate(0deg);
 }
 
-#loader .loading {
-  animation: loading 1s linear infinite;
-}
 
-@keyframes loading {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
