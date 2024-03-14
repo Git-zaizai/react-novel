@@ -1,17 +1,36 @@
 .view {
-  height: calc(100vh - 80px - 60px);
+  height: calc(100vh - 70px);
   position: relative;
   overflow: scroll;
+  /* transform: translateY(var(--zai-translateY)); */
+}
+
+/* 隐藏滚动条 */
+.view1::-webkit-scrollbar {
+  display: none;
+}
+
+/* 为了确保内容仍然可以滚动 */
+.view1 {
+  -ms-overflow-style: none; /* IE和Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* 可选：如果你想要为其他浏览器（非Webkit）也隐藏滚动条 */
+.view1 {
+  overflow: -moz-scrollbars-none; /* Firefox */
 }
 
 .loaderBox {
   position: relative;
-  top: -80px;
+  /* top: -80px; */
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80px;
+  height: 70px;
+  z-index: 10;
+  transform: translateY(var(--zai-translateY));
 }
 
 .loader {
@@ -20,7 +39,36 @@
   border: 3px solid var(--border-color);
   border-radius: 50%;
   border-bottom: 3px solid var(--success-color);
-  transform: rotate(0deg);
 }
 
+.content {
+  width: 100%;
+  transform: translateY(var(--zai-translateY));
+}
 
+.loaderBottomBox {
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loaderBottom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-color);
+  border-radius: 50%;
+  margin-right: 5px;
+  border-bottom: 2px solid var(--success-color);
+  animation: loadingskKeyframes 1s linear infinite;
+}
+
+@keyframes loadingskKeyframes {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

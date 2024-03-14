@@ -84,7 +84,7 @@ export default () => {
                   onScroll={scrollViewFun}
                   id='zaiViewId'
                 >
-                  <div style={{ height: '75px' }}></div>
+                  {/* <div style={{ height: '75px' }}></div> */}
                   <Transition
                     show={location.pathname}
                     timeout={300}

@@ -13,7 +13,7 @@ export const tabsRoutes = [
       } */
       {
         index: true,
-        element: LazyImport(() => import('@/views/test/test'))
+        element: LazyImport(() => import('@/views/test/index'))
       }
     ]
   },
