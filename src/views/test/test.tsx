@@ -1,11 +1,19 @@
 import styles from './test.module.css'
 import './css.css'
 import type { ReactNode, Dispatch } from 'react'
+import CuIcon from '@/components/cuIcon'
+import { useDebounceFn, useThrottleFn } from 'ahooks'
 
 // 最大上拉距离
 const DISTANCE_Y_MAX_LIMIT = 70
 // 最小上拉距离
 const DISTANCE_Y_MIN_LIMIT = 40
+// 拉下状态
+enum PullStatus {
+  dropdown = 1, // 下拉
+  letgo = 2, // 放手
+  loader = 3 // 加载中
+}
 
 let startY = 0,
   startX = 0,
@@ -28,35 +36,48 @@ function start(e: TouchEvent) {
   startX = e.touches[0].clientX
 }
 
-// 节流
-function throttle(fn: (...argn: any[]) => void, delay: number = 200, isImmediate = true): (...argn: any[]) => void {
-  // isImmediate 为 true 时使用前缘节流，首次触发会立即执行，为 false 时使用延迟节流，首次触发不会立即执行
-  let last = Date.now()
-  return function (this: any) {
-    let now = Date.now()
-    if (isImmediate) {
-      fn.apply(this, arguments as any)
-      isImmediate = false
-      last = now
-    }
-    if (now - last >= delay) {
-      fn.apply(this, arguments as any)
-      last = now
-    }
-  }
-}
-
 interface Props {
   children?: ReactNode
+  // 下拉刷新回调
   onEnd: <T>(fn: Dispatch<T>) => void | Promise<void>
-  onScrollThrottle: <T>(fn: Dispatch<T>) => void | Promise<void>
+  // 触底加载回调
+  onScrollThrottle: (fn: Dispatch<boolean>) => void | Promise<void>
+  InfiniteDropdown?: boolean  // 无限下拉
 }
 
-export default (props: Props) => {
+export type PullRefreshProps = Props
+
+export default ({ children, onEnd, onScrollThrottle, InfiniteDropdown = true }: Props) => {
   const viewRef = useRef<HTMLDivElement | null>(null)
   const [loaderName, setloaderName] = useState('')
   const [distance, setdistance] = useState(0)
+  const [pullStatus, setPullStatus] = useState(1)
+
   const [isloaderBottom, setisloaderBottom] = useState(true)
+  const [dropdown, setDropdown] = useState('加载中...')
+
+  const { run: scrollThrottle } = useThrottleFn(
+    () => {
+      onScrollThrottle && onScrollThrottle(setisloaderBottom)
+    },
+    { wait: 500 }
+  )
+
+  useEffect(() => {
+    if (isloaderBottom) {
+      setDropdown('加载中...')
+    }else{
+      setDropdown('没有更多了')
+    }
+  }, [isloaderBottom])
+
+  function viewScroll(e: any) {
+    const { scrollHeight, clientHeight, scrollTop } = e.target
+    viewScrollTop = scrollTop
+    if (clientHeight + scrollTop >= scrollHeight - 100) {
+      scrollThrottle()
+    }
+  }
 
   function move(e: TouchEvent) {
     if (viewScrollTop > 0) {
@@ -82,7 +103,10 @@ export default (props: Props) => {
     percent = Math.max(0.5, percent)
     distanceY = distanceY * percent
     if (distanceY > DISTANCE_Y_MAX_LIMIT) {
-      distanceY = DISTANCE_Y_MAX_LIMIT
+      setPullStatus(PullStatus.letgo)
+      if (!InfiniteDropdown) {
+        distanceY = DISTANCE_Y_MAX_LIMIT
+      }
     }
     setdistance(distanceY)
   }
@@ -106,18 +130,22 @@ export default (props: Props) => {
     if (distanceY < DISTANCE_Y_MAX_LIMIT) {
       setloaderName('')
       setdistance(0)
+      setPullStatus(PullStatus.dropdown)
       return
     }
+    setdistance(70)
     loadLock = true
+    setPullStatus(PullStatus.loader)
     setloaderName('loading-animation')
-    if (props.onEnd) {
-      props.onEnd(endCallback)
+    if (onEnd) {
+      onEnd(endCallback)
     } else {
       setTimeout(() => {
         loadLock = false
         setloaderName('')
         distanceY = 0
         setdistance(0)
+        setPullStatus(PullStatus.dropdown)
       }, 1000)
     }
   }
@@ -143,18 +171,6 @@ export default (props: Props) => {
     return addTouchEvent()
   }, [])
 
-  const scrollThrottle = throttle(function () {
-    props.onScrollThrottle && props.onScrollThrottle(setisloaderBottom)
-  })
-
-  function viewScroll(e: any) {
-    const { scrollHeight, clientHeight, scrollTop } = e.target
-    viewScrollTop = scrollTop
-    if (clientHeight + scrollTop >= scrollHeight - 100) {
-      scrollThrottle()
-    }
-  }
-
   return (
     <>
       <div
@@ -164,13 +180,32 @@ export default (props: Props) => {
         style={{ '--zai-translateY': distance + 'px' } as React.CSSProperties}
       >
         <div className={styles.loaderBox}>
-          <div className={styles.loader + ' ' + loaderName}></div>
+          {pullStatus === 1 && (
+            <div className={styles.textdisabled + ' flex-ai-c'}>
+              <CuIcon icon={'refresharrow'} size={25} />
+              <span>下拉刷新</span>
+            </div>
+          )}
+
+          {pullStatus === 2 && (
+            <div className={styles.textdisabled + ' flex-ai-c'}>
+              <CuIcon icon={'refresharrow'} size={25} className={styles.refresharrow180} />
+              <span>放手刷新</span>
+            </div>
+          )}
+
+          {pullStatus === 3 && (
+            <div className='flex-ai-c'>
+              <i className={styles.loader + ' ' + loaderName}></i>
+              <span className={styles.textdisabled + ' flex-ai-c ml-5'}>加载中...</span>
+            </div>
+          )}
         </div>
-        <div className={styles.content}>{props.children}</div>
-        {props.children && isloaderBottom && (
+        <div className={styles.content}>{children}</div>
+        {children && (
           <div className={styles.loaderBottomBox}>
-            <i className={styles.loaderBottom}></i>
-            <span>加载中...</span>
+            {isloaderBottom && <i className={styles.loaderBottom}></i>}
+            <span className={styles.textdisabled}>{dropdown}</span>
           </div>
         )}
       </div>

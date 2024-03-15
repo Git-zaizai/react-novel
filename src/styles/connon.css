@@ -3,6 +3,10 @@
   display: flex;
 }
 
+.flex-wrap{
+  flex-wrap: wrap;
+}
+
 .flex-ai-c {
   display: flex;
   align-items: center;

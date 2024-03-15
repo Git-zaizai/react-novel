@@ -42,8 +42,16 @@
 }
 
 .content {
-  width: 100%;
+  width: calc(100% - 25px);
   transform: translateY(var(--zai-translateY));
+}
+
+.textdisabled {
+  color: var(--text-color-disabled);
+}
+
+.refresharrow180 {
+  transform: rotate(180deg);
 }
 
 .loaderBottomBox {
@@ -70,5 +78,14 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes refresharrowRotate180 {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
   }
 }

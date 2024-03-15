@@ -44,7 +44,10 @@
 }
 
 .zaiView {
- 
+  width: 100%;
+  /* height: calc(100vh - (10px + 64px)); */
+  height: 100vh;
+  overflow: scroll;
 }
 
 /* 滚动条轨道 */
@@ -97,6 +100,13 @@
 }
 
 @media screen and (max-width: 980px) {
+  .zaiView {
+    overflow-y: scroll;
+    width: 100%;
+    /* height: calc(100vh - (19px + 24px * 2)); */
+    height: 100vh;
+    min-height: calc(100vh - (19px + 24px * 2));
+  }
 
   .pc-zaifooter {
     display: none;

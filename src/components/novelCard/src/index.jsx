@@ -5,6 +5,7 @@ import { useCallback } from 'react'
 import http from '@/utlis/http'
 
 export default ({ data }) => {
+  console.log('NovelCardList');
   /**
    * @module 修改章节
    */
