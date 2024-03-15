@@ -42,7 +42,6 @@
 }
 
 .content {
-  width: calc(100% - 25px);
   transform: translateY(var(--zai-translateY));
 }
 

@@ -42,7 +42,7 @@ interface Props {
   onEnd: <T>(fn: Dispatch<T>) => void | Promise<void>
   // 触底加载回调
   onScrollThrottle: (fn: Dispatch<boolean>) => void | Promise<void>
-  InfiniteDropdown?: boolean  // 无限下拉
+  InfiniteDropdown?: boolean // 无限下拉
 }
 
 export type PullRefreshProps = Props
@@ -66,7 +66,7 @@ export default ({ children, onEnd, onScrollThrottle, InfiniteDropdown = true }: 
   useEffect(() => {
     if (isloaderBottom) {
       setDropdown('加载中...')
-    }else{
+    } else {
       setDropdown('没有更多了')
     }
   }, [isloaderBottom])
@@ -201,7 +201,7 @@ export default ({ children, onEnd, onScrollThrottle, InfiniteDropdown = true }: 
             </div>
           )}
         </div>
-        <div className={styles.content}>{children}</div>
+        <div className={styles.content + ' flex-ai-c flex-wrap'}>{children}</div>
         {children && (
           <div className={styles.loaderBottomBox}>
             {isloaderBottom && <i className={styles.loaderBottom}></i>}
