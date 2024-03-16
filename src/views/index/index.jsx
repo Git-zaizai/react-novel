@@ -10,6 +10,7 @@ import { isMobile } from '@/utlis'
 import DropdownPullup from '@/components/DropdownPullup'
 
 function novelFilter(list) {
+  if (!list.length) return []
   const leng = isMobile() ? 5 : 8
   let tuijian = { Affix: '推荐', data: [] }
   let xiaoshuo = { Affix: '小说', data: [] }
@@ -35,7 +36,6 @@ export default () => {
   const [list, setList] = useState([])
 
   const setup = callback => {
-    console.log('setup')
     initTabs()
       .then(initNovel)
       .then(() => {
@@ -53,16 +53,14 @@ export default () => {
   }
 
   useEffect(() => {
-    if (novel.novelList.length) {
-      const filterdata = novelFilter(novel.novelList)
-      setList(filterdata)
-    }
+    const filterdata = novelFilter(novel.novelList)
+    setList(filterdata)
   }, [novel.novelList])
 
   return (
     <>
-      <div className='zai-content'>
-        <DropdownPullup onEnd={setup}>
+      <div className='h-100-vh'>
+        <DropdownPullup onEnd={setup} headerPosition={<div style={{ height: '10px' }}></div>}>
           <CardSkeletons show={loading}>
             {list.map((item, index) => (
               <div key={index}>

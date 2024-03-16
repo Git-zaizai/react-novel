@@ -7,6 +7,7 @@
 
 import styles from './DropdownPullup.module.css'
 import type { ReactNode, Dispatch } from 'react'
+import { isMobile } from '@/utlis'
 
 // 最大上拉距离
 const DISTANCE_Y_MAX_LIMIT = 70
@@ -47,6 +48,7 @@ interface DropdownState {
 }
 
 interface Props {
+  headerPosition?: ReactNode
   children?: ReactNode
   // 下拉刷新回调
   onEnd: (fn: () => void) => void | Promise<void>
@@ -58,7 +60,14 @@ interface Props {
 
 export type PullRefreshProps = Props
 
-const DropdownPullup = ({ children, onEnd, onPullup, InfiniteDropdown = true, isMount = true }: Props) => {
+const DropdownPullup = ({
+  headerPosition = null,
+  children,
+  onEnd,
+  onPullup,
+  InfiniteDropdown = true,
+  isMount = true
+}: Props) => {
   const dropdownPullupViewRef = useRef<HTMLDivElement | null>(null)
 
   const [style, setStyle] = useState({
@@ -74,20 +83,19 @@ const DropdownPullup = ({ children, onEnd, onPullup, InfiniteDropdown = true, is
 
   const [pullup, setPullup] = useState<PullupState>({
     text: '加载中...',
-    show: typeof onPullup === 'function',
+    show: false,
     iconShow: true
   })
-
   const pullupCallback = (value?: PullupState) => {
+    setPullup({
+      text: '加载中...',
+      show: true,
+      iconShow: true,
+      ...value
+    })
     setStyle({ '--overflow': 'scroll', '--zai-translateY': '0px' })
-    setPullup(
-      value ?? {
-        text: '加载中...',
-        show: true,
-        iconShow: true
-      }
-    )
   }
+
   function scroll(e: any) {
     const { scrollHeight, clientHeight, scrollTop } = e.target
     viewScrollTop = scrollTop
@@ -149,6 +157,9 @@ const DropdownPullup = ({ children, onEnd, onPullup, InfiniteDropdown = true, is
       status: 1,
       text: '下拉刷新'
     })
+    if (!pullup.show && typeof onPullup === 'function') {
+      setPullup((value: any) => ({ ...value, show: true }))
+    }
   }
   function end() {
     if (viewScrollTop > 0) {
@@ -161,6 +172,9 @@ const DropdownPullup = ({ children, onEnd, onPullup, InfiniteDropdown = true, is
       return
     }
     if (distanceY < DISTANCE_Y_MAX_LIMIT) {
+      setStyle((value: any) => {
+        return { ...value, '--zai-translateY': '0px' }
+      })
       setDropdown({
         className: '',
         status: 1,
@@ -207,11 +221,15 @@ const DropdownPullup = ({ children, onEnd, onPullup, InfiniteDropdown = true, is
   }
 
   useEffect(() => {
-    const dom = dropdownPullupViewRef.current
-    if (typeof onPullup === 'function' && dom) {
-      const { scrollHeight, clientHeight } = dom
-      const show = scrollHeight <= clientHeight
-      setPullup((value: any) => ({ ...value, show }))
+    if (!isMount) {
+      const dom = dropdownPullupViewRef.current
+      if (typeof onPullup === 'function' && dom) {
+        const { scrollHeight, clientHeight } = dom
+        const show = scrollHeight <= clientHeight
+        if (show) {
+          setPullup((value: any) => ({ ...value, show }))
+        }
+      }
     }
   }, [children])
 
@@ -233,10 +251,11 @@ const DropdownPullup = ({ children, onEnd, onPullup, InfiniteDropdown = true, is
     <>
       <div
         ref={dropdownPullupViewRef}
-        className={styles['dropdown-pullup']}
+        className={`${styles['dropdown-pullup']} ${!isMobile() && 'web-dropdown-pullup'}`}
         onScroll={scroll}
         style={style as React.CSSProperties}
       >
+        {headerPosition}
         <div className={styles.loaderBox}>
           {dropdown.status !== 3 && (
             <div className={styles.textdisabled + ' flex-ai-c'}>
@@ -260,6 +279,7 @@ const DropdownPullup = ({ children, onEnd, onPullup, InfiniteDropdown = true, is
               <span>{pullup.text}</span>
             </div>
           )}
+          <div className={styles['footer-position']}></div>
         </div>
       </div>
     </>

@@ -12,23 +12,23 @@ const { TextArea } = Input
 
 export default () => {
   let initialValues = {
-    beizhu: Math.random().toString(36).slice(2, 12),
-    start: (Math.random() * 10).toFixed(), // 开始章节
-    finish: (Math.random() * 10 * 10).toFixed(), // 结束章节
+    beizhu: '',
+    start: '', // 开始章节
+    finish: '', // 结束章节
     duwan: 0, // 是否读完
     isdel: 1, // 软删除
     wanjie: 1,
-    link: Math.random().toString(36).slice(2, 12), //首链接
-    linkback: Math.random().toString(36).slice(2, 12), //后续链接
-    title: Math.random().toString(36).slice(2, 12),
+    link: '', //首链接
+    linkback: '', //后续链接
+    title: '',
     links: [
-      {
-        linkName: Math.random().toString(36).slice(2, 12),
-        urli: Math.random().toString(36).slice(2, 12)
-      }
+      /* {
+        linkName: '',
+        urli: ''
+      } */
     ], // 链接
-    tabs: ['小说', '推荐', '漫画', '动漫', '有声小说', '一口气看完', '其他'], // 标签列表
-    rate: [(Math.random() * 10).toFixed()] // 评分
+    tabs: [], // 标签列表
+    rate: [] // 评分
   }
 
   const { tabs, initTabs, novel, setNovelStore } = useViewDataStore()

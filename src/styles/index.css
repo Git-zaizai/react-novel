@@ -8,20 +8,8 @@
 }
 
 :root {
-  --Header-height: 70px;
+  --Header-height: 75px;
   --Footer-height: 64px;
-}
-
-.zai-content {
-  margin: var(--Header-height) 0 var(--Footer-height) 0;
-  height: calc(100vh - var(--Header-height) - var(--Footer-height));
-}
-
-/* 整个滚动条 */
-.zaiView::-webkit-scrollbar {
-  width: var(--scrollbar-width); /* 滚动条的宽度 */
-  height: var(--scrollbar-height); /* 滚动条的高度，对水平滚动条有效 */
-  background-color: transparent; /* 滚动条的背景颜色 */
 }
 
 .zaiheader {
@@ -53,34 +41,38 @@
   margin-right: 30px;
 }
 
-.zaiView {
+/* 整个滚动条 */
+.web-dropdown-pullup::-webkit-scrollbar {
+  width: var(--scrollbar-width); /* 滚动条的宽度 */
+  height: var(--scrollbar-height); /* 滚动条的高度，对水平滚动条有效 */
+  background-color: transparent; /* 滚动条的背景颜色 */
 }
 
 /* 滚动条轨道 */
-.zaiView::-webkit-scrollbar-track {
+.web-dropdown-pullup::-webkit-scrollbar-track {
   border-radius: 10px;
   background: transparent; /* 轨道的背景颜色 */
 }
 
 /* 滚动条滑块 */
-.zaiView::-webkit-scrollbar-thumb {
+.web-dropdown-pullup::-webkit-scrollbar-thumb {
   border-radius: var(--scrollbar-border-radius);
   background-color: var(--scrollbar-color); /* 滑块的背景颜色 */
   /* border: 3px solid #e1e1e1; */ /* 滑块的边框和轨道相同的颜色，可以制造“边距”的效果 */
 }
 
 /* 滚动条滑块：悬停效果 */
-.zaiView::-webkit-scrollbar-thumb:hover {
+.web-dropdown-pullup::-webkit-scrollbar-thumb:hover {
   background-color: var(--scrollbar-color-hover); /* 滑块的悬停颜色 */
 }
 
 /* 滚动条滑块：激活时的效果 */
-.zaiView ::-webkit-scrollbar-thumb:active {
+.web-dropdown-pullup ::-webkit-scrollbar-thumb:active {
   background-color: var(--scrollbar-color-hover); /* 滑块的激活颜色 */
 }
 
 /* 滚动条按钮（上下箭头） */
-.zaiView::-webkit-scrollbar-button {
+.web-dropdown-pullup::-webkit-scrollbar-button {
   display: none; /* 通常情况下不显示滚动条按钮 */
 }
 
@@ -106,6 +98,11 @@
 }
 
 @media screen and (max-width: 980px) {
+  :root {
+    --Header-height: 64px;
+    --Footer-height: 67px;
+  }
+
   .pc-zaifooter {
     display: none;
   }

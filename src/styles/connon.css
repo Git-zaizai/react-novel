@@ -72,6 +72,11 @@
   height: 100%;
 }
 
+.h-100-vh {
+  height: 100vh;
+}
+
+
 .flex-1 {
   flex: 1;
 }
