@@ -1,4 +1,11 @@
-import styles from './test.module.css'
+/**
+ * 参考资料：
+ *
+ * https://juejin.cn/post/7340836136208859174?searchId=2024031217175341580085457EEFA1DEB3#heading-9
+ *
+ */
+
+import styles from './DropdownPullup.module.css'
 import type { ReactNode, Dispatch } from 'react'
 
 // 最大上拉距离
@@ -50,13 +57,7 @@ interface Props {
 
 export type PullRefreshProps = Props
 
-/**
- * 参考资料：
- *
- * https://juejin.cn/post/7340836136208859174?searchId=2024031217175341580085457EEFA1DEB3#heading-9
- *
- */
-export default ({ children, onEnd, onPullup, InfiniteDropdown = true }: Props) => {
+const DropdownPullup = ({ children, onEnd, onPullup, InfiniteDropdown = true }: Props) => {
   const dropdownPullupViewRef = useRef<HTMLDivElement | null>(null)
 
   const [style, setStyle] = useState({
@@ -257,3 +258,5 @@ export default ({ children, onEnd, onPullup, InfiniteDropdown = true }: Props) =
     </>
   )
 }
+
+export default DropdownPullup

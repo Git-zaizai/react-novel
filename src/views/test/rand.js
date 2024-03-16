@@ -76,3 +76,20 @@ export const RandCreateList = (leng = 10) => {
     resolve(list)
   })
 }
+
+export function getTotalHeight(element) {
+  // 获取元素的计算样式
+  var style = getComputedStyle(element)
+
+  // 获取元素的高度，不包括单位
+  var height = parseFloat(style.height)
+
+  // 获取元素的上外边距和下外边距，不包括单位
+  var marginTop = parseFloat(style.marginTop)
+  var marginBottom = parseFloat(style.marginBottom)
+
+  // 计算总高度，包括高度、上外边距和下外边距
+  var totalHeight = height + marginTop + marginBottom
+
+  return totalHeight
+}
