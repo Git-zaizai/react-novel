@@ -151,11 +151,11 @@ export default props => {
         )
       }
     >
-      <div className='flex-ai-c'>
+      <div className='flex-ai-c flex-wrap'>
         <TagOne theme='outline' size='18' fill='var(--success-color)' className='mr-5 el-transition-color' />
         标签：
         {data.tabs.map(item => (
-          <Tag key={item.tab} color={item.color} className=''>
+          <Tag key={item.tab} color={item.color} className='mb-5'>
             {item.tab}
           </Tag>
         ))}

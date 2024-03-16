@@ -12,11 +12,7 @@ import SettingTwo from './SettingTwo/SettingTwo'
 const { Header, Content, Footer } = Layout
 
 const WinConfig = () => {
-  const {
-    message: messageApi,
-    notification: notificationApi,
-    modal: modalApi
-  } = App.useApp()
+  const { message: messageApi, notification: notificationApi, modal: modalApi } = App.useApp()
   window.$message = messageApi
   window.$notification = notificationApi
   window.$modal = modalApi
@@ -58,10 +54,7 @@ export default () => {
 
   return (
     <>
-      <Nprogress
-        isAnimating={store.nprogress}
-        key={location.key}
-      />
+      <Nprogress isAnimating={store.nprogress} key={location.key} />
       <ConfigProvider
         drawer={{
           styles: drawerStyles
@@ -79,24 +72,16 @@ export default () => {
               <AddDrawer />
               <SettingTwo />
               <Content>
-                <div
-                  className='zaiView'
-                  onScroll={scrollViewFun}
-                  id='zaiViewId'
+                <Transition
+                  show={location.pathname}
+                  timeout={300}
+                  onEnter={() => nprogressToggle()}
+                  onEntered={() => {
+                    nprogressToggle()
+                  }}
                 >
-                  <div style={{ height: '75px' }}></div>
-                  <Transition
-                    show={location.pathname}
-                    timeout={300}
-                    onEnter={() => nprogressToggle()}
-                    onEntered={() => {
-                      nprogressToggle()
-                    }}
-                  >
-                    {() => <div>{currentOutlet}</div>}
-                  </Transition>
-                  {isMobile() && <div style={{ height: '60px' }}></div>}
-                </div>
+                  {() => <div>{currentOutlet}</div>}
+                </Transition>
               </Content>
               <ZaiFooter />
             </Layout>

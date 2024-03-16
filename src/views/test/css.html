@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading {
+            animation: loading 1s linear infinite;
+        }
+
+        @keyframes loading {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loaderBox {
+            position: relative;
+            top: -80px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80px;
+        }
+
+
+        .loader {
+            width: 25px;
+            height: 25px;
+            /* border: 3px solid #ccc; */
+            border-radius: 50%;
+            border-bottom: 3px solid #000;
+            border-left:  3px solid #000;
+            transform: rotate(0deg);
+        }
+    </style>
+
+
+    <div class="loaderBox">
+        <div class="loader"></div>
+    </div>
+</body>
+
+</html>

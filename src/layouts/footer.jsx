@@ -67,7 +67,7 @@ export default () => {
             }}
           />
         )
-      },
+      }
       /* {
         key: '/icon/Cuicons',
         icon: (
@@ -146,7 +146,7 @@ export default () => {
           <CuIcon icon='circle' size='40' />
           <h4></h4>
         </div>
-        {/* <div
+        {/*  <div
           className='zf-item flex-fdc-aic-juc h-100'
           onClick={() => navigate('/icon/Cuicons')}
           style={{

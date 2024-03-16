@@ -62,6 +62,7 @@ export default () => {
 
   return (
     <div className={styles.view}>
+      <div style={{ height: 'calc(var(--Header-height) + 20px)' }}></div>
       <ViewCard
         className={styles.circleCard}
         title={

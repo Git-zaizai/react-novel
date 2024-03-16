@@ -22,10 +22,10 @@ export default () => {
     linkback: '', //后续链接
     title: '',
     links: [
-      {
+      /* {
         linkName: '',
         urli: ''
-      }
+      } */
     ], // 链接
     tabs: [], // 标签列表
     rate: [] // 评分

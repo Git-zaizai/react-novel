@@ -7,8 +7,10 @@ import { useViewDataStore } from '@/store/viewdata'
 import { useState, useEffect, useRef } from 'react'
 import CuIcon from '@/components/cuIcon'
 import { isMobile } from '@/utlis'
+import DropdownPullup from '@/components/DropdownPullup'
 
 function novelFilter(list) {
+  if (!list.length) return []
   const leng = isMobile() ? 5 : 8
   let tuijian = { Affix: '推荐', data: [] }
   let xiaoshuo = { Affix: '小说', data: [] }
@@ -32,32 +34,27 @@ export default () => {
   const [loading, { set: setloading }] = useToggle(true)
   const [list, setList] = useState([])
 
-  useEffect(() => {
+  const setup = callback => {
     initTabs()
       .then(initNovel)
       .then(() => {
-        if (!list.length && novel.novelList.length) {
-          const filterdata = novelFilter(novel.novelList)
-          setList(filterdata)
-        }
+        const filterdata = novelFilter(novel.novelList)
+        setList(filterdata)
       })
       .finally(() => {
-        setloading(false)
-        console.log('loading',loading)
+        if (list.length === 0) {
+          setloading(false)
+        }
+        setTimeout(() => {
+          callback()
+        }, 1000)
       })
-  }, [novel.novelList])
+  }
 
-  const AffixArrayRef = useRef([])
-  const { run } = useDebounceFn(e => {}, {
-    wait: 500
-  })
   useEffect(() => {
-    const view = document.querySelector('#zaiViewId')
-    view.addEventListener('scroll', run)
-    return () => {
-      view.removeEventListener('scroll', run)
-    }
-  }, [])
+    const filterdata = novelFilter(novel.novelList)
+    setList(filterdata)
+  }, [novel.novelList])
 
   const refresh = () => {
     setloading(true)
@@ -77,26 +74,27 @@ export default () => {
 
   return (
     <>
-      <CardSkeletons show={loading}>
-        {list.length === 0 ? (
-          <div className='flex-fdc-aic-juc w-100-vw cursor-pointer' style={{ height: '80vh' }}>
-            <CuIcon onClick={refresh} icon='refresh' size={32} color={'var(--icon-color-disabled)'} />
-            <span className='ml-10 mt-5'>刷新？</span>
-          </div>
-        ) : (
-          list.map((item, index) => (
-            <div key={index}>
-              <div className={'flex-ai-c mb-5 ' + styles.Affixview} ref={val => (AffixArrayRef.current[index] = val)}>
-                <h2>&ensp;{item.Affix}</h2>
-                <CuIcon icon='play_forward_fill' color='var(--success-color)' className={styles.Affixicon + ' ml-10'} />
+      <div className='h-100-vh'>
+        <DropdownPullup onEnd={setup} headerPosition={<div style={{ height: '10px' }}></div>}>
+          <CardSkeletons show={loading}>
+            {list.map((item, index) => (
+              <div key={index}>
+                <div className={'flex-ai-c mb-5 ' + styles.Affixview}>
+                  <h2>&ensp;{item.Affix}</h2>
+                  <CuIcon
+                    icon='play_forward_fill'
+                    color='var(--success-color)'
+                    className={styles.Affixicon + ' ml-10'}
+                  />
+                </div>
+                <div className={styles.view} key={index}>
+                  <NovelCardList data={item.data} />
+                </div>
               </div>
-              <div className={styles.view} key={index}>
-                <NovelCardList data={item.data} />
-              </div>
-            </div>
-          ))
-        )}
-      </CardSkeletons>
+            ))}
+          </CardSkeletons>
+        </DropdownPullup>
+      </div>
     </>
   )
 }

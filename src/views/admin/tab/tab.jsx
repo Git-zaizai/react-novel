@@ -182,7 +182,8 @@ export default () => {
 
   return (
     <>
-      <div className={styles.view}>
+      <div className={styles.view + ' h-100-vh'}>
+        <div style={{ height: 'calc(var(--Header-height) + 20px)' }}></div>
         <TabCard />
 
         <ViewCard

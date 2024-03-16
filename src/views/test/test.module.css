@@ -1,0 +1,85 @@
+.textdisabled {
+  color: var(--text-color-disabled);
+}
+
+.dropdown-pullup {
+  position: relative;
+  height: 100%;
+  overflow: var(--overflow);
+}
+
+/* 隐藏滚动条 */
+.scroll-hihe::-webkit-scrollbar {
+  display: none;
+}
+/* 为了确保内容仍然可以滚动 */
+.scroll-hihe {
+  -ms-overflow-style: none; /* IE和Edge */
+  scrollbar-width: none; /* Firefox */
+}
+/* 可选：如果你想要为其他浏览器（非Webkit）也隐藏滚动条 */
+.scroll-hihe {
+  overflow: -moz-scrollbars-none; /* Firefox */
+}
+
+.loaderBox {
+  position: absolute;
+  top: -70px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70px;
+  z-index: 10;
+  transform: translateY(var(--zai-translateY));
+}
+
+.dropdown-icon {
+  font-size: 24px;
+  color: var(--text-color-disabled);
+}
+
+.dropdown-icon-rotate180 {
+  animation: rotate180 0.5s ease forwards;
+}
+
+.loader {
+  width: 25px;
+  height: 25px;
+  border: 3px solid var(--border-color);
+  border-radius: 50%;
+  border-bottom: 3px solid var(--success-color);
+  animation: loadingskKeyframes 1s linear infinite;
+}
+
+.content {
+  transform: translateY(var(--zai-translateY));
+  height: 100%;
+}
+
+.loaderBottomBox {
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-color-disabled);
+}
+
+@keyframes loadingskKeyframes {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotate180 {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+  }
+}
