@@ -6,6 +6,7 @@ import CuIcon from '@/components/cuIcon'
 import NovelCardList from '@/components/novelCard'
 import { HamburgerButton } from '@icon-park/react'
 import { SearchOutlined } from '@ant-design/icons'
+import DropdownPullup from '@/components/DropdownPullup'
 
 import { useViewDataStore } from '@/store/viewdata'
 import { useState, useEffect } from 'react'
@@ -36,6 +37,7 @@ export default () => {
   const [searchlist, setSearchlist] = useState([])
   const [page, setPage] = useState(10)
   const inputRef = useRef()
+  const { initTabs, initNovel } = useViewDataStore()
 
   const onSearch = async () => {
     const and = []
@@ -76,7 +78,6 @@ export default () => {
       })
 
     let fles = response.map(mv => {
-      console.log(tabs)
       mv.tabs = mv.tabs.map(mmv => {
         console.log(
           tabs.find(fv => fv.tab === mmv),
@@ -86,13 +87,23 @@ export default () => {
       })
       return mv
     })
-    console.log(fles)
     response = fles
     setSearchlist(response)
   }
 
-  const bindList = () => {
+  const bindList = async callback => {
+    console.log(novel.novelList, !novel.novelList.length)
+    if (!novel.novelList.length) {
+      console.log('🚀 ~ bindList ~ !novel.novelList.length:', !novel.novelList.length)
+
+      await initTabs()
+      await initNovel()
+    }
+
     setSearchlist(novel.novelList.slice(0, 10))
+    setTimeout(() => {
+      callback && callback()
+    }, 1000)
   }
 
   const { run } = useDebounceFn(
@@ -109,7 +120,7 @@ export default () => {
     }
   )
   useEffect(() => {
-    const view = document.querySelector('#zaiViewId')
+    /* const view = document.querySelector('#zaiViewId')
     view.addEventListener('scroll', run)
 
     if (novel.novelList.length) {
@@ -117,65 +128,64 @@ export default () => {
     }
     return () => {
       view.removeEventListener('scroll', run)
-    }
+    } */
   }, [])
 
   return (
     <>
-      <Card
-        className={`${styles.search} ${styles.searchcard}`}
-        hoverable
-        title={
-          <>
-            <div className={styles.searchtitle + ' flex-ai-c'}>
-              <Input placeholder='名' variant='filled' type='Primary' ref={inputRef} />
-              <Button className='ml-5' onClick={onSearch}>
-                <SearchOutlined />
-              </Button>
+      <div className='zai-content'>
+        <DropdownPullup onEnd={bindList}>
+          <Card
+            className={`${styles.search} ${styles.searchcard}`}
+            hoverable
+            title={
+              <>
+                <div className={styles.searchtitle + ' flex-ai-c'}>
+                  <Input placeholder='名' variant='filled' type='Primary' ref={inputRef} />
+                  <Button className='ml-5' onClick={onSearch}>
+                    <SearchOutlined />
+                  </Button>
 
-              {/* <Search placeholder='名' allowClear size='large' onSearch={onSearch} /> */}
-              <Button type='text' className='ml-5' onClick={toggle}>
-                <HamburgerButton theme='outline' size='26' fill={isCheckboxShow ? '#333' : 'var(--primary-color)'} />
-              </Button>
-            </div>
-          </>
-        }
-      >
-        <Transition show={isCheckboxShow}>
-          {isCheckboxShow ? (
-            <p></p>
-          ) : (
-            <>
-              <Form className={styles.searchFormItem} form={formRef}>
-                <Form.Item name='tabs'>
-                  <Checkbox.Group>
-                    {tabs.length &&
-                      tabs.map(item => (
-                        <Checkbox key={item.tab} value={item.tab} style={{ lineHeight: '32px' }}>
-                          <Tag color={item.color}>{item.tab}</Tag>
-                        </Checkbox>
-                      ))}
-                  </Checkbox.Group>
-                </Form.Item>
+                  {/* <Search placeholder='名' allowClear size='large' onSearch={onSearch} /> */}
+                  <Button type='text' className='ml-5' onClick={toggle}>
+                    <HamburgerButton
+                      theme='outline'
+                      size='26'
+                      fill={isCheckboxShow ? '#333' : 'var(--primary-color)'}
+                    />
+                  </Button>
+                </div>
+              </>
+            }
+          >
+            <Transition show={isCheckboxShow}>
+              {isCheckboxShow ? (
+                <p></p>
+              ) : (
+                <>
+                  <Form className={styles.searchFormItem} form={formRef}>
+                    <Form.Item name='tabs'>
+                      <Checkbox.Group>
+                        {tabs.length &&
+                          tabs.map(item => (
+                            <Checkbox key={item.tab} value={item.tab} style={{ lineHeight: '32px' }}>
+                              <Tag color={item.color}>{item.tab}</Tag>
+                            </Checkbox>
+                          ))}
+                      </Checkbox.Group>
+                    </Form.Item>
 
-                <Form.Item name='wanjie' className='mt-10'>
-                  <ButtonCheckboxGroup options={typeOptions} />
-                </Form.Item>
-              </Form>
-            </>
-          )}
-        </Transition>
-      </Card>
+                    <Form.Item name='wanjie' className='mt-10'>
+                      <ButtonCheckboxGroup options={typeOptions} />
+                    </Form.Item>
+                  </Form>
+                </>
+              )}
+            </Transition>
+          </Card>
 
-      <div className={styles.searchScroll} style={{ height: searchlist.length ? 'auto' : '60vh' }}>
-        <div style={{ width: '100vw', height: isMobile() ? '76px' : '100px' }}></div>
-        {searchlist.length ? (
           <NovelCardList data={searchlist} />
-        ) : (
-          <div className='flex-fdc-aic-juc w-100-vw cursor-pointer'>
-            <CuIcon onClick={bindList} icon='refresh' size={50} color={'var(--icon-color-disabled)'} />
-          </div>
-        )}
+        </DropdownPullup>
       </div>
     </>
   )

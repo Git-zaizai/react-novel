@@ -7,6 +7,16 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+:root {
+  --Header-height: 70px;
+  --Footer-height: 64px;
+}
+
+.zai-content {
+  margin: var(--Header-height) 0 var(--Footer-height) 0;
+  height: calc(100vh - var(--Header-height) - var(--Footer-height));
+}
+
 /* 整个滚动条 */
 .zaiView::-webkit-scrollbar {
   width: var(--scrollbar-width); /* 滚动条的宽度 */
@@ -44,7 +54,6 @@
 }
 
 .zaiView {
- 
 }
 
 /* 滚动条轨道 */
@@ -97,7 +106,6 @@
 }
 
 @media screen and (max-width: 980px) {
-
   .pc-zaifooter {
     display: none;
   }

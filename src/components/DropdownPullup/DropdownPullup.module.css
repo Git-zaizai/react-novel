@@ -4,6 +4,7 @@
 
 .dropdown-pullup {
   position: relative;
+  width: 100%;
   height: 100%;
   overflow: var(--overflow);
 }
@@ -55,6 +56,7 @@
 .content {
   transform: translateY(var(--zai-translateY));
   height: 100%;
+  width: 100%;
 }
 
 .loaderBottomBox {

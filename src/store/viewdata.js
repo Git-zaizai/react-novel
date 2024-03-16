@@ -1,4 +1,3 @@
-import { useMount } from 'ahooks'
 import { createGlobalStore } from 'hox'
 import { useState } from 'react'
 import http from '@/utlis/http'
@@ -34,7 +33,8 @@ const [viewdata, getViewData] = createGlobalStore(() => {
       item.title = `*****${index}`
       return item
     })
-    data = data.reverse()
+
+    data = data.reverse().slice(30)
     data = data.map(mv => {
       mv.tabs = mv.tabs.map(mmv => {
         const find = tabs.find(fv => fv.tab === mmv)
@@ -49,10 +49,6 @@ const [viewdata, getViewData] = createGlobalStore(() => {
     setNovelStore({ novelList: data })
   }
 
-  useMount(() => {
-    initTabs()
-    initNovel()
-  })
   return {
     tabs,
     setTabs,

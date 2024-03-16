@@ -49,15 +49,16 @@ interface DropdownState {
 interface Props {
   children?: ReactNode
   // 下拉刷新回调
-  onEnd: <T>(fn: Dispatch<T>) => void | Promise<void>
+  onEnd: (fn: () => void) => void | Promise<void>
   // 触底加载回调
   onPullup: (fn: Dispatch<PullupState>) => void | Promise<void>
   InfiniteDropdown?: boolean // 无限下拉
+  isMount?: boolean
 }
 
 export type PullRefreshProps = Props
 
-const DropdownPullup = ({ children, onEnd, onPullup, InfiniteDropdown = true }: Props) => {
+const DropdownPullup = ({ children, onEnd, onPullup, InfiniteDropdown = true, isMount = true }: Props) => {
   const dropdownPullupViewRef = useRef<HTMLDivElement | null>(null)
 
   const [style, setStyle] = useState({
@@ -73,7 +74,7 @@ const DropdownPullup = ({ children, onEnd, onPullup, InfiniteDropdown = true }: 
 
   const [pullup, setPullup] = useState<PullupState>({
     text: '加载中...',
-    show: true,
+    show: typeof onPullup === 'function',
     iconShow: true
   })
 
@@ -91,13 +92,9 @@ const DropdownPullup = ({ children, onEnd, onPullup, InfiniteDropdown = true }: 
     const { scrollHeight, clientHeight, scrollTop } = e.target
     viewScrollTop = scrollTop
     if (clientHeight + scrollTop >= scrollHeight) {
-      setStyle((value: any) => ({ ...value, '--overflow': 'hidden' }))
       if (onPullup) {
+        setStyle((value: any) => ({ ...value, '--overflow': 'hidden' }))
         onPullup(pullupCallback)
-      } else {
-        setTimeout(() => {
-          pullupCallback()
-        }, 1500)
       }
     }
   }
@@ -173,7 +170,7 @@ const DropdownPullup = ({ children, onEnd, onPullup, InfiniteDropdown = true }: 
     }
     loadLock = true
     setStyle((value: any) => {
-      return { ...value, '--zai-translateY': '70px' }
+      return { ...value, '--zai-translateY': DISTANCE_Y_MAX_LIMIT + 'px' }
     })
     setDropdown((value: any) => ({ ...value, status: 3 }))
     if (onEnd) {
@@ -211,15 +208,25 @@ const DropdownPullup = ({ children, onEnd, onPullup, InfiniteDropdown = true }: 
 
   useEffect(() => {
     const dom = dropdownPullupViewRef.current
-    if (dom) {
+    if (typeof onPullup === 'function' && dom) {
       const { scrollHeight, clientHeight } = dom
       const show = scrollHeight <= clientHeight
-      setPullup((value: any) => ({ ...value, show: !show }))
+      setPullup((value: any) => ({ ...value, show }))
     }
   }, [children])
 
   useLayoutEffect(() => {
+    if (isMount) {
+      setStyle({ '--overflow': 'hidden', '--zai-translateY': DISTANCE_Y_MAX_LIMIT + 'px' })
+      setDropdown((value: any) => ({ ...value, status: 3 }))
+    }
     return addTouchEvent()
+  }, [])
+
+  useEffect(() => {
+    if (isMount && onEnd) {
+      onEnd(endCallback)
+    }
   }, [])
 
   return (
@@ -245,7 +252,7 @@ const DropdownPullup = ({ children, onEnd, onPullup, InfiniteDropdown = true }: 
             </div>
           )}
         </div>
-        <div className={styles.content + ' flex-ai-c flex-wrap content-class'}>
+        <div className={styles.content}>
           {children}
           {pullup.show && (
             <div className={styles.loaderBottomBox}>
