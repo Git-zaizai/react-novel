@@ -12,6 +12,26 @@
   --Footer-height: 64px;
 }
 
+/*  禁止（safari）浏览器自带的下拉刷新 */
+html,
+body {
+  overflow: hidden;
+}
+
+/* 针对 IPhone 的底部安全距离
+https://juejin.cn/post/7046269334259236901#heading-0
+*/
+@supports (bottom: constant(safe-area-inset-bottom)) or (bottom: env(safe-area-inset-bottom)) {
+  body {
+    margin-bottom: constant(safe-area-inset-bottom);
+    margin-bottom: env(safe-area-inset-bottom);
+  }
+  .zaifooter {
+    margin-bottom: constant(safe-area-inset-bottom);
+    margin-bottom: env(safe-area-inset-bottom);
+  }
+}
+
 .zaiheader {
   height: 64px;
   display: flex;
@@ -19,7 +39,7 @@
   flex: 0 0 auto;
   padding: 0 10px 0px 4vw;
   color: var(--text-color-1);
-  /* background: var(--body-back-color); */
+  /* background: var(--divider-color); */
   backdrop-filter: blur(18px);
   justify-content: space-between;
   position: fixed;

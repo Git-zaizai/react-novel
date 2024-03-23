@@ -38,13 +38,16 @@ export default () => {
   const { initTabs, initNovel } = useViewDataStore()
 
   const bindList = async callback => {
-    if (!novel.novelList.length) {
-      await initTabs()
-      await initNovel()
+    try {
+      if (!novel.novelList.length) {
+        await initTabs()
+        await initNovel()
+      }
+    } finally {
+      setTimeout(() => {
+        callback && callback()
+      }, 1000)
     }
-    setTimeout(() => {
-      callback && callback()
-    }, 1000)
   }
 
   useEffect(() => {
@@ -168,6 +171,7 @@ export default () => {
         <DropdownPullup
           onEnd={bindList}
           onPullup={onPullup}
+          isMount={false}
           headerPosition={<div style={{ height: 'calc(var(--Header-height) + 20px)' }}></div>}
         >
           <div className='flex-ai-c flex-wrap'>
