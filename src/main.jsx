@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import '@icon-park/react/styles/index.css';
 
+import eruda from 'eruda'
+
 /**
  *     <React.StrictMode>
         <App/>
@@ -10,3 +12,4 @@ import '@icon-park/react/styles/index.css';
  *
  */
 ReactDOM.createRoot(document.getElementById('root')).render(<App />)
+eruda.init()

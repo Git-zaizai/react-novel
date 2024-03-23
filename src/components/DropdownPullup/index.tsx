@@ -39,12 +39,14 @@ interface PullupState {
   show: boolean
   text: string
   iconShow: boolean
+  opacity: 0 | 1
 }
 
 interface DropdownState {
   className: (typeof styles)['dropdown-icon-rotate180']
   status: 1 | 2 | 3
   text: string
+  opacity: 0 | 1
 }
 
 interface Props {
@@ -78,19 +80,23 @@ const DropdownPullup = ({
   const [dropdown, setDropdown] = useState<DropdownState>({
     text: '下拉刷新',
     status: 1,
-    className: ''
+    className: '',
+    opacity: 0
   })
 
   const [pullup, setPullup] = useState<PullupState>({
     text: '加载中...',
     show: false,
-    iconShow: true
+    iconShow: true,
+    opacity: 0
   })
+
   const pullupCallback = (value?: PullupState) => {
     setPullup({
       text: '加载中...',
       show: true,
       iconShow: true,
+      opacity: 0,
       ...value
     })
     setStyle({ '--overflow': 'scroll', '--zai-translateY': '0px' })
@@ -102,6 +108,7 @@ const DropdownPullup = ({
     if (clientHeight + scrollTop >= scrollHeight) {
       if (onPullup) {
         setStyle((value: any) => ({ ...value, '--overflow': 'hidden' }))
+        setPullup(value => ({ ...value, opacity: 1 }))
         onPullup(pullupCallback)
       }
     }
@@ -130,12 +137,14 @@ const DropdownPullup = ({
     let percent = (100 - distanceY * 0.5) / 100
     percent = Math.max(0.5, percent)
     distanceY = distanceY * percent
+    console.log('🚀 ~ move ~ distanceY:', distanceY)
     if (distanceY > DISTANCE_Y_MAX_LIMIT) {
       if (dropdown.status !== 2) {
         setDropdown({
           className: styles['dropdown-icon-rotate180'],
           status: 2,
-          text: '放手刷新'
+          text: '放手刷新',
+          opacity: 1
         })
       }
 
@@ -144,6 +153,7 @@ const DropdownPullup = ({
       }
     }
 
+    setDropdown(value => ({ ...value, opacity: 1 }))
     setStyle({ '--overflow': 'hidden', '--zai-translateY': distanceY + 'px' })
   }
 
@@ -155,7 +165,8 @@ const DropdownPullup = ({
     setDropdown({
       className: '',
       status: 1,
-      text: '下拉刷新'
+      text: '下拉刷新',
+      opacity: 0
     })
     if (!pullup.show && typeof onPullup === 'function') {
       setPullup((value: any) => ({ ...value, show: true }))
@@ -171,36 +182,38 @@ const DropdownPullup = ({
     if (endY - startY < 0) {
       return
     }
+    console.log('🚀 ~ end ~ end:', distanceY < DISTANCE_Y_MAX_LIMIT)
     if (distanceY < DISTANCE_Y_MAX_LIMIT) {
-      setStyle((value: any) => {
-        return { ...value, '--zai-translateY': '0px' }
-      })
-      setDropdown({
+      distanceY = 0
+      setDropdown(() => ({
         className: '',
         status: 1,
-        text: '下拉刷新'
-      })
-      return
-    }
-    loadLock = true
-    setStyle((value: any) => {
-      return { ...value, '--zai-translateY': DISTANCE_Y_MAX_LIMIT + 'px' }
-    })
-    setDropdown((value: any) => ({ ...value, status: 3 }))
-    if (onEnd) {
-      onEnd(endCallback)
+        text: '下拉刷新',
+        opacity: 0
+      }))
+      setStyle(() => ({ '--overflow': 'scroll', '--zai-translateY': '0px' }))
     } else {
-      setTimeout(() => {
-        loadLock = false
-        distanceY = 0
+      loadLock = true
+      setStyle((value: any) => {
+        return { ...value, '--zai-translateY': DISTANCE_Y_MAX_LIMIT + 'px' }
+      })
+      setDropdown((value: any) => ({ ...value, status: 3 }))
+      if (onEnd) {
+        onEnd(endCallback)
+      } else {
+        setTimeout(() => {
+          loadLock = false
+          distanceY = 0
 
-        setStyle({ '--overflow': 'scroll', '--zai-translateY': '0px' })
-        setDropdown({
-          className: '',
-          status: 1,
-          text: '下拉刷新'
-        })
-      }, 1000)
+          setStyle({ '--overflow': 'scroll', '--zai-translateY': '0px' })
+          setDropdown({
+            className: '',
+            status: 1,
+            text: '下拉刷新',
+            opacity: 0
+          })
+        }, 1000)
+      }
     }
   }
 
@@ -251,6 +264,7 @@ const DropdownPullup = ({
     <>
       <div
         ref={dropdownPullupViewRef}
+        id='dropdown-pullup'
         className={`${styles['dropdown-pullup']} ${!isMobile() && 'web-dropdown-pullup'}`}
         onScroll={scroll}
         style={style as React.CSSProperties}
@@ -258,7 +272,7 @@ const DropdownPullup = ({
         {headerPosition}
         <div className={styles.loaderBox}>
           {dropdown.status !== 3 && (
-            <div className={styles.textdisabled + ' flex-ai-c'}>
+            <div className={`${styles.textdisabled} flex-ai-c`} style={{ opacity: dropdown.opacity }}>
               <i className={`cuIcon-refresharrow ${styles['dropdown-icon']} ${dropdown.className}`} />
               <span>{dropdown.text}</span>
             </div>
@@ -274,7 +288,7 @@ const DropdownPullup = ({
         <div className={styles.content}>
           {children}
           {pullup.show && (
-            <div className={styles.loaderBottomBox}>
+            <div className={styles.loaderBottomBox} style={{ opacity: pullup.opacity }}>
               {pullup.iconShow && <i className={styles.loader}></i>}
               <span>{pullup.text}</span>
             </div>

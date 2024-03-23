@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, createHashRouter } from 'react-router-dom'
 import { LazyImport, Layout } from './content'
 
 export const tabsRoutes = [
@@ -53,7 +53,7 @@ import adminRoute from './admin/index'
 
 export const routes = [...tabsRoutes, ...adminRoute]
 
-export const router = createBrowserRouter(routes, {
+export const router = createHashRouter(routes, {
   basename: import.meta.env.VITE_GLOB_ROUTER_PREFIX ?? '/'
 })
 

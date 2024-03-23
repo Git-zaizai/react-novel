@@ -31,26 +31,6 @@ export default () => {
     }
   }
 
-  /******************************************************************** */
-  const scrollViewFun = useCallback(() => () => {
-    const scrolltop = document.querySelector('.zaiView').scrollTop
-    if (scrolltop > 100) {
-      setValueStore({
-        mainScroll: true
-      })
-    } else {
-      setValueStore({
-        mainScroll: false
-      })
-    }
-  })
-
-  /* useEffect(() => { */
-  /*   document.querySelector('.zaiView').addEventListener( */
-  /*     'scroll', */
-  /*     debounce((e) => {}) */
-  /*   ) */
-  /* }, []) */
 
   return (
     <>
