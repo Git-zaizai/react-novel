@@ -1,14 +1,15 @@
 {
   "name": "react-novel",
   "private": true,
-  "version": "1.1.1",
+  "version": "1.1.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:test": "vite build --mode test",
+    "build:hashRouter": "vite build --mode production.hashRouter",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "preview:hashRouter": "vite preview --mode production.hashRouter"
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",

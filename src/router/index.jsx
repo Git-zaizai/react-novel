@@ -53,9 +53,16 @@ import adminRoute from './admin/index'
 
 export const routes = [...tabsRoutes, ...adminRoute]
 
-export const router = createHashRouter(routes, {
-  basename: import.meta.env.VITE_GLOB_ROUTER_PREFIX ?? '/'
-})
+let router = null
+if (import.meta.env.VITE_GLOB_ROUTER_FN === 'BrowserRouter') {
+  router = createBrowserRouter(routes, {
+    basename: import.meta.env.BASE_URL ?? '/'
+  })
+} else {
+  router = createHashRouter(routes, {
+    basename: import.meta.env.BASE_URL ?? '/'
+  })
+}
 
 export default function Router() {
   return <RouterProvider router={router} />
