@@ -87,7 +87,7 @@ export default props => {
   const dropdownClick = useCallback(async ({ key }) => {
     if (key === '1') {
       setValueStore({ isAddDrawer: !store.isAddDrawer })
-      setNovelStore({ action: 'updata', data })
+      setNovelStore({ action: 'update', data })
     } else {
       const modalRes = await window.$modal.confirm({
         okText: '删除',

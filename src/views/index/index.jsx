@@ -71,7 +71,6 @@ export default () => {
         .finally(() => setloading(false))
     }, 1000)
   }
-
   return (
     <>
       <div className='h-100-vh'>

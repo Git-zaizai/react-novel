@@ -32,6 +32,7 @@ export default () => {
   }
 
   const { tabs, initTabs, novel, setNovelStore } = useViewDataStore()
+
   const { store, setValueStore } = useStore()
   const [formRef] = Form.useForm()
   const [titleRules, setTitleRules] = useState({
@@ -39,16 +40,52 @@ export default () => {
     message: '',
     hasFeedback: false
   })
+  const [checkboxs, setCheckboxs] = useState([])
+
+  if (store.isAddDrawer && novel.action === 'update' && Object.keys(novel.data).length) {
+    let data = structuredClone(novel.data)
+    data.tabs = novel.data.tabs.map(t => t.tab)
+    initialValues = data
+  }
 
   useEffect(() => {
-    if (store.isAddDrawer && tabs.length === 0) {
-      initTabs().finally(() => {
-        if (novel.action === 'updata') {
-          formRef.setFieldsValue(novel.data)
-        }
-      })
+    if (store.isAddDrawer && novel.action === 'add') {
+      formRef.setFieldsValue(initialValues)
     }
-  }, [novel.action])
+  }, [store.isAddDrawer])
+
+
+  /*   async function isAddDrawerEffect() {
+    console.log(novel.data)
+    if (Object.keys(novel.data).length === 0) {
+      return
+    }
+    if (store.isAddDrawer && tabs.length === 0) {
+      await initTabs()
+    }
+    if (novel.action === 'update') {
+      // formRef.setFieldsValue(novel.data)
+      setCheckboxs(() => novel.data.tabs.map(t => t.tab))
+    } else {
+      // formRef.setFieldsValue(initialValues)
+    }
+    // initialValues = data
+  }
+
+
+  useEffect(() => {
+    isAddDrawerEffect()
+  }, [store.isAddDrawer]) */
+
+  function checkboxChange(value, index) {
+    console.log('🚀 ~ checkboxChange ~ value:', value)
+    if (value) {
+      setCheckboxs([...checkboxs, value])
+    } else {
+      checkboxs.splice(index, i)
+      setCheckboxs([...checkboxs])
+    }
+  }
 
   const bindtitleBlur = e => {
     if (e.target.value === '') {
@@ -166,7 +203,6 @@ export default () => {
       </div>
     </>
   )
-
   return (
     <Drawer
       title={novel.action === 'updata' ? '修改 Record' : '添加 Record'}
@@ -199,6 +235,22 @@ export default () => {
             </Row>
           </Checkbox.Group>
         </Form.Item>
+        {/* <Form.Item name='tabs' label='标签：' valuePropName='checked'>
+          <Row>
+            {tabs.length &&
+              tabs.map((item, index) => (
+                <Checkbox
+                  key={item.tab}
+                  checked={checkboxs.some(t => t === item.tab)}
+                  value={item.tab}
+                  style={{ lineHeight: '32px' }}
+                  onChange={value => checkboxChange(value, index)}
+                >
+                  <Tag color={item.color}>{item.tab}</Tag>
+                </Checkbox>
+              ))}
+          </Row>
+        </Form.Item> */}
 
         <Form.Item label='章节：'>
           <Space.Compact size='large' className='w-100'>
