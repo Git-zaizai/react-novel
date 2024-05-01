@@ -40,14 +40,12 @@ export function debounce(fn, delay = 200, immediate = false, resultCb) {
 }
 
 export function isMobile() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent
-  )
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 }
 
 export function exportJsonFile(list) {
   const strlist = []
-  list.forEach((item) => {
+  list.forEach(item => {
     strlist.push(JSON.stringify(item))
     strlist.push(',')
   })
@@ -66,11 +64,13 @@ export function exportJsonFile(list) {
 }
 
 export function copyText(data, callback) {
+  console.log('🚀 ~ copyText ~ data:', data)
+  console.log('🚀 ~ copyText ~ navigator.clipboard:', navigator.clipboard)
   if (navigator.clipboard) {
     navigator.clipboard.writeText(data).then(
       function () {
         callback && callback('复制成功')
-      },
+      },   
       function () {
         copy2(data)
       }
@@ -80,7 +80,8 @@ export function copyText(data, callback) {
   }
 
   function copy2(text) {
-    const input = document.querySelector('#copyinuput')
+    const input = document.createElement('input')
+    document.body.appendChild(input)
     input.value = text
     if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i)) {
       input.setSelectionRange(0, text.length)

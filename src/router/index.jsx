@@ -53,8 +53,9 @@ import adminRoute from './admin/index'
 
 export const routes = [...tabsRoutes, ...adminRoute]
 
+const { VITE_GLOB_ROUTER_FN } = import.meta.env
 let router = null
-if (import.meta.env.VITE_GLOB_ROUTER_FN === 'BrowserRouter') {
+if (VITE_GLOB_ROUTER_FN && VITE_GLOB_ROUTER_FN === 'BrowserRouter') {
   router = createBrowserRouter(routes, {
     basename: import.meta.env.BASE_URL ?? '/'
   })

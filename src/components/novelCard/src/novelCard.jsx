@@ -50,8 +50,8 @@ function Chapter({ start, finish }) {
 
   return (
     <div className='flex-ai-c mt-10'>
-      <Asterisk theme='outline' size='18' fill='var(--success-color)' onClick={() => click(updateChapter)} />
-      <h4 className={styles.cardExtra + ' ml-10'} onClick={() => click(updateChapter)}>
+      <Asterisk theme='outline' size='18' fill='var(--success-color)' />
+      <h4 className={styles.cardExtra + ' ml-10'}>
         第 {start || '???'}&ensp;-&ensp;{finish || '???'} 章
       </h4>
       <Tag color={randomHexColor()} className='ml-auto'>

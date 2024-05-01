@@ -43,7 +43,10 @@ export default () => {
   const [checkboxs, setCheckboxs] = useState([])
 
   if (store.isAddDrawer && novel.action === 'update' && Object.keys(novel.data).length) {
-    let data = structuredClone(novel.data)
+    let data =
+      typeof window.structuredClone === 'function'
+        ? structuredClone(novel.data)
+        : JSON.parse(JSON.stringify(novel.data))
     data.tabs = novel.data.tabs.map(t => t.tab)
     initialValues = data
   }
@@ -54,28 +57,6 @@ export default () => {
     }
   }, [store.isAddDrawer])
 
-
-  /*   async function isAddDrawerEffect() {
-    console.log(novel.data)
-    if (Object.keys(novel.data).length === 0) {
-      return
-    }
-    if (store.isAddDrawer && tabs.length === 0) {
-      await initTabs()
-    }
-    if (novel.action === 'update') {
-      // formRef.setFieldsValue(novel.data)
-      setCheckboxs(() => novel.data.tabs.map(t => t.tab))
-    } else {
-      // formRef.setFieldsValue(initialValues)
-    }
-    // initialValues = data
-  }
-
-
-  useEffect(() => {
-    isAddDrawerEffect()
-  }, [store.isAddDrawer]) */
 
   function checkboxChange(value, index) {
     console.log('🚀 ~ checkboxChange ~ value:', value)
@@ -189,7 +170,7 @@ export default () => {
     <>
       <div className='flex-fdc-aic-juc'>
         <Button type='primary' block htmlType='submit' onClick={() => formfinish()}>
-          {novel.action === 'updata' ? '修改' : '添加'}
+          {novel.action === 'update' ? '修改' : '添加'}
         </Button>
         <Button
           danger
@@ -205,7 +186,7 @@ export default () => {
   )
   return (
     <Drawer
-      title={novel.action === 'updata' ? '修改 Record' : '添加 Record'}
+      title={novel.action === 'update' ? '修改 Record' : '添加 Record'}
       placement={isMobile() ? 'bottom' : 'right'}
       height='90vh'
       open={store.isAddDrawer}
