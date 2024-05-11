@@ -137,7 +137,6 @@ const DropdownPullup = ({
     let percent = (100 - distanceY * 0.5) / 100
     percent = Math.max(0.5, percent)
     distanceY = distanceY * percent
-    console.log('🚀 ~ move ~ distanceY:', distanceY)
     if (distanceY > DISTANCE_Y_MAX_LIMIT) {
       if (dropdown.status !== 2) {
         setDropdown({
@@ -182,7 +181,6 @@ const DropdownPullup = ({
     if (endY - startY < 0) {
       return
     }
-    console.log('🚀 ~ end ~ end:', distanceY < DISTANCE_Y_MAX_LIMIT)
     if (distanceY < DISTANCE_Y_MAX_LIMIT) {
       distanceY = 0
       setDropdown(() => ({
