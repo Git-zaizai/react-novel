@@ -3,9 +3,10 @@ import { useState } from 'react'
 import { setRootCss } from '@/styles/cssVars'
 import { checkIsDarkMode, getThemeToken } from '@/utlis/themeColor'
 
+
 const [useAccountStore, getAccountStore] = createGlobalStore(() => {
   const [laoutState, setlaoutState] = useState({
-    theme: false,
+    theme: checkIsDarkMode(),
     themeToken: {
       colorPrimary: '#18a058',
       colorInfo: '#18a058',
@@ -16,6 +17,7 @@ const [useAccountStore, getAccountStore] = createGlobalStore(() => {
     mainScroll: false,
     isSettingTwo: false
   })
+
 
   function setValueStore(obj) {
     setlaoutState(v => ({ ...v, ...obj }))

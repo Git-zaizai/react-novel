@@ -219,6 +219,7 @@ export const lightCssVars = {
 }
 
 export function setRootCss(ioCss) {
+  console.log("🚀 ~ setRootCss ~ ioCss:", ioCss)
   const root = document.documentElement
   let result = null
   // console.log(ioCss);

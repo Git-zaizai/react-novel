@@ -8,6 +8,7 @@ export function checkIsDarkMode() {
   } catch (err) {
     return false
   }
+    
 }
 
 /**

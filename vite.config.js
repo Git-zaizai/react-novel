@@ -6,7 +6,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 import AntdResolver from 'unplugin-auto-import-antd'
 
 // https://vitejs.dev/config/
-export default defineConfig((configEnv) => {
+export default defineConfig(configEnv => {
   const viteEnv = loadEnv(configEnv.mode, process.cwd())
 
   return {
@@ -27,6 +27,9 @@ export default defineConfig((configEnv) => {
     server: {
       host: '0.0.0.0',
       port: 1300
+    },
+    build: {
+      outDir: viteEnv.VITE_BUILD_OUTDIR ? viteEnv.VITE_BUILD_OUTDIR : 'dist'
     }
   }
 })

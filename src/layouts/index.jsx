@@ -31,7 +31,6 @@ export default () => {
     }
   }
 
-
   return (
     <>
       <Nprogress isAnimating={store.nprogress} key={location.key} />

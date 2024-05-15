@@ -2,7 +2,6 @@ import { HoxRoot } from 'hox'
 import RouterView from '@/router/index'
 import { checkIsDarkMode } from '@/utlis/themeColor'
 import { setRootCss } from '@/styles/cssVars'
-import { useEffect } from 'react'
 
 import './styles/index.css'
 
