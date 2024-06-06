@@ -30,8 +30,9 @@ const [viewdata, getViewData] = createGlobalStore(() => {
 
   const initNovel = async isleng => {
     if (!isleng) {
-      if (!tabs.length || novel.novelList.length) return
+      if (tabs.length > 0 && novel.novelList.length > 0) return
     }
+
     let data = await http.post('/curd-mongo/find/novel', { ops: { many: true } })
     /* data = data.map((item, index) => {
       item.title = `*****${index}`

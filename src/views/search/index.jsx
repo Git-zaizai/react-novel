@@ -26,6 +26,8 @@ const typeOptions = [
   }
 ]
 
+let isonSearch = false
+
 export default () => {
   console.log('search 路由页面')
 
@@ -34,7 +36,11 @@ export default () => {
   const { tabs, novel, initTabs, initNovel } = useViewDataStore()
   const [searchlist, setSearchlist] = useState([])
   const [page, setPage] = useState(10)
-  const inputRef = useRef()
+  const [inputValue, setInput] = useState('')
+
+  useEffect(() => {
+    bindList()
+  }, [novel.novelList])
 
   const bindList = async callback => {
     try {
@@ -43,22 +49,31 @@ export default () => {
         await initNovel()
       }
     } finally {
+      setSearchlist(novel.novelList.slice(0, 10))
+      setInput('')
+      formRef.resetFields()
+      isonSearch = false
       setTimeout(() => {
         callback && callback()
       }, 1000)
     }
   }
 
-  useEffect(() => {
-    setSearchlist(novel.novelList.slice(0, 10))
-  }, [novel.novelList])
-
   const onSearch = async () => {
+    isonSearch = true
     const and = []
 
-    const value = inputRef.current.input.value
-    if (value) {
-      and.push({ title: value })
+    if (inputValue) {
+      and.push({
+        title: {
+          $regex: inputValue
+        }
+      })
+      and.push({
+        beizhu: {
+          $regex: inputValue
+        }
+      })
     }
 
     if (!isCheckboxShow && formRef) {
@@ -77,7 +92,7 @@ export default () => {
     if (!and.length) return
 
     const body = {
-      $and: and
+      $or: and
     }
     let response = await http
       .post('/curd-mongo/find/novel', {
@@ -104,6 +119,10 @@ export default () => {
   }
 
   const onPullup = callback => {
+    if (isonSearch) {
+      callback()
+      return
+    }
     if (page + 10 < novel.novelList.length - 1) {
       setSearchlist(list => {
         return list.concat(novel.novelList.slice(page, page + 10))
@@ -127,7 +146,13 @@ export default () => {
           title={
             <>
               <div className={styles.searchtitle + ' flex-ai-c'}>
-                <Input placeholder='名' variant='filled' type='Primary' ref={inputRef} />
+                <Input
+                  placeholder='名'
+                  variant='filled'
+                  type='Primary'
+                  value={inputValue}
+                  onChange={e => setInput(e.target.value)}
+                />
                 <Button className='ml-5' onClick={onSearch}>
                   <SearchOutlined />
                 </Button>
@@ -148,7 +173,7 @@ export default () => {
                 <Form className={styles.searchFormItem} form={formRef}>
                   <Form.Item name='tabs'>
                     <Checkbox.Group>
-                      {tabs.length &&
+                      {tabs.length > 0 &&
                         tabs.map(item => (
                           <Checkbox key={item.tab} value={item.tab} style={{ lineHeight: '32px' }}>
                             <Tag color={item.color}>{item.tab}</Tag>
