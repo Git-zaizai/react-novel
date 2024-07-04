@@ -8,6 +8,7 @@ import { useMount } from 'ahooks'
 import { Dropdown } from 'antd'
 
 export default () => {
+
   const navigate = useNavigate()
   const location = useLocation()
   const { userStore, setUserStore } = useStore()
@@ -29,8 +30,8 @@ export default () => {
   }
 
   useMount(() => isUserAdmin())
-
   if (!isMobile()) {
+   
     const items = [
       {
         key: '/',

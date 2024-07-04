@@ -1,5 +1,6 @@
 import { useToggle } from 'ahooks'
 import { useViewDataStore, getViewDataStore } from '@/store/viewdata'
+
 export default () => {
   const { novel, setNovelStore } = useViewDataStore()
   const [show, { toggle }] = useToggle()

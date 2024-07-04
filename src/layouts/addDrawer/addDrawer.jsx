@@ -52,14 +52,15 @@ export default () => {
   }
 
   useEffect(() => {
-    if (store.isAddDrawer && novel.action === 'add') {
+    /* if (store.isAddDrawer && novel.action === 'add') {
+      formRef.setFieldsValue(initialValues)
+    }else */
+    if (store.isAddDrawer === true) {
       formRef.setFieldsValue(initialValues)
     }
   }, [store.isAddDrawer])
 
-
   function checkboxChange(value, index) {
-    console.log('🚀 ~ checkboxChange ~ value:', value)
     if (value) {
       setCheckboxs([...checkboxs, value])
     } else {
@@ -142,28 +143,28 @@ export default () => {
       }, 500)
     }
 
-    const url = novel.action === 'updata' ? 'update' : 'add'
+    const url = novel.action === 'add' ? 'add' : 'update'
     const body = novel.action === 'add' ? formdata : Object.assign(novel.data, formdata)
     body.start = Number(body.start)
     body.finish = Number(body.finish)
     const response = await http.post(`/mong/novel/${url}`, body).catch(err => {
+      window.$message.error('操作失败')
       return Promise.reject(err)
     })
 
-    if (response?.acknowledged) {
-      if (novel.action === 'add') {
-        body._id = response.insertedId
-        body.tabs = body.tabs.map(mmv => tabs.find(fv => fv.tab === mmv))
-      }
-
+    body.tabs = body.tabs.map(mmv => tabs.find(fv => fv.tab === mmv))
+    if (novel.action === 'add') {
+      body._id = response.insertedId
       setNovelStore({
         novelList: [body].concat(novel.novelList)
       })
-      setValueStore({ isAddDrawer: !store.isAddDrawer })
-      window.$message.success('操作成功')
     } else {
-      window.$message.error('操作失败')
+      const index = novel.novelList.findIndex(fv => fv['_id'] === body['_id'])
+      novel.novelList[index] = body
+      setNovelStore({ novelList: [].concat(novel.novelList) })
     }
+    setValueStore({ isAddDrawer: !store.isAddDrawer })
+    window.$message.success('操作成功')
   }
 
   const AddDrawerFooter = (
@@ -184,6 +185,7 @@ export default () => {
       </div>
     </>
   )
+
   return (
     <Drawer
       title={novel.action === 'update' ? '修改 Record' : '添加 Record'}

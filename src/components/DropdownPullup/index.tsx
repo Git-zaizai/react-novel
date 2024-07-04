@@ -105,7 +105,7 @@ const DropdownPullup = ({
   function scroll(e: any) {
     const { scrollHeight, clientHeight, scrollTop } = e.target
     viewScrollTop = scrollTop
-    if (clientHeight + scrollTop >= scrollHeight) {
+    if (clientHeight + scrollTop + 20 >= scrollHeight) {
       if (onPullup) {
         setStyle((value: any) => ({ ...value, '--overflow': 'hidden' }))
         setPullup(value => ({ ...value, opacity: 1 }))
@@ -288,7 +288,7 @@ const DropdownPullup = ({
           {pullup.show && (
             <div className={styles.loaderBottomBox} style={{ opacity: pullup.opacity }}>
               {pullup.iconShow && <i className={styles.loader}></i>}
-              <span>{pullup.text}</span>
+              <span className='ml-5'>{pullup.text}</span>
             </div>
           )}
           <div className={styles['footer-position']}></div>

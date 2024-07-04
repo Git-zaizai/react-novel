@@ -140,6 +140,9 @@ function TabCard() {
 }
 
 export default () => {
+
+  console.log('tab 页面');
+
   const [list, setList] = useState([])
   const { setTabs, tabs } = useViewDataStore()
 

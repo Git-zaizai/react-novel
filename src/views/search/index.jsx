@@ -51,11 +51,11 @@ export default () => {
     } finally {
       setSearchlist(novel.novelList.slice(0, 10))
       setInput('')
-      formRef.resetFields()
+      !isCheckboxShow && formRef.resetFields()
       isonSearch = false
       setTimeout(() => {
         callback && callback()
-      }, 1000)
+      }, 3000)
     }
   }
 
@@ -120,15 +120,22 @@ export default () => {
 
   const onPullup = callback => {
     if (isonSearch) {
-      callback()
+      console.log('🚀 ~ onPullup ~ isonSearch:', isonSearch)
+      callback({
+        text: '没有更多了',
+        iconShow: false,
+        opacity: 1
+      })
       return
     }
     if (page + 10 < novel.novelList.length - 1) {
+      callback({
+        opacity: 1
+      })
       setSearchlist(list => {
         return list.concat(novel.novelList.slice(page, page + 10))
       })
       setPage(page + 10)
-      callback()
     } else {
       callback({
         text: '没有更多了',
