@@ -12,7 +12,7 @@ import { useViewDataStore } from '@/store/viewdata'
 
 function TabCard() {
   const [isDelBut, { setLeft, setRight }] = useToggle()
-  const { tabs: checkboxs, setTabs: setCheckoxs } = useViewDataStore()
+  const { tabs: checkboxs, setTabs: setCheckoxs, initTabs } = useViewDataStore()
   const [removeTab, setRemoveTab] = useState([])
   const [val, setval] = useState('')
 
@@ -32,6 +32,7 @@ function TabCard() {
   }
 
   useEffect(() => {
+    initTabs()
     if (removeTab.length > 0 && !isDelBut) {
       setRight()
     } else if (removeTab.length === 0) {
@@ -45,7 +46,7 @@ function TabCard() {
       window.$message.warning(`${val} 已有`)
       return
     }
-    let data = checkboxs.map(mv => mv.tab).push(val)
+    let data = checkboxs.map(mv => mv.tab)
     await http
       .post('/json-set', {
         ph: 'tabs.json',
@@ -117,7 +118,7 @@ function TabCard() {
           <CuIcon icon='home' color='var(--primary-color)' size='24' />
         </div>
       )}
-      <Form.Item className={styles.addForm + ' w-100 mb-20'} labelAlign='right'>
+      <Form.Item className={styles.addForm + ' w-100 mb-30'} labelAlign='right'>
         <Space.Compact className='w-100'>
           <Input placeholder='标签名' onChange={e => setval(e.target.value)} />
           <Button type='primary' icon={<CuIcon icon='add' size={16} />} onClick={addTab}>
@@ -140,11 +141,10 @@ function TabCard() {
 }
 
 export default () => {
-
-  console.log('tab 页面');
+  console.log('tab 页面')
 
   const [list, setList] = useState([])
-  const { setTabs, tabs } = useViewDataStore()
+  const { setTabs, tabs, initTabs } = useViewDataStore()
 
   useMount(() => {
     http.post('/curd-mongo/find/tabs', { ops: { many: true } }).then(res => {

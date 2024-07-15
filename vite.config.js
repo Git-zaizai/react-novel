@@ -26,7 +26,14 @@ export default defineConfig(configEnv => {
     },
     server: {
       host: '0.0.0.0',
-      port: 1300
+      port: 1300,
+      proxy: {
+        '/gadgets-server': {
+          target: 'http://127.0.0.1:4399',
+          changeOrigin: true,
+          rewrite: path => path.replace(/^\/gadgets-server/, '')
+        }
+      }
     },
     build: {
       outDir: viteEnv.VITE_BUILD_OUTDIR ? viteEnv.VITE_BUILD_OUTDIR : 'dist'

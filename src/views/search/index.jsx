@@ -78,7 +78,8 @@ export default () => {
 
     if (!isCheckboxShow && formRef) {
       const formdata = formRef.getFieldsValue()
-      if (formdata.wanjie.value) {
+      console.log("🚀 ~ onSearch ~ formdata:", formdata)
+      if (formdata.wanjie?.value) {
         formdata.wanjie = formdata.wanjie.index
       }
 
@@ -106,10 +107,6 @@ export default () => {
 
     let fles = response.map(mv => {
       mv.tabs = mv.tabs.map(mmv => {
-        console.log(
-          tabs.find(fv => fv.tab === mmv),
-          mmv
-        )
         return tabs.find(fv => fv.tab === mmv)
       })
       return mv

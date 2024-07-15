@@ -92,7 +92,12 @@ async function request(options) {
  */
 export function createRequest() {
   const { VITE_GLOB_API_URL, VITE_GLOB_API_URL_PREFIX } = import.meta.env
-  const bacsURL = VITE_GLOB_API_URL_PREFIX ? VITE_GLOB_API_URL + VITE_GLOB_API_URL_PREFIX : VITE_GLOB_API_URL
+  let bacsURL = ''
+  if (import.meta.env.MODE === 'development') {
+    bacsURL = VITE_GLOB_API_URL_PREFIX
+  } else {
+    bacsURL = VITE_GLOB_API_URL_PREFIX ? VITE_GLOB_API_URL + VITE_GLOB_API_URL_PREFIX : VITE_GLOB_API_URL
+  }
   return {
     bacsURL,
     get: function (url, data) {
