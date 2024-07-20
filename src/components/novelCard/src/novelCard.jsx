@@ -1,7 +1,7 @@
 import styles from './novelCard.module.css'
 
 import CuIcon from '../../cuIcon'
-import { LinkTwo, TagOne, Asterisk, Dvi } from '@icon-park/react'
+import { LinkTwo, TagOne, Asterisk } from '@icon-park/react'
 
 import { randomHexColor } from '@/utlis/themeColor'
 import { Space } from 'antd'
@@ -11,6 +11,7 @@ import { useCallback } from 'react'
 import { useViewDataStore } from '@/store/viewdata'
 import { useStore } from '@/store'
 import { memo } from 'react'
+import http from '@/utlis/http'
 
 function Introduction({ txt }) {
   const [isText, { toggle }] = useToggle('nowrap', 'normal')
@@ -77,7 +78,7 @@ const Dropdowns = [
 export default props => {
   const { data, updateChapter, updateDuwan } = props
   const { store, setValueStore } = useStore()
-  const { setNovelStore } = useViewDataStore()
+  const { setNovelStore, deleteNovelItem } = useViewDataStore()
 
   const click = useCallback(callback => {
     setNovelStore({ data })
@@ -100,7 +101,7 @@ export default props => {
       })
       if (modalRes) {
         const response = await http
-          .post('/react/novel/update', {
+          .post('/mong/novel/update', {
             _id: data._id,
             isdel: 0
           })
@@ -109,10 +110,11 @@ export default props => {
             return Promise.reject(err)
           })
 
-        if (response) {
-          novelStore.novelList.splice(index, 1)
-          setNovelStore({ novelList: [].concat(novelStore.novelList) })
+        if (response === 1) {
+          deleteNovelItem(data._id)
           window.$message.success('删除成功')
+        } else {
+          window.$message.error('删除失败')
         }
       }
     }

@@ -33,7 +33,7 @@ const [viewdata, getViewData] = createGlobalStore(() => {
       if (tabs.length > 0 && novel.novelList.length > 0) return
     }
 
-    let data = await http.post('/curd-mongo/find/novel', { ops: { many: true } })
+    let data = await http.post('/curd-mongo/find/novel', { ops: { many: true }, where: { isdel: 1 } })
     /* data = data.map((item, index) => {
       item.title = `*****${index}`
       return item
@@ -55,13 +55,22 @@ const [viewdata, getViewData] = createGlobalStore(() => {
     return Promise.resolve()
   }
 
+  function deleteNovelItem(id) {
+    const findindex = novel.novelList.findIndex(fv => fv._id === id)
+    if (findindex === -1) return 0
+    novel.novelList.splice(findindex, 1)
+    setNovelStore({ novelList: [...novel.novelList] })
+    return 1
+  }
+
   return {
     tabs,
     setTabs,
     initTabs,
     novel,
     setNovelStore,
-    initNovel
+    initNovel,
+    deleteNovelItem
   }
 })
 
