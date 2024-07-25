@@ -12,7 +12,8 @@ import './styles/index.css'
  */
 function AppComponent() {
   useEffect(() => {
-    setRootCss(checkIsDarkMode() ? 'light' : 'dark')
+    // setRootCss(checkIsDarkMode() ? 'light' : 'dark')
+    setRootCss('dark')
   }, [])
   return (
     <>

@@ -46,6 +46,10 @@ export const tabsRoutes = [
         element: LazyImport(() => import('@/views/cuicons'))
       }
     ]
+  },
+  {
+    path: '/wol',
+    element: LazyImport(() => import('@/views/wol/wol'))
   }
 ]
 

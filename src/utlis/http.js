@@ -90,14 +90,7 @@ async function request(options) {
  * request:request
  * }}
  */
-export function createRequest() {
-  const { VITE_GLOB_API_URL, VITE_GLOB_API_URL_PREFIX } = import.meta.env
-  let bacsURL = ''
-  if (import.meta.env.MODE === 'development') {
-    bacsURL = VITE_GLOB_API_URL_PREFIX
-  } else {
-    bacsURL = VITE_GLOB_API_URL_PREFIX ? VITE_GLOB_API_URL + VITE_GLOB_API_URL_PREFIX : VITE_GLOB_API_URL
-  }
+export function createRequest(bacsURL) {
   return {
     bacsURL,
     get: function (url, data) {
@@ -120,4 +113,12 @@ export function createRequest() {
   }
 }
 
-export default createRequest()
+const { VITE_GLOB_API_URL, VITE_GLOB_API_URL_PREFIX } = import.meta.env
+let bacsURL = ''
+if (import.meta.env.MODE === 'development') {
+  bacsURL = VITE_GLOB_API_URL_PREFIX
+} else {
+  bacsURL = VITE_GLOB_API_URL_PREFIX ? VITE_GLOB_API_URL + VITE_GLOB_API_URL_PREFIX : VITE_GLOB_API_URL
+}
+
+export default createRequest(bacsURL)

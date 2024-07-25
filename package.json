@@ -12,7 +12,7 @@
     "preview:hashRouter": "vite preview --mode production.hashRouter"
   },
   "dependencies": {
-    "@ant-design/icons": "^5.2.6",
+    "@ant-design/icons": "^5.4.0",
     "@icon-park/react": "^1.4.2",
     "@tanem/react-nprogress": "^5.0.51",
     "ahooks": "^3.7.8",
