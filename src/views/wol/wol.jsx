@@ -4,21 +4,51 @@ import { ConfigProvider, App, Layout, theme, Form } from 'antd'
 import { useStore } from '@/store'
 import { useToggle } from 'ahooks'
 import { createRequest } from '@/utlis/http'
+import httpd from '@/utlis/http'
+
 import dayjs from 'dayjs'
 
 const { VITE_GLOB_WOL_API_URL, VITE_GLOB_WOL_API_URL_PREFIX } = import.meta.env
 const http = createRequest(VITE_GLOB_WOL_API_URL + VITE_GLOB_WOL_API_URL_PREFIX)
 
+const WINAPI = {
+  $message: null
+}
+
 const WinConfig = () => {
-  const { message: messageApi, notification: notificationApi, modal: modalApi } = App.useApp()
-  window.$message = messageApi
-  window.$notification = notificationApi
-  window.$modal = modalApi
+  const { message: messageApi } = App.useApp()
+  WINAPI.$message = messageApi
   return <></>
 }
 
+function WolAdmin() {
+  let token = localStorage.getItem('token')
+  if (!token) {
+    return null
+  }
+
+  async function createAllFile() {
+    await httpd.post('/verify').catch(e => {
+      return Promise.reject(e)
+    })
+    const res = await httpd.get('/createLog').catch(err => {
+      WINAPI.$message.error('网络错误')
+      return Promise.reject(err)
+    })
+    WINAPI.$message.success('创建成功')
+    console.log(res)
+  }
+
+  return (
+    <>
+      <div className={styles.wola}>
+        <Button onClick={createAllFile}>创建所有文件</Button>
+      </div>
+    </>
+  )
+}
+
 export default () => {
-  
   const { store } = useStore()
   const [formRef] = Form.useForm()
   const [isloading, { toggle }] = useToggle()
@@ -62,7 +92,7 @@ export default () => {
         wssid: formdata.wssid
       })
       .catch(err => {
-        window.$message.error('网络错误')
+        WINAPI.$message.error('网络错误')
         return Promise.reject(err)
       })
 
@@ -84,7 +114,7 @@ export default () => {
       )
       setitems(list)
     } else {
-      window.$message.warning({
+      WINAPI.$message.warning({
         content: response.msg + '，没有查询到',
         duration: 5
       })
@@ -142,7 +172,7 @@ export default () => {
         uuid: item.uuid
       })
       .catch(err => {
-        window.$message.error('网络错误')
+        WINAPI.$message.error('网络错误')
         item.loading = false
         setitems([...items])
         return Promise.reject(err)
@@ -191,7 +221,7 @@ export default () => {
         }
       })
       .catch(err => {
-        window.$message.error('网络错误')
+        WINAPI.$message.error('网络错误')
         item.msgs.push('网络错误')
         setitems([...items])
         return Promise.reject(err)
@@ -292,9 +322,7 @@ export default () => {
                   </div>
                 ))}
             </div>
-            <div className='mt-20'>
-
-            </div>
+            <WolAdmin />
           </Layout>
         </App>
       </ConfigProvider>
