@@ -154,6 +154,7 @@ export default () => {
         wssid: formdata.wssid
       })
       .catch(err => {
+        toggle()
         WINAPI.$message.error('网络错误')
         return Promise.reject(err)
       })

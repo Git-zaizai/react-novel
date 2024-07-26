@@ -10,9 +10,10 @@ import '@icon-park/react/styles/index.css'
  */
 ReactDOM.createRoot(document.getElementById('root')).render(<App />)
 
-import eruda from 'eruda'
+/* import eruda from 'eruda'
 let el = document.createElement('div')
 document.body.appendChild(el)
 eruda.init({
   container: el
 })
+ */
