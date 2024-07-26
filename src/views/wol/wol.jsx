@@ -1,11 +1,9 @@
 import styles from './wol.module.css'
 
-import { ConfigProvider, App, Layout, theme, Form } from 'antd'
+import { ConfigProvider, App, Layout, theme, Form, Checkbox, Modal } from 'antd'
 import { useStore } from '@/store'
 import { useToggle } from 'ahooks'
-import { createRequest } from '@/utlis/http'
-import httpd from '@/utlis/http'
-
+import httpd, { createRequest } from '@/utlis/http'
 import dayjs from 'dayjs'
 
 const { VITE_GLOB_WOL_API_URL, VITE_GLOB_WOL_API_URL_PREFIX } = import.meta.env
@@ -27,11 +25,13 @@ function WolAdmin() {
     return null
   }
 
+  const [modal, contextHolder] = Modal.useModal()
+
   async function createAllFile() {
     await httpd.post('/verify').catch(e => {
       return Promise.reject(e)
     })
-    const res = await httpd.get('/createLog').catch(err => {
+    const res = await http.get('/createLog').catch(err => {
       WINAPI.$message.error('网络错误')
       return Promise.reject(err)
     })
@@ -39,10 +39,72 @@ function WolAdmin() {
     console.log(res)
   }
 
+  const plainOptions = ['wsMap', 'wsMessageMap', 'wsPingMap']
+  const [checkedList, setCheckedList] = useState([])
+  const [modelOpen, { toggle: setModelOpen }] = useToggle()
+  const [confirmLoading, { toggle: setConfirmLoading }] = useToggle(true)
+
+  const mapOptions = [
+    { label: 'wsMap', value: 'wsMap' },
+    { label: 'wsMessageMap', value: 'wsMessageMap' },
+    { label: 'wsPingMap', value: 'wsPingMap' }
+  ]
+  function CheckboxChange(checkedValues) {
+    setCheckedList(checkedValues)
+  }
+  function bindModalOpen() {
+    checkedList.length > 0 && setModelOpen()
+    setConfirmLoading()
+    /* setTimeout(() => {
+      setConfirmLoading()
+    }, 5000) */
+  }
+  async function bindfreedMap() {
+    let confirmed
+    if (checkedList.includes('wsMap')) {
+      confirmed = await modal.confirm({
+        title: '再次确认',
+        centered: true,
+        content: '其中包含 wsMap 请确认是否继续'
+      })
+      if (!confirmed) {
+        setModelOpen()
+        setCheckedList([])
+        WINAPI.$message.warning('请仔细查看')
+      }
+    }
+    try {
+      const response = await http.post('/freedMap', {
+        mapkey: checkedList
+      })
+      if (response.code === 1) {
+        setCheckedList([])
+        WINAPI.$message.success('释放' + response.data.join(','))
+      }
+    } catch {
+      WINAPI.$message.error('网络错误')
+    }
+  }
+
   return (
     <>
       <div className={styles.wola}>
         <Button onClick={createAllFile}>创建所有文件</Button>
+        <div className='mt-10'>
+          <Checkbox.Group options={plainOptions} value={checkedList} onChange={CheckboxChange} />
+          <Button className='mt-10' onClick={bindModalOpen}>确认释放</Button>
+        </div>
+        <Modal
+          open={modelOpen}
+          onOk={bindfreedMap}
+          onCancel={setModelOpen}
+          centered
+          confirmLoading={confirmLoading}
+          title='请确认销毁'
+        >
+          请确认： {checkedList.join('，')}
+        </Modal>
+        {contextHolder}
       </div>
     </>
   )
