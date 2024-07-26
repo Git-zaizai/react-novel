@@ -54,10 +54,10 @@ function WolAdmin() {
   }
   function bindModalOpen() {
     checkedList.length > 0 && setModelOpen()
-    setConfirmLoading()
-    /* setTimeout(() => {
+    window.$wolTime1 && clearTimeout(window.$wolTime1)
+    window.$wolTime1 = setTimeout(() => {
       setConfirmLoading()
-    }, 5000) */
+    }, 5000)
   }
   async function bindfreedMap() {
     let confirmed
@@ -78,11 +78,14 @@ function WolAdmin() {
         mapkey: checkedList
       })
       if (response.code === 1) {
+        setModelOpen()
         setCheckedList([])
         WINAPI.$message.success('释放' + response.data.join(','))
       }
     } catch {
       WINAPI.$message.error('网络错误')
+      setModelOpen()
+      setCheckedList([])
     }
   }
 
@@ -92,7 +95,9 @@ function WolAdmin() {
         <Button onClick={createAllFile}>创建所有文件</Button>
         <div className='mt-10'>
           <Checkbox.Group options={plainOptions} value={checkedList} onChange={CheckboxChange} />
-          <Button className='mt-10' onClick={bindModalOpen}>确认释放</Button>
+          <Button className='mt-10' onClick={bindModalOpen}>
+            确认释放
+          </Button>
         </div>
         <Modal
           open={modelOpen}
