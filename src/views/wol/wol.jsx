@@ -6,6 +6,8 @@ import { useToggle } from 'ahooks'
 import httpd, { createRequest } from '@/utlis/http'
 import dayjs from 'dayjs'
 
+import WolJsonView from './wol-json-view'
+
 const { VITE_GLOB_WOL_API_URL, VITE_GLOB_WOL_API_URL_PREFIX } = import.meta.env
 const http = createRequest(VITE_GLOB_WOL_API_URL + VITE_GLOB_WOL_API_URL_PREFIX)
 
@@ -21,11 +23,13 @@ const WinConfig = () => {
 
 function WolAdmin() {
   let token = localStorage.getItem('token')
-  if (!token) {
+  /* if (!token) {
     return null
-  }
+  } */
 
   const [modal, contextHolder] = Modal.useModal()
+  const [openjson, { toggle: setopenjson }] = useToggle(true)
+  const [dataJson, setdataJson] = useState(null)
 
   async function createAllFile() {
     await httpd.post('/verify').catch(e => {
@@ -35,6 +39,8 @@ function WolAdmin() {
       WINAPI.$message.error('网络错误')
       return Promise.reject(err)
     })
+    setopenjson()
+    setdataJson(res.data)
     WINAPI.$message.success('创建成功')
     console.log(res)
   }
@@ -42,13 +48,8 @@ function WolAdmin() {
   const plainOptions = ['wsMap', 'wsMessageMap', 'wsPingMap']
   const [checkedList, setCheckedList] = useState([])
   const [modelOpen, { toggle: setModelOpen }] = useToggle()
-  const [confirmLoading, { toggle: setConfirmLoading }] = useToggle(true)
+  const [confirmLoading, { toggle: setConfirmLoading }] = useToggle()
 
-  const mapOptions = [
-    { label: 'wsMap', value: 'wsMap' },
-    { label: 'wsMessageMap', value: 'wsMessageMap' },
-    { label: 'wsPingMap', value: 'wsPingMap' }
-  ]
   function CheckboxChange(checkedValues) {
     setCheckedList(checkedValues)
   }
@@ -99,6 +100,9 @@ function WolAdmin() {
             确认释放
           </Button>
         </div>
+        <div className='mt-5'>
+          <Button onClick={setopenjson}>查看json</Button>
+        </div>
         <Modal
           open={modelOpen}
           onOk={bindfreedMap}
@@ -109,11 +113,16 @@ function WolAdmin() {
         >
           请确认： {checkedList.join('，')}
         </Modal>
+        <div>
+          <WolJsonView open={openjson} WINAPI={WINAPI} http={http} onClose={setopenjson} data={dataJson} />
+        </div>
         {contextHolder}
       </div>
     </>
   )
 }
+
+const Template = {}
 
 export default () => {
   const { store } = useStore()
@@ -222,12 +231,12 @@ export default () => {
       })
       .catch(err => {
         console.log('/selcect-app-messages error:', err)
-        return Promise.reject('查询错误')
+        return Promise.reject('网络错误')
       })
     if (response.code === 1) {
       return response.data
     }
-    return '无消息'
+    return 0
   }
 
   const binditemClick = async (item, index) => {
@@ -246,33 +255,36 @@ export default () => {
         return Promise.reject(err)
       })
     if (response.code === 1) {
-      item.msgs.push('等待消息')
+      item.msgs.push('等待app回复...')
       setitems([...items])
       // 判断上一个请求是否结束
       window.$timeClear = false
+      window.$timeNumber = 0
       window.$time = setInterval(async () => {
         // 没有结束 retrun
-        if (window.$timeClear) {
+        if (window.$timeClear && window.$timeNumber > 20) {
           return
         }
+        window.$timeNumber += 1
         // 进入到说明可以开始请求 设置限制
         window.$timeClear = true
         const msgs = await getWolAppSend(wssid, item.uuid).catch(err => {
           item.msgs.push(err)
           setitems([...items])
           clearInterval(window.$time)
+          // 结束
+          window.$timeClear = false
         })
-        if (Array.isArray(msgs)) {
+        if (msgs !== 0) {
           const msg = msgs.at(-1)
           item.msgs.push(`收到消息：${msg.data} ${dayjs(msg.date).format('YYYY-MM-DD HH:mm:ss')}`)
-        } else {
-          item.msgs.push(msgs)
+          item.loading = false
+          setitems([...items])
+          clearInterval(window.$time)
+          // 结束
+          window.$timeClear = false
+          window.$timeNumber = 0
         }
-        item.loading = false
-        setitems([...items])
-        clearInterval(window.$time)
-        // 结束
-        window.$timeClear = false
       }, 300)
     }
   }
@@ -289,38 +301,41 @@ export default () => {
         }
       })
       .catch(err => {
-        WINAPI.$message.error('网络错误')
         item.msgs.push('网络错误')
         setitems([...items])
         return Promise.reject(err)
       })
     if (response.code === 1) {
-      item.msgs.push('等待消息')
+      item.msgs.push('等待app回复...')
       setitems([...items])
       // 判断上一个请求是否结束
       window.$timeClear = false
+      window.$timeNumber = 0
       window.$time = setInterval(async () => {
         // 没有结束 retrun
-        if (window.$timeClear) {
+        if (window.$timeClear && window.$timeNumber > 20) {
           return
         }
+        window.$timeNumber += 1
         // 进入到说明可以开始请求 设置限制
         window.$timeClear = true
         const msgs = await getWolAppSend(wssid, item.uuid).catch(err => {
           item.msgs.push(err)
           setitems([...items])
           clearInterval(window.$time)
+          // 结束
+          window.$timeClear = false
         })
-        if (Array.isArray(msgs)) {
+        if (msgs !== 0) {
           const msg = msgs.at(-1)
-          item.msgs.push(`收到测试消息：${msg.data} ${dayjs(msg.date).format('YYYY-MM-DD HH:mm:ss')}`)
-        } else {
-          item.msgs.push(msgs)
+          item.msgs.push(`收到消息：${msg.data} ${dayjs(msg.date).format('YYYY-MM-DD HH:mm:ss')}`)
+          item.loading = false
+          setitems([...items])
+          clearInterval(window.$time)
+          // 结束
+          window.$timeClear = false
+          window.$timeNumber = 0
         }
-        setitems([...items])
-        clearInterval(window.$time)
-        // 结束
-        window.$timeClear = false
       }, 300)
     }
   }
@@ -338,6 +353,7 @@ export default () => {
       >
         <App message={{ top: 70 }}>
           <WinConfig />
+
           <Layout className={styles.wolLayout}>
             <Form
               form={formRef}

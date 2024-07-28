@@ -1,5 +1,7 @@
 .wolLayout {
   padding: 20px;
+  overflow: scroll;
+  height: 100vh;
 }
 
 .items {
