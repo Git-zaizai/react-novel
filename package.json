@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:hashRouter": "vite build --mode production.hashRouter",
+    "build:hashRouter": "vite build --mode production.hashRouter && node ./build/ssh-upload.js",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "preview:hashRouter": "vite preview --mode production.hashRouter"
@@ -34,6 +34,8 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
+    "ora": "^8.0.1",
+    "ssh2-sftp-client": "^10.0.3",
     "unplugin-auto-import": "^0.16.7",
     "unplugin-auto-import-antd": "^0.0.1",
     "vite": "^4.3.2"

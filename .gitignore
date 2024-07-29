@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 dist-HashRouter
+build/ssh-upload.js
 
 # Editor directories and files
 .vscode/*
