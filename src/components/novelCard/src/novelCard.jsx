@@ -76,7 +76,7 @@ const Dropdowns = [
 ]
 
 export default props => {
-  const { data, updateChapter, updateDuwan } = props
+  const { data, updateChapter, updateDuwan, PropsIndex } = props
   const { store, setValueStore } = useStore()
   const { setNovelStore, deleteNovelItem } = useViewDataStore()
 
@@ -145,11 +145,17 @@ export default props => {
       }
       extra={
         data.duwan === 1 ? (
-          <Tag color='var(--success-color)' className='ml-auto' onClick={() => click(updateDuwan)}>
-            读完
-          </Tag>
+          <div className='flex-ai-c'>
+            <Tag color='var(--success-color)' className='ml-auto' onClick={() => click(updateDuwan)}>
+              读完
+            </Tag>
+            <h5 className='ml-5'>{PropsIndex ?? ''}</h5>
+          </div>
         ) : (
-          <div className={styles.novelCarddiwan + ' ml-auto'} onClick={() => click(updateDuwan)}></div>
+          <div className='flex-ai-c'>
+            <div className={styles.novelCarddiwan + 'ml-auto'} onClick={() => click(updateDuwan)}></div>
+            <h5 className='ml-5'>{PropsIndex ?? ''}</h5>
+          </div>
         )
       }
     >

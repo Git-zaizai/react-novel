@@ -48,7 +48,7 @@ export default ({ data }) => {
     }
 
     return data.map((item, index) => {
-      return <NovelCard key={item._id} data={item} updateChapter={updateChapter} updateDuwan={updateDuwan} />
+      return <NovelCard key={item._id} data={item} PropsIndex={index} updateChapter={updateChapter} updateDuwan={updateDuwan} />
     })
   }, [data])
 

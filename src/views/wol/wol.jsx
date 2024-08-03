@@ -92,6 +92,7 @@ function WolAdmin() {
 
   return (
     <>
+      <div style={{ height: '70vh' }}></div>
       <div className={styles.wola}>
         <Button onClick={createAllFile}>创建所有文件</Button>
         <div className='mt-10'>

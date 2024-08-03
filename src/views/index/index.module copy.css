@@ -1,0 +1,72 @@
+.view {
+  display: flex;
+  /* align-items: center; */
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.cardindex {
+  width: 23.5%;
+  margin: 0 10px 20px 10px;
+}
+
+.carppeizhu {
+  background-color: var(--tag-color);
+  margin-top: 10px;
+  border-radius: 3px;
+  padding: 5px;
+  color: var(--text-color-2);
+}
+
+.Affixicon {
+  font-size: 24px;
+  transform: rotate(90deg);
+}
+
+.Affixview {
+  /* width: calc(100% - 20px); */
+  padding: 0 10px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  background: var(--card-color);
+  border-radius: 8px;
+  box-shadow: var(--box-shadow-4);
+}
+
+.view :global(.ant-card .ant-card-head) {
+  padding: 0 10px;
+}
+
+@media screen and (max-width: 980px) {
+  .cardindex {
+    width: 100%;
+    min-width: 80%;
+  }
+
+  .cardbut {
+    margin-bottom: 5px;
+    /* margin-right: 15px; */
+  }
+
+  .cardExtra {
+    line-height: 3;
+  }
+
+  .Affixview {
+    width: 25vw;
+    padding: 3px 0px;
+  }
+
+  .Affixicon {
+    font-size: 22px;
+    transform: rotate(90deg);
+  }
+
+  .view :global(.ant-card .ant-card-body) {
+    padding: 5px 10px 10px 10px;
+  }
+
+  .view :global(.ant-card .ant-card-head) {
+    padding: 0 10px;
+  }
+}
