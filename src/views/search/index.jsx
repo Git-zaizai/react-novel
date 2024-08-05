@@ -26,6 +26,20 @@ const typeOptions = [
   }
 ]
 
+const showOptions = [
+  {
+    icon: <CuIcon icon='medal' className='mr-10' isTransiton={false} />,
+    align: 'left',
+    txt: '隐藏'
+  },
+  {
+    icon: <CuIcon icon='tag' className='ml-10' isTransiton={false} />,
+    align: 'right',
+    value: true,
+    txt: '显示'
+  }
+]
+
 let isonSearch = false
 
 export default () => {
@@ -62,39 +76,61 @@ export default () => {
   const onSearch = async () => {
     isonSearch = true
     const and = []
+    const or = []
 
     if (inputValue) {
-      and.push({
+      or.push({
         title: {
           $regex: inputValue
         }
       })
-      and.push({
+      or.push({
         beizhu: {
           $regex: inputValue
         }
       })
     }
 
-    if (!isCheckboxShow && formRef) {
+    if (formRef) {
       const formdata = formRef.getFieldsValue()
-      console.log("🚀 ~ onSearch ~ formdata:", formdata)
+      console.log('🚀 ~ onSearch ~ formdata:', formdata)
+
+      if (formdata.tabs) {
+        formdata.tabs.forEach(item => {
+          or.push({ tabs: item })
+        })
+      }
+
       if (formdata.wanjie?.value) {
         formdata.wanjie = formdata.wanjie.index
+        or.push({ wanjie: formdata.wanjie })
       }
 
-      for (const key in formdata) {
-        if (formdata[key]) {
-          and.push({ [key]: formdata[key] })
-        }
+      if (formdata.isdel?.value) {
+        formdata.isdel = formdata.isdel.index
+        and.push({ isdel: formdata.isdel })
+      } else {
+        formdata.isdel = 1
+        and.push({ isdel: formdata.isdel })
       }
+
+      /* for (const key in formdata) {
+        if (formdata[key] !== undefined) {
+          and.push({ [key]: formdata[key] })
+        } 
+      } */
     }
 
-    if (!and.length) return
+    if (!inputValue && or.length === 0) {
+      window.$message.warning('请输入搜索内容')
+      return
+    }
 
     const body = {
-      $or: and
+      $or: or,
+      $and: and
     }
+
     let response = await http
       .post('/curd-mongo/find/novel', {
         ops: { many: true },
@@ -111,13 +147,12 @@ export default () => {
       })
       return mv
     })
-    response = fles
+    response = fles.reverse()
     setSearchlist(response)
   }
 
   const onPullup = callback => {
     if (isonSearch) {
-      console.log('🚀 ~ onPullup ~ isonSearch:', isonSearch)
       callback({
         text: '没有更多了',
         iconShow: false,
@@ -188,6 +223,10 @@ export default () => {
 
                   <Form.Item name='wanjie' className='mt-10'>
                     <ButtonCheckboxGroup options={typeOptions} />
+                  </Form.Item>
+
+                  <Form.Item name='isdel' className='mt-10'>
+                    <ButtonCheckboxGroup options={showOptions} />
                   </Form.Item>
                 </Form>
               </>

@@ -6,7 +6,7 @@ export default ({ options = [], onChange }) => {
   if (!options.length) return null
 
   const [list, setList] = useState(
-    options.map((_, i) => ({ index: i, value: false }))
+    options.map((ov, i) => ({ index: i, value: ov?.value || false }))
   )
 
   const change = useCallback((val, index) => {

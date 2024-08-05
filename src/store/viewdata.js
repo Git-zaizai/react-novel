@@ -34,6 +34,7 @@ const [viewdata, getViewData] = createGlobalStore(() => {
     }
 
     let data = await http.post('/curd-mongo/find/novel', { ops: { many: true }, where: { isdel: 1 } })
+    if (data.length === 0) return
     /* data = data.map((item, index) => {
       item.title = `*****${index}`
       return item
