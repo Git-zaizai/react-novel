@@ -19,11 +19,12 @@ export default ({ WINAPI, http, open, data, onClose, title }) => {
     getjsons()
   }, [open])
 
+
   async function getjsons() {
     try {
       const res = await http.get('/json-list')
       setJsonfiles(
-        res.map(mv => {
+        res.reverse().map(mv => {
           if (mv.name.includes('all_')) {
             mv.namef = 'all_' + dayjs(mv.mtime).format('YYYY-MM-DD HH:mm:ss')
           }else{
