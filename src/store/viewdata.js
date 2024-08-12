@@ -5,7 +5,6 @@ import { randomHexColor } from '@/utlis/themeColor'
 
 const [viewdata, getViewData] = createGlobalStore(() => {
   const [tabs, setTabs] = useState([])
-
   const [novel, setNovel] = useState({
     action: false,
     data: {},
@@ -16,8 +15,18 @@ const [viewdata, getViewData] = createGlobalStore(() => {
     setNovel(v => ({ ...v, ...obj }))
   }
 
+  function clearNovel() {
+    setTabs([])
+    setNovel({
+      action: false,
+      data: {},
+      novelList: []
+    })
+  }
+
+
   const initTabs = async () => {
-    if (tabs.length) return 0
+    if (getViewData().tabs.length) return
     try {
       const response = await http.get('/json-get', { ph: 'tabs.json' })
       setTabs(() => response.map(mv => ({ tab: mv, color: randomHexColor() })))
@@ -28,9 +37,10 @@ const [viewdata, getViewData] = createGlobalStore(() => {
     }
   }
 
+
   const initNovel = async isleng => {
     if (!isleng) {
-      if (tabs.length > 0 && novel.novelList.length > 0) return
+      if (getViewData().tabs.length > 0 && getViewData().novel.novelList.length > 0) return
     }
 
     let data = await http.post('/curd-mongo/find/novel', { ops: { many: true }, where: { isdel: 1 } })
@@ -71,7 +81,8 @@ const [viewdata, getViewData] = createGlobalStore(() => {
     novel,
     setNovelStore,
     initNovel,
-    deleteNovelItem
+    deleteNovelItem,
+    clearNovel
   }
 })
 

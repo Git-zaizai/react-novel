@@ -8,7 +8,7 @@ import { HamburgerButton } from '@icon-park/react'
 import { SearchOutlined } from '@ant-design/icons'
 import DropdownPullup from '@/components/DropdownPullup'
 
-import { useViewDataStore } from '@/store/viewdata'
+import { useViewDataStore, getViewDataStore } from '@/store/viewdata'
 import { useState, useEffect } from 'react'
 import { Form } from 'antd'
 import http from '@/utlis/http'
@@ -58,18 +58,16 @@ export default () => {
 
   const bindList = async callback => {
     try {
-      if (!novel.novelList.length) {
-        await initTabs()
-        await initNovel()
-      }
+      await initTabs()
+      await initNovel()
     } finally {
-      setSearchlist(novel.novelList.slice(0, 10))
+      setSearchlist(getViewDataStore().novel.novelList.slice(0, 10))
       setInput('')
       !isCheckboxShow && formRef.resetFields()
       isonSearch = false
       setTimeout(() => {
         callback && callback()
-      }, 3000)
+      }, 1000)
     }
   }
 
@@ -93,8 +91,6 @@ export default () => {
 
     if (formRef) {
       const formdata = formRef.getFieldsValue()
-      console.log('🚀 ~ onSearch ~ formdata:', formdata)
-
       if (formdata.tabs) {
         formdata.tabs.forEach(item => {
           or.push({ tabs: item })

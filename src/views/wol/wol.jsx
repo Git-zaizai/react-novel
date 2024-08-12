@@ -42,7 +42,6 @@ function WolAdmin() {
     setopenjson()
     setdataJson(res.data)
     WINAPI.$message.success('创建成功')
-    console.log(res)
   }
 
   const plainOptions = ['wsMap', 'wsMessageMap', 'wsPingMap']
@@ -237,7 +236,7 @@ export default () => {
     if (response.code === 1) {
       return response.data
     }
-    return 0
+    return Promise.reject('网络错误')
   }
 
   const binditemClick = async (item, index) => {
@@ -341,6 +340,33 @@ export default () => {
     }
   }
 
+  async function getPower(item) {
+    const res = await http
+      .get('/createLog', {
+        isfile: 1
+      })
+      .catch(err => {
+        WINAPI.$message.error('网络错误')
+        return Promise.reject(err)
+      })
+    const { wsPingMap } = res.data
+    if (wsPingMap.length === 0) {
+      item.msgs.push('暂无电量记录')
+      setitems([...items])
+      return
+    }
+    const wsPing = wsPingMap.find(wspingitem => wspingitem.uuid === item.uuid).times.at(-1)
+    if (!wsPing) {
+      item.msgs.push('暂无电量记录')
+      setitems([...items])
+      return
+    }
+    item.msgs.push(
+      `手机电量：${wsPing.clientmessage.level}   时间： ${dayjs(wsPing.date).format('YYYY-MM-DD HH:mm:ss')}`
+    )
+    setitems([...items])
+  }
+
   return (
     <>
       <ConfigProvider
@@ -400,6 +426,9 @@ export default () => {
                     />
                     <Button type='primary' block className='mt-10' onClick={() => testSend(item, index)}>
                       测试wolapp通讯
+                    </Button>
+                    <Button type='primary' block className='mt-10' onClick={() => getPower(item, index)}>
+                      查看手机电量
                     </Button>
                     <div className='mt-10'>
                       {item.msgs.length > 0 && item.msgs.map((msg, index) => <p key={index}>{msg}</p>)}

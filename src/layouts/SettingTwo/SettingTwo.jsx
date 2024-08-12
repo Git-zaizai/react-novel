@@ -8,6 +8,7 @@ import { useAsyncEffect, useLocalStorageState } from 'ahooks'
 import http from '@/utlis/http'
 import { useState } from 'react'
 import { exportJsonFile, isMobile } from '@/utlis'
+import { useViewDataStore } from '@/store/viewdata'
 
 const CheckboxGroup = Checkbox.Group
 
@@ -19,6 +20,7 @@ export default () => {
   const { runAsync } = useRequest(data => http.post('/secretkey', { pwd: data }), {
     manual: true
   })
+  const { clearNovel } = useViewDataStore()
 
   useAsyncEffect(async () => {
     if (token) {
@@ -69,6 +71,7 @@ export default () => {
     })
     setCheckedList(locals)
     setUserStore({ admin: false })
+    clearNovel()
     toggle()
   }
 
@@ -98,6 +101,10 @@ export default () => {
       checkAll: true
     })
     setCheckedList(locals)
+    setPwd('')
+    setUserStore({ admin: false })
+    toggle(false)
+    clearNovel()
   }
 
   async function exportSql() {

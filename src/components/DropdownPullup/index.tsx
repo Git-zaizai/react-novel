@@ -171,6 +171,7 @@ const DropdownPullup = ({
       setPullup((value: any) => ({ ...value, show: true }))
     }
   }
+
   function end() {
     if (viewScrollTop > 0) {
       return
@@ -200,16 +201,7 @@ const DropdownPullup = ({
         onEnd(endCallback)
       } else {
         setTimeout(() => {
-          loadLock = false
-          distanceY = 0
-
-          setStyle({ '--overflow': 'scroll', '--zai-translateY': '0px' })
-          setDropdown({
-            className: '',
-            status: 1,
-            text: '下拉刷新',
-            opacity: 0
-          })
+          endCallback()
         }, 1000)
       }
     }

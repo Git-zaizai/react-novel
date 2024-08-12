@@ -2,8 +2,8 @@ import styles from './index.module.css'
 
 import { CardSkeletons } from '@/components/cardSkeleton'
 import { useToggle } from 'ahooks'
-import { useViewDataStore } from '@/store/viewdata'
-import { useState, useEffect, useRef } from 'react'
+import { useViewDataStore, getViewDataStore } from '@/store/viewdata'
+import { useState, useEffect } from 'react'
 import CuIcon from '@/components/cuIcon'
 import { copyText } from '@/utlis'
 import DropdownPullup from '@/components/DropdownPullup'
@@ -19,9 +19,7 @@ export default () => {
     try {
       await initTabs()
       await initNovel()
-      setList(novel.novelList)
-    } catch (error) {
-      console.log(error)
+      setList(getViewDataStore().novel.novelList)
     } finally {
       setloading(false)
       setTimeout(() => {
@@ -31,6 +29,9 @@ export default () => {
   }
 
   useEffect(() => {
+    if (novel.novelList.length === 0) {
+      return setList([])
+    }
     onEnd()
   }, [novel.novelList])
 
@@ -49,27 +50,28 @@ export default () => {
         <DropdownPullup onEnd={onEnd} headerPosition={<div style={{ height: '10px' }}></div>}>
           <CardSkeletons show={loading}>
             <div className={styles.indexview}>
-              {list.map((item, index) => (
-                <div className={`flex-ai-c mb-10 ${styles.itemview}`} key={item._id}>
-                  <CuIcon
-                    icon='hot'
-                    size='22'
-                    color='var(--primary-color)'
-                    className='mr-10'
-                    onClick={() => copylink(item)}
-                  />
-                  <div style={{ width: '85%' }}>
-                    <h4
-                      className='wax-100 singe-line mr-20'
-                      onClick={() => copyText('小说名', msg => window.$message.success(msg))}
-                    >
-                      {item.title}
-                    </h4>
-                    {item.beizhu && <div className={styles.novelCardPeizhu}>{item.beizhu}</div>}
+              {list.length > 0 &&
+                list.map((item, index) => (
+                  <div className={`flex-ai-c mb-10 ${styles.itemview}`} key={item._id}>
+                    <CuIcon
+                      icon='hot'
+                      size='22'
+                      color='var(--primary-color)'
+                      className='mr-10'
+                      onClick={() => copylink(item)}
+                    />
+                    <div style={{ width: '85%' }}>
+                      <h4
+                        className='wax-100 singe-line mr-20'
+                        onClick={() => copyText('小说名', msg => window.$message.success(msg))}
+                      >
+                        {item.title}
+                      </h4>
+                      {item.beizhu && <div className={styles.novelCardPeizhu}>{item.beizhu}</div>}
+                    </div>
+                    <h4 className='ml-auto'>{index}</h4>
                   </div>
-                  <h4 className='ml-auto'>{index}</h4>
-                </div>
-              ))}
+                ))}
             </div>
           </CardSkeletons>
         </DropdownPullup>

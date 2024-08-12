@@ -79,22 +79,6 @@ export default () => {
             type: 1
           }}
         >
-          {/* <Form.Item name='type'>
-            <Radio.Group className='flex'>
-              <Radio.Button value={0} className='w-100'>
-                <div className='flex-ai-c'>
-                  <CuIcon icon='tag' className={styles.RadioButtonIcontag + ' mr-10'} />
-                  记录类型
-                </div>
-              </Radio.Button>
-              <Radio.Button value={1} className='w-100'>
-                <div className='flex-ai-c' style={{ justifyContent: 'flex-end' }}>
-                  标签
-                  <CuIcon icon='medal' className={styles.RadioButtonIconmedal + ' ml-10'} />
-                </div>
-              </Radio.Button>
-            </Radio.Group>
-          </Form.Item> */}
           <Form.Item
             name='name'
             rules={[
