@@ -236,7 +236,7 @@ export default () => {
     if (response.code === 1) {
       return response.data
     }
-    return Promise.reject('网络错误')
+    return Promise.reject('暂无回复')
   }
 
   const binditemClick = async (item, index) => {
@@ -359,19 +359,31 @@ export default () => {
     let wsPingItems = wsPing.times.reverse()
     wsPingItems = wsPingItems.find(fv => fv.type === 'client')
     item.msgs.push(
-      `手机电量：${wsPingItems?.clientmessage.level ?? '无'}   时间： ${dayjs(wsPingItems.date).format(
-        'YYYY-MM-DD HH:mm:ss'
-      )}`
+      `手机电量：${wsPingItems?.clientmessage.level ?? '无'}  ${dayjs(wsPingItems.date).format('YYYY-MM-DD HH:mm:ss')}`
     )
     setitems([...items])
   }
 
-  async function deleteuuid(item) {
+  const [modal, contextHolder] = Modal.useModal()
+  async function deleteuuid(item, index) {
     try {
+      const confirmed = await modal.confirm({
+        title: '确认',
+        centered: true,
+        content: '是否释放当前链接？手机可能无法连接！'
+      })
+
+      if (!confirmed) {
+        return
+      }
+
       const res = await http.post('/delete-uuid', {
+        wssid: wssid,
         uuid: item.uuid
       })
       if (res.code === 1) {
+        items.splice(index, 1)
+        setitems([...items])
         WINAPI.$message.success(res.msg)
       } else {
         WINAPI.$message.error(res.msg)
@@ -459,6 +471,7 @@ export default () => {
             </div>
             <WolAdmin />
           </Layout>
+          {contextHolder}
         </App>
       </ConfigProvider>
     </>
