@@ -10,10 +10,20 @@
   border-top: 1px solid var(--success-color);
 }
 
-.wolapp-huifu{
+.wolapp-huifu {
   color: red;
 }
 
-.wola{
+.wola {
   padding: 0 10px;
+}
+
+.gnbuts {
+  display: flex;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.gnbuts button {
+  flex: 1;
 }

@@ -258,22 +258,20 @@ export default () => {
       item.msgs.push('等待app回复...')
       setitems([...items])
       // 判断上一个请求是否结束
-      window.$timeClear = false
       window.$timeNumber = 0
       window.$time = setInterval(async () => {
-        // 没有结束 retrun
-        if (window.$timeClear && window.$timeNumber > 20) {
+        // 请求最多十次
+        if (window.$timeNumber > 10) {
+          item.loading = false
+          item.msgs.push('超时')
+          setitems([...items])
+          clearInterval(window.$time)
           return
         }
         window.$timeNumber += 1
-        // 进入到说明可以开始请求 设置限制
-        window.$timeClear = true
         const msgs = await getWolAppSend(wssid, item.uuid).catch(err => {
           item.msgs.push(err)
           setitems([...items])
-          clearInterval(window.$time)
-          // 结束
-          window.$timeClear = false
         })
         if (msgs !== 0) {
           const msg = msgs.at(-1)
@@ -282,10 +280,9 @@ export default () => {
           setitems([...items])
           clearInterval(window.$time)
           // 结束
-          window.$timeClear = false
           window.$timeNumber = 0
         }
-      }, 300)
+      }, 500)
     }
   }
 
@@ -309,22 +306,20 @@ export default () => {
       item.msgs.push('等待app回复...')
       setitems([...items])
       // 判断上一个请求是否结束
-      window.$timeClear = false
       window.$timeNumber = 0
       window.$time = setInterval(async () => {
-        // 没有结束 retrun
-        if (window.$timeClear && window.$timeNumber > 20) {
+        // 请求最多十次
+        if (window.$timeNumber > 10) {
+          item.loading = false
+          item.msgs.push('超时')
+          setitems([...items])
+          clearInterval(window.$time)
           return
         }
         window.$timeNumber += 1
-        // 进入到说明可以开始请求 设置限制
-        window.$timeClear = true
         const msgs = await getWolAppSend(wssid, item.uuid).catch(err => {
           item.msgs.push(err)
           setitems([...items])
-          clearInterval(window.$time)
-          // 结束
-          window.$timeClear = false
         })
         if (msgs !== 0) {
           const msg = msgs.at(-1)
@@ -333,10 +328,9 @@ export default () => {
           setitems([...items])
           clearInterval(window.$time)
           // 结束
-          window.$timeClear = false
           window.$timeNumber = 0
         }
-      }, 300)
+      }, 500)
     }
   }
 
@@ -355,16 +349,37 @@ export default () => {
       setitems([...items])
       return
     }
-    const wsPing = wsPingMap.find(wspingitem => wspingitem.uuid === item.uuid).times.at(-1)
-    if (!wsPing) {
+    const wsPing = wsPingMap.find(wspingitem => wspingitem.uuid === item.uuid)
+    if (wsPing.times.length === 0) {
       item.msgs.push('暂无电量记录')
       setitems([...items])
       return
     }
+
+    let wsPingItems = wsPing.times.reverse()
+    wsPingItems = wsPingItems.find(fv => fv.type === 'client')
     item.msgs.push(
-      `手机电量：${wsPing.clientmessage.level}   时间： ${dayjs(wsPing.date).format('YYYY-MM-DD HH:mm:ss')}`
+      `手机电量：${wsPingItems?.clientmessage.level ?? '无'}   时间： ${dayjs(wsPingItems.date).format(
+        'YYYY-MM-DD HH:mm:ss'
+      )}`
     )
     setitems([...items])
+  }
+
+  async function deleteuuid(item) {
+    try {
+      const res = await http.post('/delete-uuid', {
+        uuid: item.uuid
+      })
+      if (res.code === 1) {
+        WINAPI.$message.success(res.msg)
+      } else {
+        WINAPI.$message.error(res.msg)
+      }
+    } catch (error) {
+      WINAPI.$message.error('网络错误')
+      console.log(error)
+    }
   }
 
   return (
@@ -418,18 +433,24 @@ export default () => {
                     >
                       唤醒
                     </Button>
-                    <Input
-                      placeholder='随便写-测试看看在线不'
-                      className='mt-20'
-                      value={testsendValue}
-                      onInput={e => setTestsendValue(e.target.value)}
-                    />
-                    <Button type='primary' block className='mt-10' onClick={() => testSend(item, index)}>
-                      测试wolapp通讯
-                    </Button>
-                    <Button type='primary' block className='mt-10' onClick={() => getPower(item, index)}>
-                      查看手机电量
-                    </Button>
+                    <div className='flex-ai-c mt-10'>
+                      <Input
+                        placeholder='随便写-测试看看在线不'
+                        value={testsendValue}
+                        onInput={e => setTestsendValue(e.target.value)}
+                      />
+                      <Button type='primary' onClick={() => testSend(item, index)}>
+                        测试wolapp通讯
+                      </Button>
+                    </div>
+                    <div className={styles.gnbuts}>
+                      <Button type='primary' onClick={() => getPower(item, index)}>
+                        查看手机电量
+                      </Button>
+                      <Button type='primary' danger onClick={() => deleteuuid(item, index)}>
+                        释放当前链接
+                      </Button>
+                    </div>
                     <div className='mt-10'>
                       {item.msgs.length > 0 && item.msgs.map((msg, index) => <p key={index}>{msg}</p>)}
                     </div>
