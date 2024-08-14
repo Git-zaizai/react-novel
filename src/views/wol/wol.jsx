@@ -422,7 +422,7 @@ export default () => {
                 rules={[rulesID]}
                 validateTrigger='onBlur'
               >
-                <Input placeholder='id' />
+                <Input placeholder='id' allowClear />
               </Form.Item>
               <Button type='primary' htmlType='submit' block loading={isloading}>
                 查询
@@ -448,7 +448,7 @@ export default () => {
                     <div className='flex-ai-c mt-10'>
                       <Input
                         placeholder='随便写-测试看看在线不'
-                        value={testsendValue}
+                        allowClear
                         onInput={e => setTestsendValue(e.target.value)}
                       />
                       <Button type='primary' onClick={() => testSend(item, index)}>

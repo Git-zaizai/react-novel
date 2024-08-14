@@ -63,7 +63,7 @@ export default () => {
                     <div style={{ width: '85%' }}>
                       <h4
                         className='wax-100 singe-line mr-20'
-                        onClick={() => copyText('小说名', msg => window.$message.success(msg))}
+                        onClick={() => copyText(item.title, msg => window.$message.success(msg))}
                       >
                         {item.title}
                       </h4>
