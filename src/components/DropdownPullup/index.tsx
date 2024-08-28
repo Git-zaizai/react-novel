@@ -56,20 +56,16 @@ interface Props {
   onEnd: (fn: () => void) => void | Promise<void>
   // 触底加载回调
   onPullup: (fn: Dispatch<PullupState>) => void | Promise<void>
+  isOnPullup?: boolean
   InfiniteDropdown?: boolean // 无限下拉
   isMount?: boolean
+  scroll?: () => void
 }
 
 export type PullRefreshProps = Props
 
-const DropdownPullup = ({
-  headerPosition = null,
-  children,
-  onEnd,
-  onPullup,
-  InfiniteDropdown = true,
-  isMount = true
-}: Props) => {
+const DropdownPullup = (props: Props) => {
+  const { headerPosition = null, children, onEnd, onPullup, InfiniteDropdown = true, isMount = true, scroll, isOnPullup = true } = props
   const dropdownPullupViewRef = useRef<HTMLDivElement | null>(null)
 
   const [style, setStyle] = useState({
@@ -102,16 +98,17 @@ const DropdownPullup = ({
     setStyle({ '--overflow': 'scroll', '--zai-translateY': '0px' })
   }
 
-  function scroll(e: any) {
+  function scrollView(e: any) {
     const { scrollHeight, clientHeight, scrollTop } = e.target
     viewScrollTop = scrollTop
-    if (clientHeight + scrollTop + 20 >= scrollHeight) {
+    if (clientHeight + scrollTop >= scrollHeight && isOnPullup) {
       if (onPullup) {
         setStyle((value: any) => ({ ...value, '--overflow': 'hidden' }))
         setPullup(value => ({ ...value, opacity: 1 }))
         onPullup(pullupCallback)
       }
     }
+    typeof scroll === 'function' && scroll()
   }
 
   function move(e: TouchEvent) {
@@ -256,7 +253,7 @@ const DropdownPullup = ({
         ref={dropdownPullupViewRef}
         id='dropdown-pullup'
         className={`${styles['dropdown-pullup']} ${!isMobile() && 'web-dropdown-pullup'}`}
-        onScroll={scroll}
+        onScroll={scrollView}
         style={style as React.CSSProperties}
       >
         {headerPosition}

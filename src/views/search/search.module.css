@@ -85,7 +85,7 @@
   }
 
   .searchcard :global(.ant-card-head) {
-    padding: 0 5px;
+    padding: 5px;
     min-height: 53px;
     border-bottom: 1px solid var(--border-color);
   }

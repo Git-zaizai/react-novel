@@ -27,7 +27,7 @@ function Introduction({ txt }) {
 }
 
 function LinkButton({ link }) {
-  if (!link.urli) {
+  if (link.urli === '') {
     return
   }
   return (

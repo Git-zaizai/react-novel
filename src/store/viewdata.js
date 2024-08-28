@@ -24,7 +24,6 @@ const [viewdata, getViewData] = createGlobalStore(() => {
     })
   }
 
-
   const initTabs = async () => {
     if (getViewData().tabs.length) return
     try {
@@ -36,7 +35,6 @@ const [viewdata, getViewData] = createGlobalStore(() => {
       return Promise.reject(e)
     }
   }
-
 
   const initNovel = async isleng => {
     if (!isleng) {
@@ -63,7 +61,6 @@ const [viewdata, getViewData] = createGlobalStore(() => {
       return mv
     })
     setNovelStore({ novelList: data })
-    return Promise.resolve()
   }
 
   function deleteNovelItem(id) {

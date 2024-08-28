@@ -5,7 +5,7 @@ import Transition from '@/components/Transition'
 import CuIcon from '@/components/cuIcon'
 import NovelCardList from '@/components/novelCard'
 import { HamburgerButton } from '@icon-park/react'
-import { SearchOutlined } from '@ant-design/icons'
+import { SearchOutlined, ArrowUpOutlined } from '@ant-design/icons'
 import DropdownPullup from '@/components/DropdownPullup'
 
 import { useViewDataStore, getViewDataStore } from '@/store/viewdata'
@@ -40,6 +40,7 @@ const showOptions = [
   }
 ]
 
+// 判断是否在搜索，在搜索中不能上拉加载
 let isonSearch = false
 
 export default () => {
@@ -51,6 +52,7 @@ export default () => {
   const [searchlist, setSearchlist] = useState([])
   const [page, setPage] = useState(10)
   const [inputValue, setInput] = useState('')
+  const [isOnPullup, { set: setIsOnPullup }] = useToggle(true)
 
   useEffect(() => {
     bindList()
@@ -65,6 +67,7 @@ export default () => {
       setInput('')
       !isCheckboxShow && formRef.resetFields()
       isonSearch = false
+      !isOnPullup && setIsOnPullup(true)
       setTimeout(() => {
         callback && callback()
       }, 1000)
@@ -149,14 +152,9 @@ export default () => {
 
   const onPullup = callback => {
     if (isonSearch) {
-      callback({
-        text: '没有更多了',
-        iconShow: false,
-        opacity: 1
-      })
       return
     }
-    if (page + 10 < novel.novelList.length - 1) {
+    if (page + 10 <= novel.novelList.length) {
       callback({
         opacity: 1
       })
@@ -165,11 +163,24 @@ export default () => {
       })
       setPage(page + 10)
     } else {
-      callback({
-        text: '没有更多了',
-        iconShow: false
-      })
+      setTimeout(() => {
+        callback({
+          opacity: 0
+        })
+        setIsOnPullup(false)
+      }, 1000)
     }
+  }
+
+  function addListAll() {
+    if (searchlist.length < novel.novelList.length) {
+      let newlist = novel.novelList.slice(searchlist.length, novel.novelList.length)
+      setSearchlist(searchlist.concat(newlist))
+    }
+  }
+
+  function upoutClick() {
+    window.$message.warning('未完成')
   }
 
   return (
@@ -180,22 +191,26 @@ export default () => {
           hoverable
           title={
             <>
-              <div className={styles.searchtitle + ' flex-ai-c'}>
-                <Input
-                  placeholder='名'
-                  variant='filled'
-                  type='Primary'
-                  value={inputValue}
-                  onChange={e => setInput(e.target.value)}
-                />
-                <Button className='ml-5' onClick={onSearch}>
-                  <SearchOutlined />
-                </Button>
+              <div>
+                <div className={`${styles.searchtitle} flex-ai-c`}>
+                  <Input placeholder='名' variant='filled' type='Primary' value={inputValue} onChange={e => setInput(e.target.value)} />
+                  <Button className='ml-5' onClick={onSearch}>
+                    <SearchOutlined />
+                  </Button>
 
-                {/* <Search placeholder='名' allowClear size='large' onSearch={onSearch} /> */}
-                <Button type='text' className='ml-5' onClick={toggle}>
-                  <HamburgerButton theme='outline' size='26' fill={isCheckboxShow ? '#333' : 'var(--primary-color)'} />
-                </Button>
+                  {/* <Search placeholder='名' allowClear size='large' onSearch={onSearch} /> */}
+                  <Button type='text' className='ml-5' onClick={toggle}>
+                    <HamburgerButton theme='outline' size='26' fill={isCheckboxShow ? '#333' : 'var(--primary-color)'} />
+                  </Button>
+                </div>
+                <div className='mt-5 flex-fdc'>
+                  <Button block size='small' onClick={addListAll}>
+                    加载全部
+                  </Button>
+                  <Button block size='small' className='mt-10' onClick={upoutClick}>
+                    <ArrowUpOutlined />
+                  </Button>
+                </div>
               </div>
             </>
           }
@@ -233,7 +248,8 @@ export default () => {
           onEnd={bindList}
           onPullup={onPullup}
           isMount={false}
-          headerPosition={<div style={{ height: 'calc(var(--Header-height) + 20px)' }}></div>}
+          isOnPullup={isOnPullup}
+          headerPosition={<div style={{ height: 'calc(var(--Header-height) + 10.3vh)' }}></div>}
         >
           <div className='flex-ai-c flex-wrap'>
             <NovelCardList data={searchlist} />

@@ -59,7 +59,8 @@ export default () => {
                     nprogressToggle()
                   }}
                 >
-                  {() => <div>{currentOutlet}</div>}
+                  {/* {() => <div>{currentOutlet}</div>} */}
+                  {currentOutlet}
                 </Transition>
               </Content>
               <ZaiFooter />
