@@ -1,7 +1,8 @@
 .wolLayout {
   padding: 20px;
   overflow: scroll;
-  height: 100vh;
+  height: calc(100vh - var(--Header-Navigate));
+  margin-top: var(--Header-Navigate);
 }
 
 .items {

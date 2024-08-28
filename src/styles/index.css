@@ -10,9 +10,10 @@
 :root {
   --Header-height: 75px;
   --Footer-height: 64px;
+  --Header-Navigate: 5vh;
 }
 
-body{
+body {
   background-color: var(--base-color);
 }
 
