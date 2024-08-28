@@ -7,6 +7,7 @@ import httpd, { createRequest } from '@/utlis/http'
 import dayjs from 'dayjs'
 
 import WolJsonView from './wol-json-view'
+import HeaderNavigate from '@/components/HeaderNavigate/HeaderNavigate'
 
 const { VITE_GLOB_WOL_API_URL, VITE_GLOB_WOL_API_URL_PREFIX } = import.meta.env
 const http = createRequest(VITE_GLOB_WOL_API_URL + VITE_GLOB_WOL_API_URL_PREFIX)
@@ -33,6 +34,7 @@ function WolAdmin() {
 
   async function createAllFile() {
     await httpd.post('/verify').catch(e => {
+      localStorage.removeItem('token')
       return Promise.reject(e)
     })
     const res = await http.get('/createLog').catch(err => {
@@ -395,6 +397,7 @@ export default () => {
         }}
       >
         <App message={{ top: 70 }}>
+          <HeaderNavigate />
           <WinConfig />
 
           <Layout className={styles.wolLayout}>

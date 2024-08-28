@@ -49,6 +49,9 @@ export const tabsRoutes = [
   },
   {
     path: '/wol',
+    handle: {
+      title: 'wol'
+    },
     element: LazyImport(() => import('@/views/wol/wol'))
   }
 ]
