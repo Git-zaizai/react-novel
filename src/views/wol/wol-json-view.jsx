@@ -7,12 +7,17 @@ import dayjs from 'dayjs'
 import { Button, Checkbox } from 'antd'
 
 export default ({ WINAPI, http, open, data, onClose, title }) => {
+  if (open) {
+    return null
+  }
+
   const [srcData, setSrcData] = useState(data ?? null)
   const [jsonFiles, setJsonfiles] = useState([])
   const [atitle, setAtitle] = useState(title ?? '')
   const [isReactJsonOpen, { toggle: toggleReactJson }] = useToggle(false)
   const fileInputRef = useRef(null)
-  const [isDelete, { set: setDelete }] = useToggle(true)
+  // const [isDelete, { set: setDelete }] = useToggle(true)
+  const isDeleteButdisabled = !jsonFiles.some(sv => sv.checked)
 
   useEffect(() => {
     if (data) {
@@ -93,11 +98,11 @@ export default ({ WINAPI, http, open, data, onClose, title }) => {
 
   function CheckboxChange(e) {
     jsonFiles[e.target.value].checked = !jsonFiles[e.target.value].checked
-    if (jsonFiles[e.target.value].checked) {
-      setDelete(false)
-    } else {
-      setDelete(!jsonFiles.some(sv => sv.checked))
-    }
+    // if (jsonFiles[e.target.value].checked) {
+    //   setDelete(false)
+    // } else {
+    //   setDelete(!jsonFiles.some(sv => sv.checked))
+    // }
     setJsonfiles([].concat(jsonFiles))
   }
 
@@ -105,17 +110,20 @@ export default ({ WINAPI, http, open, data, onClose, title }) => {
     jsonFiles.forEach(item => {
       item.checked = false
     })
-    setDelete(true)
+    // setDelete(true)
     setJsonfiles([].concat(jsonFiles))
   }
 
   async function deleteJsonFlile() {
-    chongzhi()
-    WINAPI.$message.warning('暂时不支持删除')
-  }
-
-  if (open) {
-    return null
+    const names = jsonFiles.filter(sv => sv.checked).map(mv => mv.name)
+    try {
+      await http.post('/rm-json', { names })
+      await getjsons()
+      WINAPI.$message.success('删除成功')
+    } catch (error) {
+      console.log(error)
+      WINAPI.$message.error('删除失败')
+    }
   }
 
   return (
@@ -130,10 +138,10 @@ export default ({ WINAPI, http, open, data, onClose, title }) => {
                 上传
               </Button>
               <input ref={fileInputRef} type='file' hidden onChange={changeFile} />
-              <Button className='ml-10' type='primary' danger disabled={isDelete} onClick={deleteJsonFlile}>
+              <Button className='ml-10' type='primary' danger disabled={isDeleteButdisabled} onClick={deleteJsonFlile}>
                 删除
               </Button>
-              <Button className='ml-10' type='primary' disabled={isDelete} onClick={chongzhi}>
+              <Button className='ml-10' type='primary' disabled={isDeleteButdisabled} onClick={chongzhi}>
                 重置
               </Button>
             </div>

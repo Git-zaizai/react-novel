@@ -1,91 +1,91 @@
-import styles from './wol.module.css';
+import styles from './wol.module.css'
 
-import { ConfigProvider, App, Layout, theme, Form, Checkbox, Modal } from 'antd';
-import { useStore } from '@/store';
-import { useToggle } from 'ahooks';
-import httpd, { createRequest } from '@/utlis/http';
-import dayjs from 'dayjs';
+import { ConfigProvider, App, Layout, theme, Form, Checkbox, Modal } from 'antd'
+import { useStore } from '@/store'
+import { useToggle } from 'ahooks'
+import httpd, { createRequest } from '@/utlis/http'
+import dayjs from 'dayjs'
 
-import WolJsonView from './wol-json-view';
+import WolJsonView from './wol-json-view'
 
-const { VITE_GLOB_WOL_API_URL, VITE_GLOB_WOL_API_URL_PREFIX } = import.meta.env;
-const http = createRequest(VITE_GLOB_WOL_API_URL + VITE_GLOB_WOL_API_URL_PREFIX);
+const { VITE_GLOB_WOL_API_URL, VITE_GLOB_WOL_API_URL_PREFIX } = import.meta.env
+const http = createRequest(VITE_GLOB_WOL_API_URL + VITE_GLOB_WOL_API_URL_PREFIX)
 
 const WINAPI = {
   $message: null
-};
+}
 
 const WinConfig = () => {
-  const { message: messageApi } = App.useApp();
-  WINAPI.$message = messageApi;
-  return <></>;
-};
+  const { message: messageApi } = App.useApp()
+  WINAPI.$message = messageApi
+  return <></>
+}
 
 function WolAdmin() {
-  let token = localStorage.getItem('token');
+  let token = localStorage.getItem('token')
   if (!token) {
-    return null;
+    return null
   }
 
-  const [modal, contextHolder] = Modal.useModal();
-  const [openjson, { toggle: setopenjson }] = useToggle(false);
-  const [dataJson, setdataJson] = useState(null);
+  const [modal, contextHolder] = Modal.useModal()
+  const [openjson, { toggle: setopenjson }] = useToggle(true)
+  const [dataJson, setdataJson] = useState(null)
 
   async function createAllFile() {
     await httpd.post('/verify').catch(e => {
-      return Promise.reject(e);
-    });
+      return Promise.reject(e)
+    })
     const res = await http.get('/createLog').catch(err => {
-      WINAPI.$message.error('网络错误');
-      return Promise.reject(err);
-    });
-    setopenjson();
-    setdataJson(res.data);
-    WINAPI.$message.success('创建成功');
+      WINAPI.$message.error('网络错误')
+      return Promise.reject(err)
+    })
+    setopenjson()
+    setdataJson(res.data)
+    WINAPI.$message.success('创建成功')
   }
 
-  const plainOptions = ['wsMap', 'wsMessageMap', 'wsPingMap'];
-  const [checkedList, setCheckedList] = useState([]);
-  const [modelOpen, { toggle: setModelOpen }] = useToggle();
-  const [confirmLoading, { toggle: setConfirmLoading }] = useToggle();
+  const plainOptions = ['wsMap', 'wsMessageMap', 'wsPingMap']
+  const [checkedList, setCheckedList] = useState([])
+  const [modelOpen, { toggle: setModelOpen }] = useToggle()
+  const [confirmLoading, { toggle: setConfirmLoading }] = useToggle()
 
   function CheckboxChange(checkedValues) {
-    setCheckedList(checkedValues);
+    setCheckedList(checkedValues)
   }
   function bindModalOpen() {
-    checkedList.length > 0 && setModelOpen();
-    window.$wolTime1 && clearTimeout(window.$wolTime1);
+    checkedList.length > 0 && setModelOpen()
+    window.$wolTime1 && clearTimeout(window.$wolTime1)
     window.$wolTime1 = setTimeout(() => {
-      setConfirmLoading();
-    }, 5000);
+      setConfirmLoading()
+    }, 5000)
   }
   async function bindfreedMap() {
-    let confirmed;
+    let confirmed
     if (checkedList.includes('wsMap')) {
       confirmed = await modal.confirm({
         title: '再次确认',
         centered: true,
         content: '其中包含 wsMap 请确认是否继续'
-      });
+      })
       if (!confirmed) {
-        setModelOpen();
-        setCheckedList([]);
-        WINAPI.$message.warning('请仔细查看');
+        setModelOpen()
+        setCheckedList([])
+        WINAPI.$message.warning('请仔细查看')
       }
     }
     try {
       const response = await http.post('/freedMap', {
         mapkey: checkedList
-      });
+      })
       if (response.code === 1) {
-        setModelOpen();
-        setCheckedList([]);
-        WINAPI.$message.success('释放' + response.data.join(','));
+        setModelOpen()
+        setCheckedList([])
+        WINAPI.$message.success('释放' + response.data.join(','))
       }
     } catch {
-      WINAPI.$message.error('网络错误');
-      setModelOpen();
-      setCheckedList([]);
+      WINAPI.$message.error('网络错误')
+      setModelOpen()
+      setCheckedList([])
     }
   }
 
@@ -112,21 +112,21 @@ function WolAdmin() {
         {contextHolder}
       </div>
     </>
-  );
+  )
 }
 
 export default () => {
-  const { store } = useStore();
-  const [formRef] = Form.useForm();
-  const [isloading, { toggle }] = useToggle();
+  const { store } = useStore()
+  const [formRef] = Form.useForm()
+  const [isloading, { toggle }] = useToggle()
 
-  const [wssid, setWssid] = useState('空');
-  const [items, setitems] = useState([]);
-  const [testsendValue, setTestsendValue] = useState('');
+  const [wssid, setWssid] = useState('空')
+  const [items, setitems] = useState([])
+  const [testsendValue, setTestsendValue] = useState('')
 
-  let wssid_list = localStorage.getItem('wssid_list');
+  let wssid_list = localStorage.getItem('wssid_list')
   if (wssid_list) {
-    wssid_list = JSON.parse(wssid_list);
+    wssid_list = JSON.parse(wssid_list)
     /* wssid_list.list = wssid_list.list.map(mv => {
       return {
         uuid: mv,
@@ -139,79 +139,79 @@ export default () => {
 
   useEffect(() => {
     if (wssid_list) {
-      setWssid(wssid_list.wssid);
-      onFinish();
+      setWssid(wssid_list.wssid)
+      onFinish()
     }
-  }, []);
+  }, [])
 
   const drawerStyles = {
     mask: {
       backdropFilter: 'blur(10px)'
     }
-  };
+  }
 
   const onFinish = async () => {
-    toggle();
-    const formdata = await formRef.validateFields();
+    toggle()
+    const formdata = await formRef.validateFields()
 
     const response = await http
       .get('/wssidlist', {
         wssid: formdata.wssid
       })
       .catch(err => {
-        toggle();
-        WINAPI.$message.error('网络错误');
-        return Promise.reject(err);
-      });
+        toggle()
+        WINAPI.$message.error('网络错误')
+        return Promise.reject(err)
+      })
 
     if (response.code === 1 && response.data) {
-      setWssid(response.data.wssid);
+      setWssid(response.data.wssid)
       const list = response.data.list.map(mv => {
         return {
           uuid: mv,
           loading: false,
           msgs: [],
           buttype: 'primary'
-        };
-      });
+        }
+      })
       localStorage.setItem(
         'wssid_list',
         JSON.stringify({
           wssid: response.data.wssid
         })
-      );
-      setitems(list);
+      )
+      setitems(list)
     } else {
       WINAPI.$message.warning({
         content: response.msg + '，没有查询到',
         duration: 5
-      });
-      setitems([]);
+      })
+      setitems([])
     }
     setTimeout(() => {
-      toggle();
-    }, 1000);
-  };
+      toggle()
+    }, 1000)
+  }
 
   const rulesID = ({ getFieldValue }) => ({
     async validator(_, value) {
       if (!value) {
-        return Promise.reject(new Error('请输入id'));
+        return Promise.reject(new Error('请输入id'))
       }
     }
-  });
+  })
 
   function setHttpHeaderWssid() {
-    const header = new Headers();
-    header.append('wssid', wssid);
-    let cookie = document.cookie;
+    const header = new Headers()
+    header.append('wssid', wssid)
+    let cookie = document.cookie
     if (!cookie.includes('wssid')) {
-      let date = new Date();
-      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-      let expires = '; expires=' + date.toUTCString();
-      document.cookie = 'wssid' + '=' + (wssid || '') + expires + '; path=/';
+      let date = new Date()
+      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000)
+      let expires = '; expires=' + date.toUTCString()
+      document.cookie = 'wssid' + '=' + (wssid || '') + expires + '; path=/'
     }
-    return header;
+    return header
   }
 
   async function getWolAppSend(wssid, uuid) {
@@ -221,65 +221,65 @@ export default () => {
         uuid: uuid
       })
       .catch(err => {
-        console.log('/selcect-app-messages error:', err);
-        return Promise.reject('网络错误');
-      });
+        console.log('/selcect-app-messages error:', err)
+        return Promise.reject('网络错误')
+      })
     if (response.code === 1) {
-      return response.data;
+      return response.data
     }
-    return Promise.reject('暂无回复');
+    return Promise.reject('暂无回复')
   }
 
   const binditemClick = async (item, index) => {
-    item.loading = true;
-    item.msgs.push('通讯中...');
-    setitems([...items]);
+    item.loading = true
+    item.msgs.push('通讯中...')
+    setitems([...items])
     let response = await http
       .post(`/send-wol?wssid=${wssid}`, {
         wssid: wssid,
         uuid: item.uuid
       })
       .catch(err => {
-        WINAPI.$message.error('网络错误');
-        item.loading = false;
-        setitems([...items]);
-        return Promise.reject(err);
-      });
+        WINAPI.$message.error('网络错误')
+        item.loading = false
+        setitems([...items])
+        return Promise.reject(err)
+      })
     if (response.code === 1) {
-      item.msgs.push('等待app回复...');
-      setitems([...items]);
+      item.msgs.push('等待app回复...')
+      setitems([...items])
       // 判断上一个请求是否结束
-      window.$timeNumber = 0;
+      window.$timeNumber = 0
       window.$time = setInterval(async () => {
         // 请求最多十次
         if (window.$timeNumber > 10) {
-          item.loading = false;
-          item.msgs.push('超时');
-          setitems([...items]);
-          clearInterval(window.$time);
-          return;
+          item.loading = false
+          item.msgs.push('超时')
+          setitems([...items])
+          clearInterval(window.$time)
+          return
         }
-        window.$timeNumber += 1;
+        window.$timeNumber += 1
         const msgs = await getWolAppSend(wssid, item.uuid).catch(err => {
-          item.msgs.push(err);
-          setitems([...items]);
-        });
+          item.msgs.push(err)
+          setitems([...items])
+        })
         if (msgs !== 0) {
-          const msg = msgs.at(-1);
-          item.msgs.push(`收到消息：${msg.data} ${dayjs(msg.date).format('YYYY-MM-DD HH:mm:ss')}`);
-          item.loading = false;
-          setitems([...items]);
-          clearInterval(window.$time);
+          const msg = msgs.at(-1)
+          item.msgs.push(`收到消息：${msg.data} ${dayjs(msg.date).format('YYYY-MM-DD HH:mm:ss')}`)
+          item.loading = false
+          setitems([...items])
+          clearInterval(window.$time)
           // 结束
-          window.$timeNumber = 0;
+          window.$timeNumber = 0
         }
-      }, 500);
+      }, 500)
     }
-  };
+  }
 
   const testSend = async (item, index) => {
-    item.msgs.push('通讯中...');
-    setitems([...items]);
+    item.msgs.push('通讯中...')
+    setitems([...items])
     let response = await http
       .post(`/send-app?wssid=${wssid}`, {
         wssid: wssid,
@@ -289,41 +289,41 @@ export default () => {
         }
       })
       .catch(err => {
-        item.msgs.push('网络错误');
-        setitems([...items]);
-        return Promise.reject(err);
-      });
+        item.msgs.push('网络错误')
+        setitems([...items])
+        return Promise.reject(err)
+      })
     if (response.code === 1) {
-      item.msgs.push('等待app回复...');
-      setitems([...items]);
+      item.msgs.push('等待app回复...')
+      setitems([...items])
       // 判断上一个请求是否结束
-      window.$timeNumber = 0;
+      window.$timeNumber = 0
       window.$time = setInterval(async () => {
         // 请求最多十次
         if (window.$timeNumber > 10) {
-          item.loading = false;
-          item.msgs.push('超时');
-          setitems([...items]);
-          clearInterval(window.$time);
-          return;
+          item.loading = false
+          item.msgs.push('超时')
+          setitems([...items])
+          clearInterval(window.$time)
+          return
         }
-        window.$timeNumber += 1;
+        window.$timeNumber += 1
         const msgs = await getWolAppSend(wssid, item.uuid).catch(err => {
-          item.msgs.push(err);
-          setitems([...items]);
-        });
+          item.msgs.push(err)
+          setitems([...items])
+        })
         if (msgs !== 0) {
-          const msg = msgs.at(-1);
-          item.msgs.push(`收到消息：${msg.data} ${dayjs(msg.date).format('YYYY-MM-DD HH:mm:ss')}`);
-          item.loading = false;
-          setitems([...items]);
-          clearInterval(window.$time);
+          const msg = msgs.at(-1)
+          item.msgs.push(`收到消息：${msg.data} ${dayjs(msg.date).format('YYYY-MM-DD HH:mm:ss')}`)
+          item.loading = false
+          setitems([...items])
+          clearInterval(window.$time)
           // 结束
-          window.$timeNumber = 0;
+          window.$timeNumber = 0
         }
-      }, 500);
+      }, 500)
     }
-  };
+  }
 
   async function getPower(item) {
     const res = await http
@@ -331,55 +331,55 @@ export default () => {
         isfile: 1
       })
       .catch(err => {
-        WINAPI.$message.error('网络错误');
-        return Promise.reject(err);
-      });
-    const { wsPingMap } = res.data;
+        WINAPI.$message.error('网络错误')
+        return Promise.reject(err)
+      })
+    const { wsPingMap } = res.data
     if (wsPingMap.length === 0) {
-      item.msgs.push('暂无电量记录');
-      setitems([...items]);
-      return;
+      item.msgs.push('暂无电量记录')
+      setitems([...items])
+      return
     }
-    const wsPing = wsPingMap.find(wspingitem => wspingitem.uuid === item.uuid);
+    const wsPing = wsPingMap.find(wspingitem => wspingitem.uuid === item.uuid)
     if (wsPing.times.length === 0) {
-      item.msgs.push('暂无电量记录');
-      setitems([...items]);
-      return;
+      item.msgs.push('暂无电量记录')
+      setitems([...items])
+      return
     }
 
-    let wsPingItems = wsPing.times.reverse();
-    wsPingItems = wsPingItems.find(fv => fv.type === 'client');
-    item.msgs.push(`手机电量：${wsPingItems?.clientmessage.level ?? '无'}  ${dayjs(wsPingItems.date).format('YYYY-MM-DD HH:mm:ss')}`);
-    setitems([...items]);
+    let wsPingItems = wsPing.times.reverse()
+    wsPingItems = wsPingItems.find(fv => fv.type === 'client')
+    item.msgs.push(`手机电量：${wsPingItems?.clientmessage.level ?? '无'}  ${dayjs(wsPingItems.date).format('YYYY-MM-DD HH:mm:ss')}`)
+    setitems([...items])
   }
 
-  const [modal, contextHolder] = Modal.useModal();
+  const [modal, contextHolder] = Modal.useModal()
   async function deleteuuid(item, index) {
     try {
       const confirmed = await modal.confirm({
         title: '确认',
         centered: true,
         content: '是否释放当前链接？手机可能无法连接！'
-      });
+      })
 
       if (!confirmed) {
-        return;
+        return
       }
 
       const res = await http.post('/delete-uuid', {
         wssid: wssid,
         uuid: item.uuid
-      });
+      })
       if (res.code === 1) {
-        items.splice(index, 1);
-        setitems([...items]);
-        WINAPI.$message.success(res.msg);
+        items.splice(index, 1)
+        setitems([...items])
+        WINAPI.$message.success(res.msg)
       } else {
-        WINAPI.$message.error(res.msg);
+        WINAPI.$message.error(res.msg)
       }
     } catch (error) {
-      WINAPI.$message.error('网络错误');
-      console.log(error);
+      WINAPI.$message.error('网络错误')
+      console.log(error)
     }
   }
 
@@ -446,5 +446,5 @@ export default () => {
         </App>
       </ConfigProvider>
     </>
-  );
-};
+  )
+}
