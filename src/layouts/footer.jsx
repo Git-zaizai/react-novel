@@ -3,11 +3,13 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { isMobile } from '@/utlis'
 import { useStore } from '@/store'
 import http from '@/utlis/http'
-import adminRoute from '@/router/admin'
+import { adminRoute } from '@/router/admin'
 import { useMount } from 'ahooks'
 import { Dropdown } from 'antd'
 
 export default () => {
+  window.logComponents('Footer')
+
   const navigate = useNavigate()
   const location = useLocation()
   const { userStore, setUserStore } = useStore()
@@ -16,19 +18,23 @@ export default () => {
     return location.pathname === path ? 'var(--success-color)' : 'var(--text-color-3)'
   }
 
-  async function isUserAdmin() {
-    if (!localStorage.getItem('token')) return
-
-    const response = await http.get('/verifyUser').catch(err => {
-      window.$message.error(err)
-    })
-
-    if (response === 'root') {
-      setUserStore({ admin: true })
-    }
+  const handleMenuClick = val => {
+    navigate(val.key)
   }
 
-  useMount(() => isUserAdmin())
+  useMount(() => {
+    if (!localStorage.getItem('token')) return
+    http
+      .get('/verifyUser')
+      .then(response => {
+        if (response === 'root') {
+          setUserStore({ admin: true })
+        }
+      })
+      .catch(err => {
+        window.$message.error(err)
+      })
+  })
 
   if (!isMobile()) {
     const items = [
@@ -36,38 +42,38 @@ export default () => {
         key: '/',
         icon: (
           <CuIcon
-            icon='hot'
-            size='32'
+            icon="hot"
+            size="32"
             style={{
-              color: getColor('/')
+              color: getColor('/'),
             }}
           />
-        )
+        ),
       },
       {
         key: '/search',
         icon: (
           <CuIcon
-            icon='search'
-            size='32'
+            icon="search"
+            size="32"
             style={{
-              color: getColor('/search')
+              color: getColor('/search'),
             }}
           />
-        )
+        ),
       },
       {
         key: '/circle',
         icon: (
           <CuIcon
-            icon='circle'
-            size='32'
+            icon="circle"
+            size="32"
             style={{
-              color: getColor('/circle')
+              color: getColor('/circle'),
             }}
           />
-        )
-      }
+        ),
+      },
       /* {
         key: '/icon/Cuicons',
         icon: (
@@ -85,28 +91,32 @@ export default () => {
     if (userStore.admin) {
       adminRoute.forEach(item => {
         items.push({
-          key: item.path,
+          key: '/admin' + item?.path ?? '',
           icon: (
             <CuIcon
               icon={item.meta.icon}
-              size='32'
+              size="32"
               style={{
-                color: getColor(item.path)
+                color: getColor(item.path),
               }}
             />
-          )
+          ),
         })
       })
     }
 
-    const handleMenuClick = val => {
-      navigate(val.key)
-    }
     return (
       <>
-        <Dropdown menu={{ items, onClick: handleMenuClick }} placement='bottom'>
-          <footer className='pc-zaifooter flex cursor-pointer'>
-            <CuIcon icon='similar' size='34' color='var(--success-color)' />
+        <Dropdown
+          menu={{ items, onClick: handleMenuClick }}
+          placement="bottom"
+        >
+          <footer className="pc-zaifooter flex cursor-pointer">
+            <CuIcon
+              icon="similar"
+              size="34"
+              color="var(--success-color)"
+            />
           </footer>
         </Dropdown>
       </>
@@ -115,35 +125,44 @@ export default () => {
 
   return (
     <>
-      <footer className='zaifooter'>
+      <footer className="zaifooter">
         <div
-          className='zf-item flex-fdc-aic-juc h-100'
+          className="zf-item flex-fdc-aic-juc h-100"
           onClick={() => navigate('/')}
           style={{
-            color: getColor('/')
+            color: getColor('/'),
           }}
         >
-          <CuIcon icon='hot' size='40' />
+          <CuIcon
+            icon="hot"
+            size="40"
+          />
           <h4></h4>
         </div>
         <div
-          className='zf-item flex-fdc-aic-juc h-100'
+          className="zf-item flex-fdc-aic-juc h-100"
           onClick={() => navigate('/search')}
           style={{
-            color: getColor('/search')
+            color: getColor('/search'),
           }}
         >
-          <CuIcon icon='search' size='40' />
+          <CuIcon
+            icon="search"
+            size="40"
+          />
           <h4></h4>
         </div>
         <div
-          className='zf-item flex-fdc-aic-juc h-100'
+          className="zf-item flex-fdc-aic-juc h-100"
           onClick={() => navigate('/circle')}
           style={{
-            color: getColor('/circle')
+            color: getColor('/circle'),
           }}
         >
-          <CuIcon icon='circle' size='40' />
+          <CuIcon
+            icon="circle"
+            size="40"
+          />
           <h4></h4>
         </div>
         {/*  <div
@@ -157,17 +176,20 @@ export default () => {
           <h4></h4>
         </div> */}
         {userStore.admin &&
-          adminRoute.map(v => (
+          adminRoute.map((v, i) => (
             <div
-              key={v.path}
-              className='zf-item flex-fdc-aic-juc h-100'
-              onClick={() => navigate(v.path)}
+              key={i}
+              className="zf-item flex-fdc-aic-juc h-100"
+              onClick={() => navigate('/admin')}
               style={{
-                color: getColor(v.path)
+                color: getColor(v?.path ?? '/admin'),
               }}
             >
-              <CuIcon icon={v.meta.icon} size='40' />
-              <h4>{v.meta.footerText}</h4>
+              <CuIcon
+                icon={v.handle.icon}
+                size="40"
+              />
+              <h4>{v.handle.footerText}</h4>
             </div>
           ))}
       </footer>

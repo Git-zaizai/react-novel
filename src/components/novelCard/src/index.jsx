@@ -5,17 +5,10 @@ import { useCallback } from 'react'
 import http from '@/utlis/http'
 
 export default ({ data }) => {
-  console.log('NovelCardList');
   /**
    * @module 修改章节
    */
-  const {
-    show: chapterShow,
-    toggle: chapterToggle,
-    toggleOnSetData,
-    data: noData,
-    updateNovelList
-  } = useNovelCardComp()
+  const { show: chapterShow, toggle: chapterToggle, toggleOnSetData, data: noData, updateNovelList } = useNovelCardComp()
 
   const updateChapter = useCallback(toggleOnSetData)
 
@@ -26,7 +19,7 @@ export default ({ data }) => {
     const xduwan = Number(!noval.duwan)
     const response = await http.post('/mong/novel/update', {
       _id: noval._id,
-      duwan: xduwan
+      duwan: xduwan,
     })
     if (response) {
       updateNovelList(({ novel }, setNovel) => {
@@ -48,7 +41,15 @@ export default ({ data }) => {
     }
 
     return data.map((item, index) => {
-      return <NovelCard key={item._id} data={item} PropsIndex={index} updateChapter={updateChapter} updateDuwan={updateDuwan} />
+      return (
+        <NovelCard
+          key={item._id}
+          data={item}
+          PropsIndex={index}
+          updateChapter={updateChapter}
+          updateDuwan={updateDuwan}
+        />
+      )
     })
   }, [data])
 

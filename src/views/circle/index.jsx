@@ -12,7 +12,8 @@ const { TextArea } = Input
 export default () => {
   const [formRef] = Form.useForm()
   const [isloading, { toggle }] = useToggle()
-  const { tabs } = useViewDataStore()
+  // const { tabs } = useViewDataStore()
+  const tabs = []
 
   const onFinish = async value => {
     toggle()

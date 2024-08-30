@@ -1,7 +1,6 @@
 import styles from './index.module.css'
 
 import { CardSkeletons } from '@/components/cardSkeleton'
-import { useToggle } from 'ahooks'
 import { useViewDataStore, getViewDataStore } from '@/store/viewdata'
 import { useState, useEffect } from 'react'
 import CuIcon from '@/components/cuIcon'
@@ -9,7 +8,7 @@ import { copyText } from '@/utlis'
 import DropdownPullup from '@/components/DropdownPullup'
 
 export default () => {
-  console.log('index 路由页面')
+  window.logComponents('index 首页')
 
   const { initTabs, novel, initNovel } = useViewDataStore()
   const [loading, { set: setloading }] = useToggle(true)
@@ -46,30 +45,36 @@ export default () => {
 
   return (
     <>
-      <div className='h-100-vh'>
-        <DropdownPullup onEnd={onEnd} headerPosition={<div style={{ height: '10px' }}></div>}>
+      <div className="h-100-vh">
+        <DropdownPullup
+          onEnd={onEnd}
+          headerPosition={<div style={{ height: '10px' }}></div>}
+        >
           <CardSkeletons show={loading}>
             <div className={styles.indexview}>
               {list.length > 0 &&
                 list.map((item, index) => (
-                  <div className={`flex-ai-c mb-10 ${styles.itemview}`} key={item._id}>
+                  <div
+                    className={`flex-ai-c mb-10 ${styles.itemview}`}
+                    key={item._id}
+                  >
                     <CuIcon
-                      icon='hot'
-                      size='22'
-                      color='var(--primary-color)'
-                      className='mr-10'
+                      icon="hot"
+                      size="22"
+                      color="var(--primary-color)"
+                      className="mr-10"
                       onClick={() => copylink(item)}
                     />
                     <div style={{ width: '85%' }}>
                       <h4
-                        className='wax-100 singe-line mr-20'
+                        className="wax-100 singe-line mr-20"
                         onClick={() => copyText(item.title, msg => window.$message.success(msg))}
                       >
                         {item.title}
                       </h4>
                       {item.beizhu && <div className={styles.novelCardPeizhu}>{item.beizhu}</div>}
                     </div>
-                    <h4 className='ml-auto'>{index}</h4>
+                    <h4 className="ml-auto">{index}</h4>
                   </div>
                 ))}
             </div>

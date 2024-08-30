@@ -1,4 +1,4 @@
-import { useStore } from '@/store'
+import { useStore, getStore } from '@/store'
 import styles from './css.module.css'
 import CuIcon from '@/components/cuIcon'
 import { DeleteThree } from '@icon-park/react'
@@ -31,9 +31,9 @@ export default () => {
     rate: [] // 评分
   }
 
+  const { addDrawerShow, toggleAddDrawerShow } = useStore()
   const { tabs, initTabs, novel, setNovelStore } = useViewDataStore()
 
-  const { store, setValueStore } = useStore()
   const [formRef] = Form.useForm()
   const [titleRules, setTitleRules] = useState({
     validateStatus: '',
@@ -42,23 +42,20 @@ export default () => {
   })
   const [checkboxs, setCheckboxs] = useState([])
 
-  if (store.isAddDrawer && novel.action === 'update' && Object.keys(novel.data).length) {
-    let data =
-      typeof window.structuredClone === 'function'
-        ? structuredClone(novel.data)
-        : JSON.parse(JSON.stringify(novel.data))
+  if (addDrawerShow && novel.action === 'update' && Object.keys(novel.data).length) {
+    let data = typeof window.structuredClone === 'function' ? structuredClone(novel.data) : JSON.parse(JSON.stringify(novel.data))
     data.tabs = novel.data.tabs.map(t => t.tab)
     initialValues = data
   }
 
   useEffect(() => {
-    /* if (store.isAddDrawer && novel.action === 'add') {
+    /* if (store.addDrawerShow && novel.action === 'add') {
       formRef.setFieldsValue(initialValues)
     }else */
-    if (store.isAddDrawer === true) {
+    if (addDrawerShow === true) {
       formRef.setFieldsValue(initialValues)
     }
-  }, [store.isAddDrawer])
+  }, [addDrawerShow])
 
   function checkboxChange(value, index) {
     if (value) {
@@ -163,37 +160,28 @@ export default () => {
       novel.novelList[index] = body
       setNovelStore({ novelList: [].concat(novel.novelList) })
     }
-    setValueStore({ isAddDrawer: !store.isAddDrawer })
+    // setValueStore({ addDrawerShow: !store.addDrawerShow })
+    toggleAddDrawerShow()
     window.$message.success('操作成功')
   }
-
-  const AddDrawerFooter = (
-    <>
-      <div className='flex-fdc-aic-juc'>
-        <Button type='primary' block htmlType='submit' onClick={() => formfinish()}>
-          {novel.action === 'update' ? '修改' : '添加'}
-        </Button>
-        <Button
-          danger
-          type='primary'
-          block
-          className='mt-10'
-          onClick={() => setValueStore({ isAddDrawer: !store.isAddDrawer })}
-        >
-          返回
-        </Button>
-      </div>
-    </>
-  )
 
   return (
     <Drawer
       title={novel.action === 'update' ? '修改 Record' : '添加 Record'}
       placement={isMobile() ? 'bottom' : 'right'}
       height='90vh'
-      open={store.isAddDrawer}
-      onClose={() => setValueStore({ isAddDrawer: !store.isAddDrawer })}
-      footer={AddDrawerFooter}
+      open={addDrawerShow}
+      onClose={toggleAddDrawerShow}
+      footer={
+        <div className='flex-fdc-aic-juc'>
+          <Button type='primary' block htmlType='submit' onClick={() => formfinish()}>
+            {novel.action === 'update' ? '修改' : '添加'}
+          </Button>
+          <Button danger type='primary' block className='mt-10' onClick={toggleAddDrawerShow}>
+            返回
+          </Button>
+        </div>
+      }
     >
       <Form layout='vertical' form={formRef} initialValues={initialValues} requiredMark={false}>
         <Form.Item

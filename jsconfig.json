@@ -20,5 +20,5 @@
     },
     "experimentalDecorators": true
   },
-  "include": ["src", "typed-css.d.ts", "global.d.ts", "./auto-imports.d.ts"]
+  "include": ["src", "typed-css.d.ts", "global.d.ts", "./auto-imports.d.ts", "logComponents.ts"]
 }

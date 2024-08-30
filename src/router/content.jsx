@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react'
-export const LazyImport = (fn) => {
+
+export const LazyImport = fn => {
   const LazyComponent = lazy(fn)
   return (
     <Suspense>
@@ -8,4 +9,6 @@ export const LazyImport = (fn) => {
   )
 }
 
-export const Layout = LazyImport(() => import('@/layouts/index'))
+export { default as RouterView } from '@/components/RouterView'
+
+export const LayoutDefault = LazyImport(() => import('@/layouts/LayoutDefault'))

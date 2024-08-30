@@ -1,53 +1,43 @@
 import { createGlobalStore } from 'hox'
-import { useState } from 'react'
-import { setRootCss } from '@/styles/cssVars'
-import { checkIsDarkMode, getThemeToken } from '@/utlis/themeColor'
+import http from '@/utlis/http'
 
 const [useAccountStore, getAccountStore] = createGlobalStore(() => {
-  const [laoutState, setlaoutState] = useState({
-    theme: false,
-    themeToken: {
-      colorPrimary: '#63e2b7',
-      colorInfo: '#63e2b7',
-      colorSuccess: '#63e2b7'
-    },
-    isAddDrawer: false,
-    nprogress: false,
-    mainScroll: false,
-    isSettingTwo: false
-  })
-
-  function setValueStore(obj) {
-    setlaoutState(v => ({ ...v, ...obj }))
-  }
-
-  function setThemeToggle(value) {
-    setlaoutState(v => {
-      const res = { ...v, theme: value ?? !v.theme }
-      res.themeToken = getThemeToken(v.theme)
-      setRootCss(res.theme ? 'light' : 'dark')
-      return res
-    })
-  }
-
-  function nprogressToggle() {
-    setlaoutState(v => ({ ...v, nprogress: !v.nprogress }))
-  }
-
+  const [settingTwoShow, { toggle: toggleSettingTwoShow }] = useToggle(false)
   const [user, setUser] = useState({
-    admin: false
+    admin: false,
   })
+
   function setUserStore(obj) {
     setUser(v => ({ ...v, ...obj }))
   }
 
+  const [addDrawerShow, { toggle: toggleAddDrawerShow }] = useToggle(false)
+  const [novelFormData, setNovelFormData] = useState({
+    action: false,
+    data: {},
+  })
+  const [tabs, setTabs] = useState([])
+  const [novleList, setNovelList] = useState([])
+
+  /* useMount(() => {
+    http.post('/verify').then(() => {
+      setUser({ ...user, admin: true })
+    })
+  }) */
+
   return {
-    store: laoutState,
-    setValueStore,
-    setThemeToggle,
-    nprogressToggle,
     userStore: user,
-    setUserStore
+    setUserStore,
+    settingTwoShow,
+    toggleSettingTwoShow,
+    addDrawerShow,
+    toggleAddDrawerShow,
+    tabs,
+    setTabs,
+    novelFormData,
+    setNovelFormData,
+    novleList,
+    setNovelList,
   }
 })
 

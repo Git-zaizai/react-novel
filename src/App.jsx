@@ -1,7 +1,9 @@
 import { HoxRoot } from 'hox'
-import RouterView from '@/router/index'
+import Router from '@/router/index'
 import { checkIsDarkMode } from '@/utlis/themeColor'
 import { setRootCss } from '@/styles/cssVars'
+import AppProvider from './layouts/AppProvider'
+import { AppConfigStoreProvider } from '@/store/appConfig'
 
 import './styles/index.css'
 
@@ -10,18 +12,25 @@ import './styles/index.css'
  * @returns {JSX.Element}
  * @constructor
  */
-function AppComponent() {
-  useEffect(() => {
+function App() {
+  logComponents('App')
+  /* useEffect(() => {
     // setRootCss(checkIsDarkMode() ? 'light' : 'dark')
     setRootCss('dark')
-  }, [])
+  }, []) */
+  setRootCss('dark')
+
   return (
     <>
-      <HoxRoot>
-        <RouterView></RouterView>
-      </HoxRoot>
+      <AppConfigStoreProvider>
+        <AppProvider>
+          <HoxRoot>
+            <Router />
+          </HoxRoot>
+        </AppProvider>
+      </AppConfigStoreProvider>
     </>
   )
 }
 
-export default AppComponent
+export default App

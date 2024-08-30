@@ -5,6 +5,8 @@ import { resolve } from 'path'
 import AutoImport from 'unplugin-auto-import/vite'
 import AntdResolver from 'unplugin-auto-import-antd'
 
+import viteReactLogComponent from './build/vite-react-log-component'
+
 // https://vitejs.dev/config/
 export default defineConfig(configEnv => {
   const viteEnv = loadEnv(configEnv.mode, process.cwd())
@@ -16,7 +18,8 @@ export default defineConfig(configEnv => {
         imports: ['react', 'react-router-dom', 'ahooks'],
         dts: true,
         resolvers: [AntdResolver()]
-      })
+      }),
+      viteReactLogComponent()
     ],
     base: viteEnv.VITE_BASE_URL,
     resolve: {

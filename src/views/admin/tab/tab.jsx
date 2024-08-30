@@ -50,7 +50,7 @@ function TabCard() {
     await http
       .post('/json-set', {
         ph: 'tabs.json',
-        data
+        data,
       })
       .catch(e => {
         window.$message.error('添加标签失败')
@@ -60,8 +60,8 @@ function TabCard() {
       ...checkboxs,
       {
         tab: val,
-        color: randomHexColor()
-      }
+        color: randomHexColor(),
+      },
     ])
   }
 
@@ -73,7 +73,7 @@ function TabCard() {
       centered: true,
       cancelText: '取消',
       title: '删除记录类型',
-      content: '是否将（删除）'
+      content: '是否将（删除）',
     })
     if (!modalRes) return
     const removes = checkboxs.filter(v => {
@@ -85,7 +85,7 @@ function TabCard() {
     await http
       .post('/json-set', {
         ph: 'tabs.json',
-        data: removes.map(mv => mv.tab)
+        data: removes.map(mv => mv.tab),
       })
       .catch(e => {
         window.$message.error(e)
@@ -99,29 +99,61 @@ function TabCard() {
     <ViewCard
       className={styles.circleCard}
       title={
-        <div className='flex-ai-c'>
-          <CuIcon icon='tag' size='22' color='var(--primary-color)' className='mr-10' />
-          <h4 className='wax-100 singe-line'>标签</h4>
+        <div className="flex-ai-c">
+          <CuIcon
+            icon="tag"
+            size="22"
+            color="var(--primary-color)"
+            className="mr-10"
+          />
+          <h4 className="wax-100 singe-line">标签</h4>
         </div>
       }
     >
       {checkboxs.length ? (
-        <Space size={[0, 8]} wrap className='mt-10'>
+        <Space
+          size={[0, 8]}
+          wrap
+          className="mt-10"
+        >
           {checkboxs.map((item, index) => (
-            <Checkbox onChange={() => onChange(item, index)} checked={item.checked} key={item.tab}>
+            <Checkbox
+              onChange={() => onChange(item, index)}
+              checked={item.checked}
+              key={item.tab}
+            >
               <Tag color={item.color}>{item.tab}</Tag>
             </Checkbox>
           ))}
         </Space>
       ) : (
-        <div className='flex-fdc-aic-juc w-100'>
-          <CuIcon icon='home' color='var(--primary-color)' size='24' />
+        <div className="flex-fdc-aic-juc w-100">
+          <CuIcon
+            icon="home"
+            color="var(--primary-color)"
+            size="24"
+          />
         </div>
       )}
-      <Form.Item className={styles.addForm + ' w-100 mb-30'} labelAlign='right'>
-        <Space.Compact className='w-100'>
-          <Input placeholder='标签名' onChange={e => setval(e.target.value)} />
-          <Button type='primary' icon={<CuIcon icon='add' size={16} />} onClick={addTab}>
+      <Form.Item
+        className={styles.addForm + ' w-100 mb-30'}
+        labelAlign="right"
+      >
+        <Space.Compact className="w-100">
+          <Input
+            placeholder="标签名"
+            onChange={e => setval(e.target.value)}
+          />
+          <Button
+            type="primary"
+            icon={
+              <CuIcon
+                icon="add"
+                size={16}
+              />
+            }
+            onClick={addTab}
+          >
             提交
           </Button>
         </Space.Compact>
@@ -129,8 +161,17 @@ function TabCard() {
 
       <Transition show={isDelBut}>
         {isDelBut ? (
-          <Button danger type='primary' block className='mt-10' onClick={removeTabClick}>
-            <CuIcon icon='delete' size={16} />
+          <Button
+            danger
+            type="primary"
+            block
+            className="mt-10"
+            onClick={removeTabClick}
+          >
+            <CuIcon
+              icon="delete"
+              size={16}
+            />
           </Button>
         ) : (
           <></>
@@ -141,8 +182,6 @@ function TabCard() {
 }
 
 export default () => {
-  console.log('tab 页面')
-
   const [list, setList] = useState([])
   const { setTabs, tabs, initTabs } = useViewDataStore()
 
@@ -156,8 +195,8 @@ export default () => {
     const response = await http
       .post('/curd-mongo/del/tabs', {
         where: {
-          _id: id
-        }
+          _id: id,
+        },
       })
       .catch(e => {
         return Promise.reject(e)
@@ -191,16 +230,24 @@ export default () => {
 
         <ViewCard
           title={
-            <div className='flex'>
-              <CuIcon icon='form' size='22' color='var(--primary-color)' className='mr-10' />
-              <h4 className='wax-100 singe-line'>申请的便签</h4>
+            <div className="flex">
+              <CuIcon
+                icon="form"
+                size="22"
+                color="var(--primary-color)"
+                className="mr-10"
+              />
+              <h4 className="wax-100 singe-line">申请的便签</h4>
             </div>
           }
         >
           {list.length ? (
             list.map((item, i) => (
-              <div className='mt-10 mb-10 flex-ai-c' key={item._id}>
-                <div className='flex-1'>
+              <div
+                className="mt-10 mb-10 flex-ai-c"
+                key={item._id}
+              >
+                <div className="flex-1">
                   <Tag color={randomHexColor()}>{item.name}</Tag>
                   说明：{item.txt}
                 </div>
@@ -212,27 +259,37 @@ export default () => {
 
                 <Button
                   danger
-                  type='text'
-                  className='ml-10'
+                  type="text"
+                  className="ml-10"
                   style={{ backgroundColor: 'var(--primary-color-suppl)', color: '#fff' }}
                   onClick={() => checkTab(item, i)}
                 >
-                  <CuIcon icon='check' size={16} />
+                  <CuIcon
+                    icon="check"
+                    size={16}
+                  />
                 </Button>
                 <Button
                   danger
-                  type='text'
-                  className='ml-10'
+                  type="text"
+                  className="ml-10"
                   style={{ backgroundColor: '#fff2f0' }}
                   onClick={() => removeTabApply(item._id, i)}
                 >
-                  <CuIcon icon='delete' size={16} />
+                  <CuIcon
+                    icon="delete"
+                    size={16}
+                  />
                 </Button>
               </div>
             ))
           ) : (
-            <div className='flex-fdc-aic-juc w-100'>
-              <CuIcon icon='home' color='var(--primary-color)' size='24' />
+            <div className="flex-fdc-aic-juc w-100">
+              <CuIcon
+                icon="home"
+                color="var(--primary-color)"
+                size="24"
+              />
             </div>
           )}
         </ViewCard>

@@ -1,14 +1,16 @@
 import { createGlobalStore } from 'hox'
-import { useState } from 'react'
 import http from '@/utlis/http'
 import { randomHexColor } from '@/utlis/themeColor'
 
 const [viewdata, getViewData] = createGlobalStore(() => {
   const [tabs, setTabs] = useState([])
+
+  const [novelFormView, { toggle: toggleNovelFormView }] = useToggle(false)
+
   const [novel, setNovel] = useState({
     action: false,
     data: {},
-    novelList: []
+    novelList: [],
   })
 
   function setNovelStore(obj) {
@@ -20,7 +22,7 @@ const [viewdata, getViewData] = createGlobalStore(() => {
     setNovel({
       action: false,
       data: {},
-      novelList: []
+      novelList: [],
     })
   }
 
@@ -55,7 +57,7 @@ const [viewdata, getViewData] = createGlobalStore(() => {
         if (find) return find
         return {
           tab: mmv,
-          color: randomHexColor()
+          color: randomHexColor(),
         }
       })
       return mv
@@ -74,12 +76,15 @@ const [viewdata, getViewData] = createGlobalStore(() => {
   return {
     tabs,
     setTabs,
+    novelFormView,
+    toggleNovelFormView,
+
     initTabs,
     novel,
     setNovelStore,
     initNovel,
     deleteNovelItem,
-    clearNovel
+    clearNovel,
   }
 })
 

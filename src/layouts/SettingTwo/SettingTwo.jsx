@@ -1,4 +1,4 @@
-import { useStore } from '@/store'
+import { useStore, getStore } from '@/store'
 import { EyeTwoTone, EyeInvisibleOutlined } from '@ant-design/icons'
 import { Input, Checkbox } from 'antd'
 import Transition from '@/components/Transition'
@@ -13,12 +13,18 @@ import { useViewDataStore } from '@/store/viewdata'
 const CheckboxGroup = Checkbox.Group
 
 export default () => {
-  const { store, setValueStore, setUserStore } = useStore()
+  const { setUserStore, settingTwoShow, toggleSettingTwoShow } = useStore()
+  logComponents('SettingTwo')
+  /* if (getStore().isSettingTwo === false) {
+    logComponents('SettingTwo')
+    return null
+  } */
+
   const [token, setToken] = useLocalStorageState('token')
   const [isLogin, { toggle }] = useToggle(true)
   const [pwd, setPwd] = useState('')
   const { runAsync } = useRequest(data => http.post('/secretkey', { pwd: data }), {
-    manual: true
+    manual: true,
   })
   const { clearNovel } = useViewDataStore()
 
@@ -38,7 +44,7 @@ export default () => {
   // chechke 配置
   const [checkd, setCheckd] = useState({
     plainOptions: checkedList,
-    checkAll: !!checkedList.length
+    checkAll: !!checkedList.length,
   })
 
   async function login() {
@@ -67,7 +73,7 @@ export default () => {
     const locals = Object.keys(localStorage)
     setCheckd({
       plainOptions: locals,
-      checkAll: locals.length ? true : false
+      checkAll: locals.length ? true : false,
     })
     setCheckedList(locals)
     setUserStore({ admin: false })
@@ -79,7 +85,7 @@ export default () => {
     setCheckedList(list)
     setCheckd(v => ({
       ...v,
-      checkAll: list > 0 && list < checkd.plainOptions.length
+      checkAll: list > 0 && list < checkd.plainOptions.length,
     }))
   }
 
@@ -87,7 +93,7 @@ export default () => {
     setCheckedList(e.target.checked ? checkd.plainOptions : [])
     setCheckd({
       plainOptions: checkd.plainOptions,
-      checkAll: e.target.checked
+      checkAll: e.target.checked,
     })
   }
 
@@ -98,7 +104,7 @@ export default () => {
     const locals = Object.keys(localStorage)
     setCheckd({
       plainOptions: locals,
-      checkAll: true
+      checkAll: true,
     })
     setCheckedList(locals)
     setPwd('')
@@ -120,50 +126,91 @@ export default () => {
 
   return (
     <Drawer
-      title='设置'
-      placement='left'
-      open={store.isSettingTwo}
-      onClose={() => setValueStore({ isSettingTwo: !store.isSettingTwo })}
+      title="设置"
+      placement="left"
+      open={settingTwoShow}
+      onClose={() => toggleSettingTwoShow()}
       width={isMobile() ? '80vw' : '20vw'}
     >
-      <div className='flex-fdc h-100'>
+      <div className="flex-fdc h-100">
         <Input.Password
-          size='large'
+          size="large"
           allowClear
-          placeholder='秘钥'
+          placeholder="秘钥"
           value={pwd}
           onChange={e => setPwd(e.target.value)}
           iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
         />
         <Transition show={isLogin}>
           {isLogin ? (
-            <Button type='primary' className='mt-10' block onClick={login}>
+            <Button
+              type="primary"
+              className="mt-10"
+              block
+              onClick={login}
+            >
               获取秘钥
             </Button>
           ) : (
-            <Button type='primary' className='mt-10' block danger onClick={removeToken}>
+            <Button
+              type="primary"
+              className="mt-10"
+              block
+              danger
+              onClick={removeToken}
+            >
               清除秘钥
             </Button>
           )}
         </Transition>
 
-        <Space direction='vertical' size='middle' className='mt-20' style={{ display: 'flex' }}>
-          <Button block type='dashed' icon={<CuIcon icon='down' />} onClick={exportSql}>
+        <Space
+          direction="vertical"
+          size="middle"
+          className="mt-20"
+          style={{ display: 'flex' }}
+        >
+          <Button
+            block
+            type="dashed"
+            icon={<CuIcon icon="down" />}
+            onClick={exportSql}
+          >
             导出数据库表
           </Button>
-          <Button block type='dashed' icon={<CuIcon icon='down' />} onClick={exportLocal}>
+          <Button
+            block
+            type="dashed"
+            icon={<CuIcon icon="down" />}
+            onClick={exportLocal}
+          >
             导出本地数据
           </Button>
         </Space>
 
         <div style={{ marginTop: 'auto' }}>
           <div>
-            <Checkbox onChange={onCheckAllChange} checked={checkd.checkAll}>
+            <Checkbox
+              onChange={onCheckAllChange}
+              checked={checkd.checkAll}
+            >
               选择所有
             </Checkbox>
           </div>
-          <CheckboxGroup className='mt-20' options={checkd.plainOptions} value={checkedList} onChange={onChange} />
-          <Button className='mt-20' block type='primary' danger icon={<CuIcon icon='delete' />} onClick={removeLocal}>
+          <CheckboxGroup
+            className="mt-20"
+            options={checkd.plainOptions}
+            value={checkedList}
+            onChange={onChange}
+          />
+          <Button
+            className="mt-20"
+            block
+            type="primary"
+            danger
+            icon={<CuIcon icon="delete" />}
+            onClick={removeLocal}
+          >
             删除本地数据
           </Button>
         </div>

@@ -1,18 +1,25 @@
-import { LazyImport, Layout } from '../content'
+import { LazyImport, LayoutDefault, RouterView } from '../content'
+
+export const adminRoute = [
+  {
+    index: true,
+    handle: {
+      icon: 'tag',
+      footerText: '',
+    },
+    element: LazyImport(() => import('@/views/admin/tab/tab')),
+  },
+]
 
 export default [
   {
-    path: '/admin/tab',
-    element: Layout,
-    meta: {
-      footerText: '',
-      icon:'tag'
-    },
+    path: '/admin',
+    element: LayoutDefault,
     children: [
       {
-        index: true,
-        element: LazyImport(() => import('@/views/admin/tab/tab'))
-      }
-    ]
-  }
+        element: <RouterView />,
+        children: adminRoute,
+      },
+    ],
+  },
 ]
