@@ -1,4 +1,5 @@
 import type { HmrContext, ResolvedConfig } from 'vite'
+// @ts-ignore
 import { readFile } from 'node:fs/promises'
 
 
@@ -51,10 +52,6 @@ function createlogFn() {
     }
 }
 
-interface MyPluginContext {
-    mode: string;
-    // 可以添加其他上下文信息
-}
 
 export default (options?: {
     drop_console?: boolean
@@ -84,10 +81,14 @@ export default (options?: {
                     }
                 }
             }
-            if (MODE === 'production' && drop_console) {
+            if (MODE.includes('production') && drop_console) {
+                let movde = fileStr.match(regex)
+                if (movde) {
+                    console.log("🚀 ~ transform ~ movde:", movde)
+                }
+                let code = fileStr.replace(regex, '')
                 return {
-                    // @ts-ignore
-                    code: fileStr.replaceAll(regex, ''),
+                    code,
                     map: { mappings: '' }
                 }
             }
