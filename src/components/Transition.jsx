@@ -1,6 +1,6 @@
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-export default props => {
+export default memo(props => {
   const { show, children, ...Remaining } = props
   window.logComponents('Transition')
 
@@ -9,13 +9,13 @@ export default props => {
       <SwitchTransition mode="out-in">
         <CSSTransition
           key={show}
-          timeout={props?.timeout ?? 300}
+          timeout={props?.timeout ?? 100}
           classNames={props?.name ?? 'fade'}
           {...Remaining}
         >
-          {children.type === 'div' ? children : <div>{children}</div>}
+          {children}
         </CSSTransition>
       </SwitchTransition>
     </>
   )
-}
+})

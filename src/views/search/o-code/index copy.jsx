@@ -3,17 +3,15 @@ import styles from './search.module.css'
 import ButtonCheckboxGroup from '@/components/buttonCheckboxGroup'
 import Transition from '@/components/Transition'
 import CuIcon from '@/components/cuIcon'
-
+import NovelCardList from '@/components/novelCard'
 import { HamburgerButton } from '@icon-park/react'
-import { SearchOutlined, BarsOutlined, FallOutlined } from '@ant-design/icons'
+import { SearchOutlined, ArrowUpOutlined } from '@ant-design/icons'
 import DropdownPullup from '@/components/DropdownPullup'
 
 import { useViewDataStore, getViewDataStore } from '@/store/viewdata'
 import { useState, useEffect } from 'react'
 import { Form } from 'antd'
 import http from '@/utlis/http'
-
-import { NovelCardList } from '@/components/novelCard-v2'
 
 const typeOptions = [
   {
@@ -70,6 +68,8 @@ const showOptions = [
 let isonSearch = false
 
 export default () => {
+  console.log('search 路由页面')
+
   const [formRef] = Form.useForm()
   const [isCheckboxShow, { toggle }] = useToggle(true)
   const { tabs, novelData, initTabs, initNovel } = useViewDataStore()
@@ -178,12 +178,12 @@ export default () => {
     if (isonSearch) {
       return
     }
-    if (page + 10 <= novelData.length) {
+    if (page + 10 <= novel.novelList.length) {
       callback({
         opacity: 1,
       })
       setSearchlist(list => {
-        return list.concat(novelData.slice(page, page + 10))
+        return list.concat(novel.novelList.slice(page, page + 10))
       })
       setPage(page + 10)
     } else {
@@ -197,8 +197,8 @@ export default () => {
   }
 
   function addListAll() {
-    if (searchlist.length < novelData.length) {
-      let newlist = novelData.slice(searchlist.length, novelData.length)
+    if (searchlist.length < novel.novelList.length) {
+      let newlist = novel.novelList.slice(searchlist.length, novel.novelList.length)
       setSearchlist(searchlist.concat(newlist))
     }
   }
@@ -225,28 +225,40 @@ export default () => {
                     onChange={e => setInput(e.target.value)}
                   />
                   <Button
-                    type="text"
                     className="ml-5"
                     onClick={onSearch}
                   >
                     <SearchOutlined />
                   </Button>
 
+                  {/* <Search placeholder='名' allowClear size='large' onSearch={onSearch} /> */}
                   <Button
                     type="text"
+                    className="ml-5"
                     onClick={toggle}
                   >
-                    <BarsOutlined
-                      style={{
-                        color: isCheckboxShow ? '' : 'var(--primary-color)',
-                      }}
+                    <HamburgerButton
+                      theme="outline"
+                      size="26"
+                      fill={isCheckboxShow ? '#333' : 'var(--primary-color)'}
                     />
                   </Button>
+                </div>
+                <div className="mt-5 flex-fdc">
                   <Button
-                    type="text"
+                    block
+                    size="small"
                     onClick={addListAll}
                   >
-                    <FallOutlined />
+                    加载全部
+                  </Button>
+                  <Button
+                    block
+                    size="small"
+                    className="mt-10"
+                    onClick={upoutClick}
+                  >
+                    <ArrowUpOutlined />
                   </Button>
                 </div>
               </div>
@@ -300,7 +312,7 @@ export default () => {
           onPullup={onPullup}
           isMount={false}
           isOnPullup={isOnPullup}
-          headerPosition={<div style={{ height: 'calc(var(--Header-height) + 3.3vh)' }}></div>}
+          headerPosition={<div style={{ height: 'calc(var(--Header-height) + 10.3vh)' }}></div>}
         >
           <div className="flex-ai-c flex-wrap">
             <NovelCardList data={searchlist} />

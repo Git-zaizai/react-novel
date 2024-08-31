@@ -1,0 +1,45 @@
+.novelCard {
+  width: 23.5%;
+  margin: 0 10px 20px 10px;
+}
+
+.novelCardPeizhu {
+  background-color: var(--tag-color);
+  margin-top: 10px;
+  border-radius: 3px;
+  padding: 5px;
+  color: var(--text-color-2);
+}
+
+.novelCarddiwan {
+  width: 40px;
+  height: 40px;
+}
+
+.novelCard :global(.ant-card-body) {
+  padding: 10px;
+}
+
+@media screen and (max-width: 980px) {
+  .novelCard {
+    width: 100%;
+    min-width: 80%;
+  }
+
+  .Tagsview {
+    gap: 5px 0;
+  }
+
+  .novelCardLinkBut {
+    margin-bottom: 5px;
+  }
+
+  .novelCard :global(.ant-card-head) {
+    padding: 0 10px;
+    min-height: 40px;
+  }
+
+  .novelCard :global(.ant-space) {
+    display: flex;
+  }
+}

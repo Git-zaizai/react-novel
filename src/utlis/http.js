@@ -27,7 +27,7 @@ async function request(options) {
     ...opts,
     url: /https?:\/\//.test(url) ? url : bacsURL + url,
     headers: null,
-    method: method.toUpperCase()
+    method: method.toUpperCase(),
   }
   if (requsetType === 'json') {
     config.headers = { 'Content-Type': 'application/json;charset=utf-8' }
@@ -45,7 +45,6 @@ async function request(options) {
   } else {
     config.body = JSON.stringify(data)
   }
-
   try {
     const response = await fetch(config.url, config)
 
@@ -98,7 +97,7 @@ export function createRequest(bacsURL) {
         bacsURL: bacsURL,
         method: 'get',
         url,
-        data
+        data,
       })
     },
     post: function (url, data) {
@@ -106,10 +105,10 @@ export function createRequest(bacsURL) {
         bacsURL: bacsURL,
         method: 'post',
         url,
-        data
+        data,
       })
     },
-    request: request
+    request: request,
   }
 }
 

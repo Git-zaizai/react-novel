@@ -252,7 +252,7 @@ const DropdownPullup = (props: Props) => {
       <div
         ref={dropdownPullupViewRef}
         id='dropdown-pullup'
-        className={`${styles['dropdown-pullup']} ${!isMobile() && 'web-dropdown-pullup'}`}
+        className={`${styles['dropdown-pullup']}${!isMobile() ? 'web-dropdown-pullup' : ''}`}
         onScroll={scrollView}
         style={style as React.CSSProperties}
       >

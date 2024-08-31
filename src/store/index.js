@@ -5,6 +5,7 @@ const [useAccountStore, getAccountStore] = createGlobalStore(() => {
   const [settingTwoShow, { toggle: toggleSettingTwoShow }] = useToggle(false)
   const [user, setUser] = useState({
     admin: false,
+    name: '',
   })
 
   function setUserStore(obj) {
@@ -13,17 +14,28 @@ const [useAccountStore, getAccountStore] = createGlobalStore(() => {
 
   const [addDrawerShow, { toggle: toggleAddDrawerShow }] = useToggle(false)
   const [novelFormData, setNovelFormData] = useState({
-    action: false,
-    data: {},
+    action: 'add', // add update
+    data: null,
   })
-  const [tabs, setTabs] = useState([])
-  const [novleList, setNovelList] = useState([])
 
-  /* useMount(() => {
-    http.post('/verify').then(() => {
-      setUser({ ...user, admin: true })
-    })
-  }) */
+  const initUserVerify = async () => {
+    if (localStorage.getItem('token')) {
+      await http.post('/verify').catch(() => {
+        localStorage.removeItem('token')
+        window.$message.warning('请重新登录')
+      })
+      user.admin = true
+      let res = await http.get('/verifyUser')
+      if (res === 'root') {
+        user.name = res
+      }
+      setUser({ ...user })
+    }
+  }
+
+  useMount(() => {
+    initUserVerify()
+  })
 
   return {
     userStore: user,
@@ -32,12 +44,9 @@ const [useAccountStore, getAccountStore] = createGlobalStore(() => {
     toggleSettingTwoShow,
     addDrawerShow,
     toggleAddDrawerShow,
-    tabs,
-    setTabs,
     novelFormData,
     setNovelFormData,
-    novleList,
-    setNovelList,
+    initUserVerify,
   }
 })
 

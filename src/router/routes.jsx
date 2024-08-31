@@ -27,6 +27,21 @@ export const commonRoutes = [
       },
     ],
   },
+  {
+    path: '/test',
+    element: LayoutDefault,
+    children: [
+      {
+        element: <RouterView />,
+        children: [
+          {
+            index: true,
+            element: LazyImport(() => import('@/views/test')),
+          },
+        ],
+      },
+    ],
+  },
 ]
 
 export const mainRoutes = [

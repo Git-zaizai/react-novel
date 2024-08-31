@@ -15,7 +15,12 @@
   padding: 8px 15px;
 }
 
-.searchtitle :global(.ant-btn) {
+.searchtitle :global(.ant-btn:nth-child(2)) {
+  padding: 8px 15px;
+  height: 40px;
+}
+
+.searchtitle :global(.ant-btn:last-child) {
   padding: 8px 15px;
   height: 42px;
 }

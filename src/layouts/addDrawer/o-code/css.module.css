@@ -1,0 +1,33 @@
+.addLinkForm {
+  /* padding: 15px 3px 3px 3px; */
+  /* border-top: 2px solid; */
+  margin: 15px 0;
+}
+
+.addLinkClose {
+  position: absolute;
+  right: 10px;
+  top: 6px;
+  font-size: 15px;
+  
+}
+
+.zj {
+  width: 60px;
+  height: 37px;
+  border: 2px solid var(--border-color);
+  margin: 0 10px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.zj::before {
+  content: ' ';
+  width: 12px;
+  height: 2px;
+  background: var(--text-color-2);
+}
+
+:global(.ant-drawer .ant-drawer-body) {
+  padding: 15px;
+}

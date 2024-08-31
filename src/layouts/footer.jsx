@@ -12,29 +12,26 @@ export default () => {
 
   const navigate = useNavigate()
   const location = useLocation()
-  const { userStore, setUserStore } = useStore()
+  const { userStore } = useStore()
 
   function getColor(path) {
     return location.pathname === path ? 'var(--success-color)' : 'var(--text-color-3)'
   }
 
-  const handleMenuClick = val => {
-    navigate(val.key)
-  }
+  const handleMenuClick = route => {
+    let url = typeof route === 'string' ? route : route.path
 
-  useMount(() => {
-    if (!localStorage.getItem('token')) return
-    http
-      .get('/verifyUser')
-      .then(response => {
-        if (response === 'root') {
-          setUserStore({ admin: true })
-        }
-      })
-      .catch(err => {
-        window.$message.error(err)
-      })
-  })
+    if (url !== location.pathname) {
+      navigate(url)
+    } else {
+      const scrollEl = document.querySelector('#dropdown-pullup')
+      if (scrollEl && scrollEl.scrollTop > 0) {
+        scrollEl.scrollTo({ top: 0, behavior: 'smooth' })
+      } else if (document.body.scrollTop > 0) {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+    }
+  }
 
   if (!isMobile()) {
     const items = [
@@ -94,7 +91,7 @@ export default () => {
           key: '/admin' + item?.path ?? '',
           icon: (
             <CuIcon
-              icon={item.meta.icon}
+              icon={item.handle.icon}
               size="32"
               style={{
                 color: getColor(item.path),
@@ -128,7 +125,7 @@ export default () => {
       <footer className="zaifooter">
         <div
           className="zf-item flex-fdc-aic-juc h-100"
-          onClick={() => navigate('/')}
+          onClick={() => handleMenuClick('/')}
           style={{
             color: getColor('/'),
           }}
@@ -141,7 +138,7 @@ export default () => {
         </div>
         <div
           className="zf-item flex-fdc-aic-juc h-100"
-          onClick={() => navigate('/search')}
+          onClick={() => handleMenuClick('/search')}
           style={{
             color: getColor('/search'),
           }}
@@ -154,7 +151,7 @@ export default () => {
         </div>
         <div
           className="zf-item flex-fdc-aic-juc h-100"
-          onClick={() => navigate('/circle')}
+          onClick={() => handleMenuClick('/circle')}
           style={{
             color: getColor('/circle'),
           }}
@@ -180,7 +177,7 @@ export default () => {
             <div
               key={i}
               className="zf-item flex-fdc-aic-juc h-100"
-              onClick={() => navigate('/admin')}
+              onClick={() => handleMenuClick('/admin')}
               style={{
                 color: getColor(v?.path ?? '/admin'),
               }}

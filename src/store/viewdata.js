@@ -5,17 +5,9 @@ import { randomHexColor } from '@/utlis/themeColor'
 const [viewdata, getViewData] = createGlobalStore(() => {
   const [tabs, setTabs] = useState([])
 
-  const [novelFormView, { toggle: toggleNovelFormView }] = useToggle(false)
+  // const [novelFormView, { toggle: toggleNovelFormView }] = useToggle(false)
 
-  const [novel, setNovel] = useState({
-    action: false,
-    data: {},
-    novelList: [],
-  })
-
-  function setNovelStore(obj) {
-    setNovel(v => ({ ...v, ...obj }))
-  }
+  const [novelData, setNovelData] = useState([])
 
   function clearNovel() {
     setTabs([])
@@ -40,7 +32,7 @@ const [viewdata, getViewData] = createGlobalStore(() => {
 
   const initNovel = async isleng => {
     if (!isleng) {
-      if (getViewData().tabs.length > 0 && getViewData().novel.novelList.length > 0) return
+      if (getViewData().tabs.length > 0 && getViewData().novelData.length > 0) return
     }
 
     let data = await http.post('/curd-mongo/find/novel', { ops: { many: true }, where: { isdel: 1 } })
@@ -62,28 +54,36 @@ const [viewdata, getViewData] = createGlobalStore(() => {
       })
       return mv
     })
-    setNovelStore({ novelList: data })
+    setNovelData(data)
   }
 
   function deleteNovelItem(id) {
-    const findindex = novel.novelList.findIndex(fv => fv._id === id)
+    const findindex = novelData.findIndex(fv => fv._id === id)
     if (findindex === -1) return 0
-    novel.novelList.splice(findindex, 1)
-    setNovelStore({ novelList: [...novel.novelList] })
+    novelData.splice(findindex, 1)
+    setNovelData([].concat(novelData))
     return 1
+  }
+
+  function updateNovelItem(newData) {
+    const findindex = novelData.findIndex(fv => fv._id === newData._id)
+    if (findindex === -1) return 0
+    novelData[findindex] = newData
+    setNovelData([].concat(novelData))
   }
 
   return {
     tabs,
     setTabs,
-    novelFormView,
-    toggleNovelFormView,
+
+    novelData,
+    setNovelData,
+
+    updateNovelItem,
+    deleteNovelItem,
 
     initTabs,
-    novel,
-    setNovelStore,
     initNovel,
-    deleteNovelItem,
     clearNovel,
   }
 })

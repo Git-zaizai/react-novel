@@ -9,13 +9,8 @@ const plainOptions = ['wsMap', 'wsMessageMap', 'wsPingMap']
 
 export default () => {
   const { userStore } = useStore()
-  let token = localStorage.getItem('token')
-  if (!token || !userStore.admin) {
-    return
-  }
-
   const [openjson, { toggle: setopenjson }] = useToggle(false)
-  const [dataJson, setdataJson] = useState(null)
+  const [opentoupdate, setopentoupdate] = useState('')
 
   async function createAllFile() {
     if (!userStore.admin) {
@@ -25,9 +20,12 @@ export default () => {
       window.$message.error('网络错误')
       return Promise.reject(err)
     })
-    setopenjson()
-    setdataJson(res.data)
-    window.$message.success('创建成功')
+    let log_path = res.data.log_path.split('/json/').pop()
+    setopentoupdate(log_path)
+    window.$message.success('创建成功，打开文件')
+    setTimeout(() => {
+      setopenjson()
+    }, 1000)
   }
 
   const [checkedList, setCheckedList] = useState([])
@@ -78,6 +76,11 @@ export default () => {
     }
   }
 
+  let token = localStorage.getItem('token')
+  if (!token || !userStore.admin) {
+    return
+  }
+
   return (
     <div className={styles.wola}>
       <Button
@@ -102,7 +105,10 @@ export default () => {
       </div>
       <div className="mt-5">
         <Button
-          onClick={setopenjson}
+          onClick={() => {
+            setopentoupdate('')
+            setopenjson()
+          }}
           block
         >
           查看json
@@ -112,7 +118,7 @@ export default () => {
       <CheckJson
         open={openjson}
         onClose={setopenjson}
-        data={dataJson}
+        opentoupdate={opentoupdate}
       />
     </div>
   )

@@ -2,26 +2,26 @@ import { useToggle } from 'ahooks'
 import { useViewDataStore, getViewDataStore } from '@/store/viewdata'
 
 export default () => {
-  const { novel, setNovelStore } = useViewDataStore()
+  const { novelData, setNovelStore } = useViewDataStore()
   const [show, { toggle }] = useToggle()
 
-  const setData = (value) => setNovelStore({ data: value })
+  const setData = value => setNovelStore({ data: value })
 
-  const toggleOnSetData = (data) => {
+  const toggleOnSetData = data => {
     setData(data)
     toggle()
   }
 
-  const updateNovelList = (callback) => {
+  const updateNovelList = callback => {
     callback && callback(getViewDataStore(), setNovelStore)
   }
 
   return {
     show,
     toggle,
-    data: novel.data,
+    data: novelData,
     setData,
     updateNovelList,
-    toggleOnSetData
+    toggleOnSetData,
   }
 }

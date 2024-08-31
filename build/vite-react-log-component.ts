@@ -20,22 +20,26 @@ function createlogFn() {
 
             let str = args.join()
             let color
-            let backgroundColor
+            let backgroundColor, count
             if (ComponentsMap.has(str)) {
                 let current = ComponentsMap.get(str)
+                current.count += 1
+                count = current.count
                 color = current.color
                 backgroundColor = current.backgroundColor
             } else {
                 color = randomHexColor()
                 backgroundColor = randomHexColor()
-                ComponentsMap.set(str, { color: color, backgroundColor: backgroundColor })
+                ComponentsMap.set(str, { color: color, backgroundColor: backgroundColor, count: 1 })
+                count = 1
             }
 
 
             console.log(
-                `%c REACT-NOVEL %c ${args.join()}`,
+                `%c REACT-NOVEL %c ${args.join()} %c ${count}`,
                 `padding: 2px 1px; border-radius: 3px; color: #fff; background: ${backgroundColor}; font-weight: bold;`,
-                `padding: 2px 1px; border-radius: 3px; color: #fff; background: ${backgroundColor}; font-weight: bold;margin: 0 10px;`
+                `padding: 2px 1px; border-radius: 3px; color: #fff; background: ${backgroundColor}; font-weight: bold;margin-left: 10px;`,
+                `padding: 2px 2px; border-radius: 3px; color: #fff; background: ${backgroundColor}; font-weight: bold;margin-left: 10px;`
             )
         }
 

@@ -1,85 +1,126 @@
-.textdisabled {
-  color: var(--text-color-disabled);
-}
-
-.dropdown-pullup {
-  position: relative;
-  height: 100%;
-  overflow: var(--overflow);
-}
-
-/* 隐藏滚动条 */
-.scroll-hihe::-webkit-scrollbar {
-  display: none;
-}
-/* 为了确保内容仍然可以滚动 */
-.scroll-hihe {
-  -ms-overflow-style: none; /* IE和Edge */
-  scrollbar-width: none; /* Firefox */
-}
-/* 可选：如果你想要为其他浏览器（非Webkit）也隐藏滚动条 */
-.scroll-hihe {
-  overflow: -moz-scrollbars-none; /* Firefox */
-}
-
-.loaderBox {
-  position: absolute;
-  top: -70px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 70px;
+.search {
+  width: 97.5vw;
+  margin: 0 auto;
   z-index: 10;
-  transform: translateY(var(--zai-translateY));
+  position: fixed;
+  top: 74px;
+  left: 10px;
 }
 
-.dropdown-icon {
-  font-size: 24px;
-  color: var(--text-color-disabled);
+.zhanwei {
+  height: calc(var(--Header-height) + 20px);
 }
 
-.dropdown-icon-rotate180 {
-  animation: rotate180 0.5s ease forwards;
+.searchtitle :global(.ant-input) {
+  padding: 8px 15px;
 }
 
-.loader {
-  width: 25px;
-  height: 25px;
-  border: 3px solid var(--border-color);
-  border-radius: 50%;
-  border-bottom: 3px solid var(--success-color);
-  animation: loadingskKeyframes 1s linear infinite;
+/* .searchtitle :global(.ant-btn:nth-child(2)) {
+  padding: 8px 15px;
+  height: 40px;
+}
+*/
+.searchtitle :global(.ant-btn) {
+  padding: 8px 15px;
+  height: 42px;
 }
 
-.content {
-  transform: translateY(var(--zai-translateY));
-  height: 100%;
+.searchcard :global(.ant-card-head) {
+  padding: 5px;
+}
+.searchcard :global(.ant-card-body) {
+  padding: 5px;
+}
+.searchcard :global(.ant-form-item) {
+  margin-bottom: 0px;
 }
 
-.loaderBottomBox {
-  width: 100%;
-  height: 30px;
+.searchScroll {
+  /* overflow-y: scroll; */
   display: flex;
-  justify-content: center;
+  flex-direction: row;
   align-items: center;
-  color: var(--text-color-disabled);
+  flex-wrap: wrap;
 }
 
-@keyframes loadingskKeyframes {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* 整个滚动条 */
+.searchScroll::-webkit-scrollbar {
+  width: var(--scrollbar-width); /* 滚动条的宽度 */
+  height: var(--scrollbar-height); /* 滚动条的高度，对水平滚动条有效 */
+  background-color: transparent; /* 滚动条的背景颜色 */
 }
 
-@keyframes rotate180 {
-  from {
-    transform: rotate(0deg);
+/* 滚动条轨道 */
+.searchScroll::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: transparent; /* 轨道的背景颜色 */
+}
+
+/* 滚动条滑块 */
+.searchScroll::-webkit-scrollbar-thumb {
+  border-radius: var(--scrollbar-border-radius);
+  background-color: var(--scrollbar-color); /* 滑块的背景颜色 */
+  /* border: 3px solid #e1e1e1; */ /* 滑块的边框和轨道相同的颜色，可以制造“边距”的效果 */
+}
+
+/* 滚动条滑块：悬停效果 */
+.searchScroll::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-color-hover); /* 滑块的悬停颜色 */
+}
+
+/* 滚动条滑块：激活时的效果 */
+.searchScroll ::-webkit-scrollbar-thumb:active {
+  background-color: var(--scrollbar-color-hover); /* 滑块的激活颜色 */
+}
+
+/* 滚动条按钮（上下箭头） */
+.searchScroll::-webkit-scrollbar-button {
+  display: none; /* 通常情况下不显示滚动条按钮 */
+}
+
+@media screen and (max-width: 980px) {
+  .search {
+    width: 95vw;
+    left: calc((100vw - 95vw) / 2);
   }
-  to {
-    transform: rotate(180deg);
+
+  .searchcard :global(.ant-card-head) {
+    padding: 5px;
+    min-height: 53px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .searchScroll {
+    overflow-y: visible;
+    height: 55vh;
+  }
+
+  .cardindex {
+    width: 23.5%;
+    margin: 0 10px 20px 10px;
+  }
+
+  .carppeizhu {
+    background-color: var(--tag-color);
+    margin-top: 10px;
+    border-radius: 3px;
+    padding: 5px;
+    color: var(--text-color-2);
+  }
+
+  .cardtitle {
+    width: 80%;
+  }
+
+  .cardindex {
+    width: 95vw;
+  }
+
+  .cardbut {
+    margin-bottom: 5px;
+  }
+
+  .searchFormItem :global(.ant-form-item) {
+    margin-bottom: 0px;
   }
 }

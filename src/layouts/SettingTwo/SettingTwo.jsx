@@ -13,23 +13,19 @@ import { useViewDataStore } from '@/store/viewdata'
 const CheckboxGroup = Checkbox.Group
 
 export default () => {
-  const { setUserStore, settingTwoShow, toggleSettingTwoShow } = useStore()
   logComponents('SettingTwo')
-  /* if (getStore().isSettingTwo === false) {
-    logComponents('SettingTwo')
-    return null
-  } */
 
+  const { userStore, setUserStore, settingTwoShow, toggleSettingTwoShow } = useStore()
   const [token, setToken] = useLocalStorageState('token')
-  const [isLogin, { toggle }] = useToggle(true)
-  const [pwd, setPwd] = useState('')
+  const [isLogin, { toggle }] = useToggle(!token)
+  const [pwd, setPwd] = useState(token ? 'token' : '')
   const { runAsync } = useRequest(data => http.post('/secretkey', { pwd: data }), {
     manual: true,
   })
   const { clearNovel } = useViewDataStore()
 
   useAsyncEffect(async () => {
-    if (token) {
+    if (settingTwoShow && token && userStore.admin === false) {
       await http.post('/verify').catch(e => {
         setToken()
         return Promise.reject(e)
@@ -37,7 +33,7 @@ export default () => {
       setPwd('token')
       toggle()
     }
-  }, [])
+  }, [settingTwoShow])
 
   // 选中的checke
   const [checkedList, setCheckedList] = useState(Object.keys(localStorage))
@@ -122,7 +118,9 @@ export default () => {
     }
   }
 
-  function exportLocal() {}
+  function exportLocal() {
+    window.$message.warning('暂未实现')
+  }
 
   return (
     <Drawer

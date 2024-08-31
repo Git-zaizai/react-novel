@@ -17,21 +17,30 @@ export default () => {
 
   return (
     <>
-      <div style={{ height: 'calc(var(--Header-height) + 20px)' }}></div>
-      <div className={styles.iconview}>
-        {cuicons.map(v => (
-          <div className={styles.icondiv} onClick={() => copyfun(v)} key={v}>
-            <CuIcon
+      <div>
+        <div style={{ height: 'calc(var(--Header-height) + 20px)' }}></div>
+        <div
+          className={styles.iconview}
+          style={{ height: 'calc(100vh - 150px)' }}
+        >
+          {cuicons.map(v => (
+            <div
+              className={styles.icondiv}
+              onClick={() => copyfun(v)}
               key={v}
-              icon={v}
-              size='32'
-              color={store.theme ? `var(--text-color-3)` : `var(--success-color)`}
-            ></CuIcon>
-            <span>{v}</span>
-          </div>
-        ))}
+            >
+              <CuIcon
+                key={v}
+                icon={v}
+                size="32"
+                color={store.theme ? `var(--text-color-3)` : `var(--success-color)`}
+              ></CuIcon>
+              <span>{v}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{ height: 'calc(var(--Header-height) + 20px)' }}></div>
       </div>
-      <div style={{ height: 'calc(var(--Header-height) + 20px)' }}></div>
     </>
   )
 }

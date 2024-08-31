@@ -4,6 +4,7 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+  overflow: scroll;
 }
 .icondiv {
   display: flex;
@@ -14,4 +15,3 @@
   height: 60px;
   border: 1px solid #ccc;
 }
-

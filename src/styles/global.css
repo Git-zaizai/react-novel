@@ -1,10 +1,8 @@
 :root.global__style--light {
   --name: common;
-  --font-family: v-sans, system-ui, -apple-system, BlinkMacSystemFont,
-    'Segoe UI', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+  --font-family: v-sans, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
     'Segoe UI Symbol';
-  --font-family-mono: v-mono, SFMono-Regular, Menlo, Consolas, Courier,
-    monospace;
+  --font-family-mono: v-mono, SFMono-Regular, Menlo, Consolas, Courier, monospace;
   --font-weight: 400;
   --font-weight-strong: 500;
   --cubic-bezier-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
@@ -102,12 +100,9 @@
   --button-color-2: rgba(46, 51, 56, 0.05);
   --button-color-2-hover: rgba(46, 51, 56, 0.09);
   --button-color-2-pressed: rgba(46, 51, 56, 0.13);
-  --box-shadow-1: 0 1px 2px -2px rgba(0, 0, 0, 0.08),
-    0 3px 6px 0 rgba(0, 0, 0, 0.06), 0 5px 12px 4px rgba(0, 0, 0, 0.04);
-  --box-shadow-2: 0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
-  --box-shadow-3: 0 6px 16px -9px rgba(0, 0, 0, 0.08),
-    0 9px 28px 0 rgba(0, 0, 0, 0.05), 0 12px 48px 16px rgba(0, 0, 0, 0.03);
+  --box-shadow-1: 0 1px 2px -2px rgba(0, 0, 0, 0.08), 0 3px 6px 0 rgba(0, 0, 0, 0.06), 0 5px 12px 4px rgba(0, 0, 0, 0.04);
+  --box-shadow-2: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  --box-shadow-3: 0 6px 16px -9px rgba(0, 0, 0, 0.08), 0 9px 28px 0 rgba(0, 0, 0, 0.05), 0 12px 48px 16px rgba(0, 0, 0, 0.03);
   /****************************  下面是自己加得 *********************************/
   --body-back-color: #fff;
   --box-shadow-4: rgba(0, 0, 0, 0.12) 0px 2px 8px 0px;
@@ -116,11 +111,9 @@
 
 :root.global__style--dark {
   --name: common;
-  --font-family: v-sans, system-ui, -apple-system, BlinkMacSystemFont,
-    'Segoe UI', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+  --font-family: v-sans, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
     'Segoe UI Symbol';
-  --font-family-mono: v-mono, SFMono-Regular, Menlo, Consolas, Courier,
-    monospace;
+  --font-family-mono: v-mono, SFMono-Regular, Menlo, Consolas, Courier, monospace;
   --font-weight: 400;
   --font-weight-strong: 500;
   --cubic-bezier-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
@@ -218,12 +211,9 @@
   --button-color-2: rgba(255, 255, 255, 0.08);
   --button-color-2-hover: rgba(255, 255, 255, 0.12);
   --button-color-2-pressed: rgba(255, 255, 255, 0.08);
-  --box-shadow-1: 0 1px 2px -2px rgba(0, 0, 0, 0.24),
-    0 3px 6px 0 rgba(0, 0, 0, 0.18), 0 5px 12px 4px rgba(0, 0, 0, 0.12);
-  --box-shadow-2: 0 3px 6px -4px rgba(0, 0, 0, 0.24),
-    0 6px 12px 0 rgba(0, 0, 0, 0.16), 0 9px 18px 8px rgba(0, 0, 0, 0.1);
-  --box-shadow-3: 0 6px 16px -9px rgba(0, 0, 0, 0.08),
-    0 9px 28px 0 rgba(0, 0, 0, 0.05), 0 12px 48px 16px rgba(0, 0, 0, 0.03);
+  --box-shadow-1: 0 1px 2px -2px rgba(0, 0, 0, 0.24), 0 3px 6px 0 rgba(0, 0, 0, 0.18), 0 5px 12px 4px rgba(0, 0, 0, 0.12);
+  --box-shadow-2: 0 3px 6px -4px rgba(0, 0, 0, 0.24), 0 6px 12px 0 rgba(0, 0, 0, 0.16), 0 9px 18px 8px rgba(0, 0, 0, 0.1);
+  --box-shadow-3: 0 6px 16px -9px rgba(0, 0, 0, 0.08), 0 9px 28px 0 rgba(0, 0, 0, 0.05), 0 12px 48px 16px rgba(0, 0, 0, 0.03);
   /****************************  下面是自己加得 *********************************/
   --body-back-color: rgb(16, 16, 20);
   --box-shadow-4: rgba(0, 0, 0, 0.12) 0px 2px 8px 0px;
@@ -238,7 +228,8 @@
 body {
   font-family: var(--font-family);
   color: var(--text-color-base);
-  /* background: var(--body-back-color); */
+  background: var(--body-back-color);
+  transition: background-color 0.5s ease-in-out;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

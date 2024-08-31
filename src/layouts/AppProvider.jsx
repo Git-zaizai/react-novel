@@ -20,7 +20,6 @@ const AppProvider = memo(({ children }) => {
   window.logComponents('AppProvider')
 
   const { appTheme } = useAppStore()
-
   const CreateWindow = useMemo(() => GlobeFn, [])
 
   return (
@@ -31,7 +30,7 @@ const AppProvider = memo(({ children }) => {
         }}
         theme={{
           token: appTheme.themeToken,
-          algorithm: appTheme.theme ? theme.defaultAlgorithm : theme.darkAlgorithm,
+          algorithm: appTheme.theme === 'light' ? theme.defaultAlgorithm : theme.darkAlgorithm,
         }}
       >
         <App message={{ top: 70 }}>

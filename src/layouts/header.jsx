@@ -10,57 +10,55 @@ import { useViewDataStore } from '@/store/viewdata'
 export default () => {
   logComponents('Header')
 
-  const { toggleSettingTwoShow, toggleAddDrawerShow } = useStore()
+  const { toggleSettingTwoShow, toggleAddDrawerShow, setNovelFormData } = useStore()
   const { appTheme, setThemeToggle } = useAppStore()
-  const { toggleNovelFormView } = useViewDataStore()
+  // const { toggleNovelFormView } = useViewDataStore()
 
-  const oponNovelFormClick = useCallback(() => {
+  const oponNovelFormClick = () => {
     toggleAddDrawerShow()
-    setNovelStore({ action: 'add' })
-  }, [])
+    setNovelFormData({ action: 'add' })
+  }
 
   return (
-    <>
-      <header className="zaiheader">
+    <header className="zaiheader">
+      <CuIcon
+        icon="cascades cursor-pointer"
+        size="34"
+        color="var(--success-color)"
+        onClick={toggleSettingTwoShow}
+      />
+
+      <div className="header-current flex">
         <CuIcon
-          icon="cascades cursor-pointer"
+          icon="roundadd"
+          className="ml-20 cursor-pointer"
           size="34"
           color="var(--success-color)"
-          onClick={toggleSettingTwoShow}
+          onClick={oponNovelFormClick}
         />
-
-        <div className="header-current flex">
-          <CuIcon
-            icon="roundadd"
-            className="ml-20 cursor-pointer"
-            size="34"
-            color="var(--success-color)"
-            onClick={oponNovelFormClick}
+      </div>
+      <Link to="/wol">
+        <WindowsOutlined style={{ color: 'var(--success-color)', fontSize: '38px', marginRight: '20px' }} />
+      </Link>
+      <Transition show={appTheme.theme}>
+        {appTheme.theme ? (
+          <SunOne
+            className="el-transition-color header-rigth cursor-pointer"
+            theme="outline"
+            size="32"
+            fill="var(--success-color)"
+            onClick={setThemeToggle}
           />
-        </div>
-        <Link to="/wol">
-          <WindowsOutlined style={{ color: 'var(--success-color)', fontSize: '38px', marginRight: '20px' }} />
-        </Link>
-        <Transition show={appTheme.theme}>
-          {appTheme.theme ? (
-            <SunOne
-              className="el-transition-color header-rigth cursor-pointer"
-              theme="outline"
-              size="32"
-              fill="var(--success-color)"
-              onClick={setThemeToggle}
-            />
-          ) : (
-            <Moon
-              className="el-transition-color header-rigth cursor-pointer"
-              theme="outline"
-              size="32"
-              fill="var(--success-color)"
-              onClick={setThemeToggle}
-            />
-          )}
-        </Transition>
-      </header>
-    </>
+        ) : (
+          <Moon
+            className="el-transition-color header-rigth cursor-pointer"
+            theme="outline"
+            size="32"
+            fill="var(--success-color)"
+            onClick={setThemeToggle}
+          />
+        )}
+      </Transition>
+    </header>
   )
 }

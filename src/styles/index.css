@@ -13,10 +13,6 @@
   --Header-Navigate: 5vh;
 }
 
-body {
-  background-color: var(--base-color);
-}
-
 /*  禁止（safari）浏览器自带的下拉刷新 */
 html,
 body {

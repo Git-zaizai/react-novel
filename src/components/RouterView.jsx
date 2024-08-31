@@ -15,10 +15,10 @@ const RouterView = () => {
     const route = matches.at(-1)
     let is = route.handle?.Transition ?? true
     if (is) {
-      setIsAnimating()
+      /*   setIsAnimating()
       setTimeout(() => {
         setIsAnimating()
-      }, 300)
+      }, 300) */
     }
   }, [location.key])
 

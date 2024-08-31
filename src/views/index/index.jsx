@@ -10,7 +10,7 @@ import DropdownPullup from '@/components/DropdownPullup'
 export default () => {
   window.logComponents('index 首页')
 
-  const { initTabs, novel, initNovel } = useViewDataStore()
+  const { initTabs, novelData, initNovel } = useViewDataStore()
   const [loading, { set: setloading }] = useToggle(true)
   const [list, setList] = useState([])
 
@@ -18,7 +18,7 @@ export default () => {
     try {
       await initTabs()
       await initNovel()
-      setList(getViewDataStore().novel.novelList)
+      setList(getViewDataStore().novelData)
     } finally {
       setloading(false)
       setTimeout(() => {
@@ -28,11 +28,11 @@ export default () => {
   }
 
   useEffect(() => {
-    if (novel.novelList.length === 0) {
+    if (novelData.length === 0) {
       return setList([])
     }
     onEnd()
-  }, [novel.novelList])
+  }, [novelData])
 
   function copylink(item) {
     let link = item.link ? item.link : item.linkback ? item.linkback : false
@@ -40,7 +40,11 @@ export default () => {
       link = item.links.filter(fv => fv.urli)
       link = link.urli
     }
-    copyText(link, msg => window.$message.success(msg))
+    if (link) {
+      copyText(link, msg => window.$message.success(msg))
+    } else {
+      window.$message.warning('没有链接')
+    }
   }
 
   return (

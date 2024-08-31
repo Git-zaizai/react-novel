@@ -7,10 +7,6 @@ import { WOLHTTP } from './api'
 import dayjs from 'dayjs'
 
 export default ({ open, opentoupdate, onClose }) => {
-  if (!open) {
-    return
-  }
-
   const [jsonFiles, setJsonfiles] = useState([])
 
   const [srcData, setSrcData] = useState(null)
@@ -21,9 +17,13 @@ export default ({ open, opentoupdate, onClose }) => {
   const isDeleteButdisabled = !jsonFiles.some(sv => sv.checked)
 
   useAsyncEffect(async () => {
-    await getjsons()
+    if (!open) return
+    let jsonlist = await getjsons()
     if (opentoupdate) {
-      await getjson(jsonFiles[0].name)
+      const jsonfileitem = jsonlist.find(fv => fv.name === opentoupdate)
+      if (jsonfileitem) {
+        await getjson(jsonfileitem)
+      }
     }
   }, [open])
 
@@ -39,17 +39,17 @@ export default ({ open, opentoupdate, onClose }) => {
   async function getjsons() {
     try {
       const res = await WOLHTTP.get('/json-list')
-      setJsonfiles(
-        res.reverse().map(mv => {
-          if (mv.name.includes('all_')) {
-            mv.namef = 'all_' + dayjs(mv.mtime).format('YYYY-MM-DD HH:mm:ss')
-          } else {
-            mv.namef = mv.name
-          }
-          mv.checked = false
-          return mv
-        })
-      )
+      let list = res.reverse().map(mv => {
+        if (mv.name.includes('all_')) {
+          mv.namef = 'all_' + dayjs(mv.mtime).format('YYYY-MM-DD HH:mm:ss')
+        } else {
+          mv.namef = mv.name
+        }
+        mv.checked = false
+        return mv
+      })
+      setJsonfiles(list)
+      return list
     } catch {
       window.$message.error('获取json失败')
     }
@@ -115,6 +115,10 @@ export default ({ open, opentoupdate, onClose }) => {
       console.log(error)
       window.$message.error('删除失败')
     }
+  }
+
+  if (!open) {
+    return
   }
 
   return (

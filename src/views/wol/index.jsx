@@ -179,88 +179,90 @@ export default () => {
 
   return (
     <>
-      <HeaderNavigate />
-      <div className={styles.wolLayout}>
-        <Form
-          form={formRef}
-          onFinish={onFinish}
-          initialValues={{
-            wssid: wssid_list?.wssid ?? '',
-          }}
-        >
-          <Form.Item
-            name="wssid"
-            label="id：（最好使用英文和数字组合，自己记得就好）"
-            rules={[rulesID]}
-            validateTrigger="onBlur"
+      <div>
+        <HeaderNavigate />
+        <div className={styles.wolLayout}>
+          <Form
+            form={formRef}
+            onFinish={onFinish}
+            initialValues={{
+              wssid: wssid_list?.wssid ?? '',
+            }}
           >
-            <Input
-              placeholder="id"
-              allowClear
-            />
-          </Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            block
-            loading={isloading}
-          >
-            查询
-          </Button>
-        </Form>
+            <Form.Item
+              name="wssid"
+              label="id：（最好使用英文和数字组合，自己记得就好）"
+              rules={[rulesID]}
+              validateTrigger="onBlur"
+            >
+              <Input
+                placeholder="id"
+                allowClear
+              />
+            </Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              block
+              loading={isloading}
+            >
+              查询
+            </Button>
+          </Form>
 
-        <div className="mt-10">
-          <h1>id：{wssid_list?.wssid ?? '空'}</h1>
-          {items.length > 0 &&
-            items.map((item, index) => (
-              <div
-                className={styles.items}
-                key={item.uuid}
-              >
-                <h3>uuid：{item.uuid}</h3>
-                <Button
-                  type={item.buttype}
-                  block
-                  danger
-                  className="mt-10"
-                  loading={item.loading}
-                  onClick={() => binditemClick(item, index)}
+          <div className="mt-10">
+            <h1>id：{wssid_list?.wssid ?? '空'}</h1>
+            {items.length > 0 &&
+              items.map((item, index) => (
+                <div
+                  className={styles.items}
+                  key={item.uuid}
                 >
-                  唤醒
-                </Button>
-                <div className="flex-ai-c mt-10">
-                  <Input
-                    placeholder="随便写-测试看看在线不"
-                    allowClear
-                    onChange={e => setTestsendValue(e.target.value)}
-                  />
+                  <h3>uuid：{item.uuid}</h3>
                   <Button
-                    type="primary"
-                    onClick={() => testSend(item, index)}
-                  >
-                    测试wolapp通讯
-                  </Button>
-                </div>
-                <div className={styles.gnbuts}>
-                  <Button
-                    type="primary"
-                    onClick={() => getPower(item, index)}
-                  >
-                    查看手机电量
-                  </Button>
-                  <Button
-                    type="primary"
+                    type={item.buttype}
+                    block
                     danger
-                    onClick={() => deleteuuid(item, index)}
+                    className="mt-10"
+                    loading={item.loading}
+                    onClick={() => binditemClick(item, index)}
                   >
-                    释放当前链接
+                    唤醒
                   </Button>
+                  <div className="flex-ai-c mt-10">
+                    <Input
+                      placeholder="随便写-测试看看在线不"
+                      allowClear
+                      onChange={e => setTestsendValue(e.target.value)}
+                    />
+                    <Button
+                      type="primary"
+                      onClick={() => testSend(item, index)}
+                    >
+                      测试wolapp通讯
+                    </Button>
+                  </div>
+                  <div className={styles.gnbuts}>
+                    <Button
+                      type="primary"
+                      onClick={() => getPower(item, index)}
+                    >
+                      查看手机电量
+                    </Button>
+                    <Button
+                      type="primary"
+                      danger
+                      onClick={() => deleteuuid(item, index)}
+                    >
+                      释放当前链接
+                    </Button>
+                  </div>
+                  <div className="mt-10">{item.msgs.length > 0 && item.msgs.map((msg, index) => <p key={index}>{msg}</p>)}</div>
                 </div>
-                <div className="mt-10">{item.msgs.length > 0 && item.msgs.map((msg, index) => <p key={index}>{msg}</p>)}</div>
-              </div>
-            ))}
+              ))}
+          </div>
+          <WolAdmin />
         </div>
-        <WolAdmin />
       </div>
     </>
   )
