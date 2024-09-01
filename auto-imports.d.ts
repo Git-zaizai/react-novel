@@ -24,6 +24,7 @@ declare global {
   const Row: typeof import('antd')['Row']
   const Skeleton: typeof import('antd')['Skeleton']
   const Space: typeof import('antd')['Space']
+  const Spin: typeof import('antd')['Spin']
   const Tag: typeof import('antd')['Tag']
   const createRef: typeof import('react')['createRef']
   const forwardRef: typeof import('react')['forwardRef']
@@ -134,4 +135,9 @@ declare global {
   const useVirtualList: typeof import('ahooks')['useVirtualList']
   const useWebSocket: typeof import('ahooks')['useWebSocket']
   const useWhyDidYouUpdate: typeof import('ahooks')['useWhyDidYouUpdate']
+}
+// for type re-export
+declare global {
+  // @ts-ignore
+  export type { FC } from 'react'
 }

@@ -14,9 +14,13 @@
 }
 
 /*  禁止（safari）浏览器自带的下拉刷新 */
-html,
-body {
-  overflow: hidden;
+
+@media screen and (max-width: 980px) {
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
 }
 
 /* 针对 IPhone 的底部安全距离

@@ -11,14 +11,14 @@ export default () => {
   window.logComponents('index 首页')
 
   const { initTabs, novelData, initNovel } = useViewDataStore()
-  const [loading, { set: setloading }] = useToggle(true)
-  const [list, setList] = useState([])
+  const [loading, { set: setloading }] = useToggle(!novelData.length)
 
   async function onEnd(callback) {
     try {
-      await initTabs()
-      await initNovel()
-      setList(getViewDataStore().novelData)
+      if (!novelData.length) {
+        await initTabs()
+        await initNovel()
+      }
     } finally {
       setloading(false)
       setTimeout(() => {
@@ -26,13 +26,6 @@ export default () => {
       }, 1000)
     }
   }
-
-  useEffect(() => {
-    if (novelData.length === 0) {
-      return setList([])
-    }
-    onEnd()
-  }, [novelData])
 
   function copylink(item) {
     let link = item.link ? item.link : item.linkback ? item.linkback : false
@@ -51,13 +44,14 @@ export default () => {
     <>
       <div className="h-100-vh">
         <DropdownPullup
+          isMount={loading}
           onEnd={onEnd}
           headerPosition={<div style={{ height: '10px' }}></div>}
         >
           <CardSkeletons show={loading}>
             <div className={styles.indexview}>
-              {list.length > 0 &&
-                list.map((item, index) => (
+              {novelData.length > 0 &&
+                novelData.map((item, index) => (
                   <div
                     className={`flex-ai-c mb-10 ${styles.itemview}`}
                     key={item._id}

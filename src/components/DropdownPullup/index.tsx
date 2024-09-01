@@ -65,26 +65,35 @@ interface Props {
 export type PullRefreshProps = Props
 
 const DropdownPullup = (props: Props) => {
-  const { headerPosition = null, children, onEnd, onPullup, InfiniteDropdown = true, isMount = true, scroll, isOnPullup = true } = props
+  const {
+    headerPosition = null,
+    children,
+    onEnd,
+    onPullup,
+    InfiniteDropdown = true,
+    isMount = true,
+    scroll,
+    isOnPullup = true,
+  } = props
   const dropdownPullupViewRef = useRef<HTMLDivElement | null>(null)
 
   const [style, setStyle] = useState({
     '--zai-translateY': '0px',
-    '--overflow': 'scroll'
+    '--overflow': 'scroll',
   })
 
   const [dropdown, setDropdown] = useState<DropdownState>({
     text: '下拉刷新',
     status: 1,
     className: '',
-    opacity: 0
+    opacity: 0,
   })
 
   const [pullup, setPullup] = useState<PullupState>({
     text: '加载中...',
     show: false,
     iconShow: true,
-    opacity: 0
+    opacity: 0,
   })
 
   const pullupCallback = (value?: PullupState) => {
@@ -93,7 +102,7 @@ const DropdownPullup = (props: Props) => {
       show: true,
       iconShow: true,
       opacity: 0,
-      ...value
+      ...value,
     })
     setStyle({ '--overflow': 'scroll', '--zai-translateY': '0px' })
   }
@@ -140,7 +149,7 @@ const DropdownPullup = (props: Props) => {
           className: styles['dropdown-icon-rotate180'],
           status: 2,
           text: '放手刷新',
-          opacity: 1
+          opacity: 1,
         })
       }
 
@@ -162,7 +171,7 @@ const DropdownPullup = (props: Props) => {
       className: '',
       status: 1,
       text: '下拉刷新',
-      opacity: 0
+      opacity: 0,
     })
     if (!pullup.show && typeof onPullup === 'function') {
       setPullup((value: any) => ({ ...value, show: true }))
@@ -185,7 +194,7 @@ const DropdownPullup = (props: Props) => {
         className: '',
         status: 1,
         text: '下拉刷新',
-        opacity: 0
+        opacity: 0,
       }))
       setStyle(() => ({ '--overflow': 'scroll', '--zai-translateY': '0px' }))
     } else {
@@ -251,7 +260,7 @@ const DropdownPullup = (props: Props) => {
     <>
       <div
         ref={dropdownPullupViewRef}
-        id='dropdown-pullup'
+        id="dropdown-pullup"
         className={`${styles['dropdown-pullup']}${!isMobile() ? 'web-dropdown-pullup' : ''}`}
         onScroll={scrollView}
         style={style as React.CSSProperties}
@@ -259,14 +268,17 @@ const DropdownPullup = (props: Props) => {
         {headerPosition}
         <div className={styles.loaderBox}>
           {dropdown.status !== 3 && (
-            <div className={`${styles.textdisabled} flex-ai-c`} style={{ opacity: dropdown.opacity }}>
+            <div
+              className={`${styles.textdisabled} flex-ai-c`}
+              style={{ opacity: dropdown.opacity }}
+            >
               <i className={`cuIcon-refresharrow ${styles['dropdown-icon']} ${dropdown.className}`} />
               <span>{dropdown.text}</span>
             </div>
           )}
 
           {dropdown.status === 3 && (
-            <div className='flex-ai-c'>
+            <div className="flex-ai-c">
               <i className={styles.loader}></i>
               <span className={styles.textdisabled + ' flex-ai-c ml-5'}>加载中...</span>
             </div>
@@ -275,9 +287,12 @@ const DropdownPullup = (props: Props) => {
         <div className={styles.content}>
           {children}
           {pullup.show && (
-            <div className={styles.loaderBottomBox} style={{ opacity: pullup.opacity }}>
+            <div
+              className={styles.loaderBottomBox}
+              style={{ opacity: pullup.opacity }}
+            >
               {pullup.iconShow && <i className={styles.loader}></i>}
-              <span className='ml-5'>{pullup.text}</span>
+              <span className="ml-5">{pullup.text}</span>
             </div>
           )}
           <div className={styles['footer-position']}></div>

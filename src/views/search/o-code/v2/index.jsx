@@ -14,7 +14,6 @@ import { Form } from 'antd'
 import http from '@/utlis/http'
 
 import { NovelCardList } from '@/components/novelCard-v2'
-import DropdownPullupV2 from '@/components/DropdownPullup-v2'
 
 const typeOptions = [
   {
@@ -77,6 +76,7 @@ export default () => {
   const [searchlist, setSearchlist] = useState(novelData.slice(0, 10))
   const [page, setPage] = useState(10)
   const [inputValue, setInput] = useState('')
+  const [isOnPullup, { set: setIsOnPullup }] = useToggle(true)
   const [spinning, { toggle: toggleSpinning }] = useToggle(false)
 
   const bindList = async callback => {
@@ -86,12 +86,11 @@ export default () => {
         await initNovel()
       }
     } finally {
-      if (searchlist.length > 10 || searchlist.length === 0) {
-        setSearchlist(novelData.slice(0, 10))
-      }
+      setSearchlist(getViewDataStore().novelData.slice(0, 10))
       setInput('')
       !isCheckboxShow && formRef.resetFields()
       isonSearch = false
+      !isOnPullup && setIsOnPullup(true)
       setTimeout(() => {
         callback && callback()
       }, 1000)
@@ -179,18 +178,20 @@ export default () => {
       return
     }
     if (page + 10 <= novelData.length) {
-      setTimeout(() => {
-        setSearchlist(list => {
-          return list.concat(novelData.slice(page, page + 10))
-        })
-        setPage(page + 10)
-        callback()
-      }, 1000)
-    } else {
       callback({
-        pullupIconShow: false,
-        text: '没有了...',
+        opacity: 1,
       })
+      setSearchlist(list => {
+        return list.concat(novelData.slice(page, page + 10))
+      })
+      setPage(page + 10)
+    } else {
+      setTimeout(() => {
+        callback({
+          opacity: 0,
+        })
+        setIsOnPullup(false)
+      }, 1000)
     }
   }
 
@@ -299,24 +300,35 @@ export default () => {
           </Transition>
         </Card>
 
-        <Spin
-          size="large"
-          delay={300}
-          spinning={spinning}
+        <DropdownPullup
+          onEnd={bindList}
+          onPullup={onPullup}
+          isMount={false}
+          isOnPullup={isOnPullup}
+          headerPosition={<div style={{ height: 'calc(var(--Header-height) + 3.3vh)' }}></div>}
         >
-          <DropdownPullupV2
-            onDropdown={bindList}
-            onPullup={onPullup}
-            InfiniteDropdown
-            top="140px"
-            DropdownChildren={<div style={{ height: '160px' }}></div>}
-            PullupChildren={<div className={styles.footerposition}></div>}
+          <Spin
+            size="large"
+            delay={300}
+            spinning={spinning}
           >
             <div className="flex-ai-c flex-wrap">
               <NovelCardList data={searchlist} />
             </div>
-          </DropdownPullupV2>
-        </Spin>
+          </Spin>
+        </DropdownPullup>
+
+        {/*   <div
+          style={{
+            height: 'calc(100vh - (var(--Header-height) + 3.3vh))',
+            position: 'fixed',
+            zIndex: '1',
+            top: 'calc(var(--Header-height) + 3.3vh)',
+            width: '100%',
+          }}
+        >
+          <div className="flex-fdc-aic-juc h-100"></div>
+        </div> */}
       </div>
     </>
   )

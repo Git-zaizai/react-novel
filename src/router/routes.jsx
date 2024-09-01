@@ -42,6 +42,10 @@ export const commonRoutes = [
       },
     ],
   },
+  {
+    path: '/DropdownPullup-v2',
+    element: LazyImport(() => import('@/views/test/test-d')),
+  },
 ]
 
 export const mainRoutes = [
@@ -58,7 +62,7 @@ export const mainRoutes = [
           },
           {
             path: 'search',
-            element: LazyImport(() => import('@/views/search')),
+            element: LazyImport(() => import('@/views/search/')),
           },
           {
             path: 'circle',

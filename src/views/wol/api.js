@@ -1,6 +1,6 @@
 import http, { createRequest } from '@/utlis/http'
 import dayjs from 'dayjs'
-import { awaitTime } from '@/utlis'
+import { waitTime } from '@/utlis'
 
 export { http }
 
@@ -8,7 +8,7 @@ const { VITE_GLOB_WOL_API_URL, VITE_GLOB_WOL_API_URL_PREFIX } = import.meta.env
 export const WOLHTTP = createRequest(VITE_GLOB_WOL_API_URL + VITE_GLOB_WOL_API_URL_PREFIX)
 
 export const getWolAppSend = async (wssid, uuid) => {
-  await awaitTime(200)
+  await waitTime(200)
   let result
   for (let i = 0; i < 10; i++) {
     try {

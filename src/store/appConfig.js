@@ -34,5 +34,10 @@ export const [useAppStore, AppConfigStoreProvider] = createStore(() => {
       return res
     })
   }
+
+  useMount(() => {
+    setRootCss(appTheme.theme)
+  })
+
   return { appTheme, setAppTheme, setThemeToggle }
 })

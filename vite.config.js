@@ -15,17 +15,18 @@ export default defineConfig(configEnv => {
     plugins: [
       react(),
       AutoImport({
-        imports: ['react', 'react-router-dom', 'ahooks'],
+        imports: ['react', 'react-router-dom', 'ahooks', { from: 'react', imports: ['FC'], type: true }],
         dts: true,
-        resolvers: [AntdResolver()]
+        include: [/\.[tj]sx?$/],
+        resolvers: [AntdResolver()],
       }),
-      viteReactLogComponent()
+      viteReactLogComponent(),
     ],
     base: viteEnv.VITE_BASE_URL,
     resolve: {
       alias: {
-        '@': resolve('./src')
-      }
+        '@': resolve('./src'),
+      },
     },
     server: {
       host: '0.0.0.0',
@@ -34,12 +35,12 @@ export default defineConfig(configEnv => {
         '/gadgets-server': {
           target: 'http://127.0.0.1:4399',
           changeOrigin: true,
-          rewrite: path => path.replace(/^\/gadgets-server/, '')
-        }
-      }
+          rewrite: path => path.replace(/^\/gadgets-server/, ''),
+        },
+      },
     },
     build: {
-      outDir: viteEnv.VITE_BUILD_OUTDIR ? viteEnv.VITE_BUILD_OUTDIR : 'dist'
-    }
+      outDir: viteEnv.VITE_BUILD_OUTDIR ? viteEnv.VITE_BUILD_OUTDIR : 'dist',
+    },
   }
 })

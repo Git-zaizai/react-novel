@@ -19,3 +19,13 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }
+
+declare global {
+  // @ts-ignore
+  export type { FC } from 'react'
+  import('react')
+}
+
+declare interface global {
+  logComponents: (...agrs: any[]) => void
+}

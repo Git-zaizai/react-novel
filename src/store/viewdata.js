@@ -72,6 +72,10 @@ const [viewdata, getViewData] = createGlobalStore(() => {
     setNovelData([].concat(novelData))
   }
 
+  useMount(() => {
+    initTabs().then(initNovel(true))
+  })
+
   return {
     tabs,
     setTabs,

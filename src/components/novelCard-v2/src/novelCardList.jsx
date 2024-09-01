@@ -6,6 +6,8 @@ import { useViewDataStore } from '@/store/viewdata'
 import http from '@/utlis/http'
 
 export default ({ data }) => {
+  window.logComponents('novelCardList')
+
   const { toggleAddDrawerShow, setNovelFormData } = useStore()
   const { deleteNovelItem, updateNovelItem } = useViewDataStore()
 

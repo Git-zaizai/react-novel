@@ -8,7 +8,6 @@ const RouterView = () => {
   const [isAnimating, { toggle: setIsAnimating }] = useToggle(false)
   const currentOutlet = useOutlet()
   const location = useLocation()
-
   const matches = useMatches()
 
   useEffect(() => {
@@ -34,6 +33,8 @@ const RouterView = () => {
         onEntered={setIsAnimating}
       >
         {currentOutlet}
+        {/* 不能使用，因为会导致组件不会更新，动画失效 */}
+        {/* <Outlet /> */}
       </Transition>
     </>
   )

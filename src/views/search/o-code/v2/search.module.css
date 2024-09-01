@@ -79,10 +79,6 @@
     left: calc((100vw - 95vw) / 2);
   }
 
-  .searchview :global(.ant-spin-nested-loading > div > .ant-spin) {
-    max-height: 100vh;
-  }
-
   .searchcard :global(.ant-card-head) {
     padding: 5px;
     min-height: 53px;
@@ -127,17 +123,4 @@
     max-height: calc(100vh - (var(--Header-height) + 7.3vh + var(--Footer-height)));
     top: calc(var(--Header-height) + 7.3vh);
   } */
-
-  .footerposition {
-    display: block;
-    height: var(--Footer-height);
-  }
-
-  @supports (bottom: constant(safe-area-inset-bottom)) or (bottom: env(safe-area-inset-bottom)) {
-    .footerposition {
-      margin-bottom: constant(safe-area-inset-bottom);
-      margin-bottom: env(safe-area-inset-bottom);
-      height: calc(var(--Footer-height));
-    }
-  }
 }

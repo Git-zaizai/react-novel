@@ -29,7 +29,7 @@ const AppProvider = memo(({ children }) => {
           styles: drawerStyles,
         }}
         theme={{
-          token: appTheme.themeToken,
+          token: { ...appTheme.themeToken },
           algorithm: appTheme.theme === 'light' ? theme.defaultAlgorithm : theme.darkAlgorithm,
         }}
       >

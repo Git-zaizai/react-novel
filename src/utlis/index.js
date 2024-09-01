@@ -57,7 +57,7 @@ export function copyText(data, callback) {
   }
 }
 
-export const awaitTime = (time = 1000) => {
+export const waitTime = (time = 1000) => {
   return new Promise(resolve => {
     setTimeout(() => {
       resolve()

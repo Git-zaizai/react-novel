@@ -14,11 +14,6 @@ import './styles/index.css'
  */
 function App() {
   logComponents('App')
-  /* useEffect(() => {
-    // setRootCss(checkIsDarkMode() ? 'light' : 'dark')
-    setRootCss('dark')
-  }, []) */
-  setRootCss('dark')
 
   return (
     <>

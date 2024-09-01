@@ -5,14 +5,12 @@ import CuIcon from '@/components/cuIcon'
 import ViewCard from '@/components/ViewCard'
 import { useToggle } from 'ahooks'
 import http from '@/utlis/http'
-import { useViewDataStore } from '@/store/viewdata'
 
 const { TextArea } = Input
 
 export default () => {
   const [formRef] = Form.useForm()
   const [isloading, { toggle }] = useToggle()
-  // const { tabs } = useViewDataStore()
   const tabs = []
 
   const onFinish = async value => {
@@ -25,8 +23,8 @@ export default () => {
 
       const findTabName = await http.post('/curd-mongo/find/tabs', {
         where: {
-          name: value.name
-        }
+          name: value.name,
+        },
       })
 
       if (findTabName.length) {
@@ -40,15 +38,15 @@ export default () => {
           name: value.name,
           txt: value.txt,
           reply: '',
-          adddate: new Date()
-        }
+          adddate: new Date(),
+        },
       })
       if (response?.acknowledged) {
         window.$message.success(`提交申请成功`)
         formRef.setFieldsValue({
           type: 1,
           name: '',
-          txt: ''
+          txt: '',
         })
       }
     } catch (error) {
@@ -67,9 +65,14 @@ export default () => {
       <ViewCard
         className={styles.circleCard}
         title={
-          <div className='flex'>
-            <CuIcon icon='tag' size='22' color='var(--primary-color)' className='mr-10' />
-            <h4 className='wax-100 singe-line'>标签添加申请</h4>
+          <div className="flex">
+            <CuIcon
+              icon="tag"
+              size="22"
+              color="var(--primary-color)"
+              className="mr-10"
+            />
+            <h4 className="wax-100 singe-line">标签添加申请</h4>
           </div>
         }
       >
@@ -77,25 +80,41 @@ export default () => {
           form={formRef}
           onFinish={onFinish}
           initialValues={{
-            type: 1
+            type: 1,
           }}
         >
           <Form.Item
-            name='name'
+            name="name"
             rules={[
               {
                 required: true,
-                message: '不能为空'
-              }
+                message: '不能为空',
+              },
             ]}
-            validateTrigger='onBlur'
+            validateTrigger="onBlur"
           >
-            <Input placeholder='记录类型与标签 名' allowClear />
+            <Input
+              placeholder="记录类型与标签 名"
+              allowClear
+            />
           </Form.Item>
-          <Form.Item name='txt' validateTrigger='onBlur'>
-            <TextArea allowClear placeholder='说明' autoSize={{ minRows: 2, maxRows: 7 }} />
+          <Form.Item
+            name="txt"
+            validateTrigger="onBlur"
+          >
+            <TextArea
+              allowClear
+              placeholder="说明"
+              autoSize={{ minRows: 2, maxRows: 7 }}
+            />
           </Form.Item>
-          <Button type='primary' htmlType='submit' className='mt-5' block loading={isloading}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="mt-5"
+            block
+            loading={isloading}
+          >
             提交
           </Button>
         </Form>
