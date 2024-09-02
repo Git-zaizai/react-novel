@@ -19,7 +19,14 @@ export default () => {
   }
 
   const handleMenuClick = route => {
-    let url = typeof route === 'string' ? route : route.path
+    let url
+    if (typeof route === 'string') {
+      url = route
+    } else if (route.path) {
+      url = route.path
+    } else {
+      url = route.key
+    }
 
     if (url !== location.pathname) {
       navigate(url)

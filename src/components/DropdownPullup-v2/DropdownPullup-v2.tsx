@@ -249,8 +249,6 @@ export const DropdownPullupv2: FC<Props> = props => {
     }
   }, [])
 
-  const childrenMemo = useMemo(() => children, [children])
-
   return (
     <>
       <div
@@ -283,7 +281,7 @@ export const DropdownPullupv2: FC<Props> = props => {
           onScroll={contentScroll}
         >
           {DropdownChildren}
-          {childrenMemo}
+          {children}
           {dropdown.pullupShow && (
             <div className={styles.Hitbottom}>
               <div className={styles.DropdownIconView}>
