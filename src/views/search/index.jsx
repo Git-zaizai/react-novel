@@ -75,7 +75,6 @@ export default () => {
   const [isCheckboxShow, { toggle }] = useToggle(true)
   const { tabs, novelData, initTabs, initNovel } = useViewDataStore()
   const [searchlist, setSearchlist] = useState(novelData.slice(0, 10))
-  const [page, setPage] = useState(10)
   const [inputValue, setInput] = useState('')
   const [spinning, { toggle: toggleSpinning }] = useToggle(false)
 
@@ -178,12 +177,11 @@ export default () => {
     if (isonSearch) {
       return
     }
-    if (page + 10 <= novelData.length) {
+    if (searchlist.length - 1 < novelData.length - 1) {
       setTimeout(() => {
         setSearchlist(list => {
-          return list.concat(novelData.slice(page, page + 10))
+          return list.concat(novelData.slice(searchlist.length - 1, searchlist.length - 1 + 10))
         })
-        setPage(page + 10)
         callback()
       }, 1000)
     } else {
