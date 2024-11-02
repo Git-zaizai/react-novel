@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "build:hashRouter": "vite build --mode production.hashRouter && node ./build/ssh-upload.js",
+    "build:hashRouter:github": "vite build --mode production.hashRouter",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "preview:hashRouter": "vite preview --mode production.hashRouter"
