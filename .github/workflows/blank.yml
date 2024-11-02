@@ -17,8 +17,8 @@ on:
 env:
   TZ: Asia/Shanghai
 
-  # 任务
-  #jobs:
+# 任务
+jobs:
   build-and-deploy:
     # 服务器环境：最新版 ubuntu
     runs-on: ubuntu-latest
