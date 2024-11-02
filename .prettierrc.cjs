@@ -23,9 +23,6 @@ module.exports = {
   bracketSameLine: false,
   // 在单独的箭头函数参数周围包括括号 always：(x) => x \ avoid：x => x
   arrowParens: 'avoid',
-  // 这两个选项可用于格式化以给定字符偏移量（分别包括和不包括）开始和结束的代码
-  rangeStart: 0,
-  rangeEnd: Infinity,
   // 指定要使用的解析器，不需要写文件开头的 @prettier
   requirePragma: false,
   // 不需要自动在文件开头插入 @prettier

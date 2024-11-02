@@ -23,7 +23,8 @@
     "react-dom": "^18.2.0",
     "react-json-view": "^1.21.3",
     "react-router-dom": "6",
-    "react-transition-group": "^4.4.5"
+    "react-transition-group": "^4.4.5",
+    "unocss": "^0.63.6"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",
