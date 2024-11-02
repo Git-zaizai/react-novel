@@ -13,7 +13,7 @@ export default ({ data }) => {
 
   const dropdownClick = useCallback(async (key, novelItem) => {
     if (key === 'update') {
-      setNovelFormData({ action: key, novelItem })
+      setNovelFormData({ action: key, data: novelItem })
       toggleAddDrawerShow()
     } else {
       const modalRes = await window.$modal.confirm({

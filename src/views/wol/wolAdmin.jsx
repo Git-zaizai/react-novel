@@ -1,6 +1,7 @@
 import styles from './wol.module.css'
 
 import CheckJson from './Check-json'
+import SelectCurrent from './select-current'
 
 import { WOLHTTP } from './api'
 import { useStore } from '@/store'
@@ -76,11 +77,11 @@ export default () => {
     }
   }
 
-  let token = localStorage.getItem('token')
+  /*   let token = localStorage.getItem('token')
   if (!token || !userStore.admin) {
     return
   }
-
+ */
   return (
     <div className={styles.wola}>
       <Button
@@ -104,7 +105,7 @@ export default () => {
         </Button>
       </div>
       <div className="mt-5">
-        <Button
+        {/* <Button
           onClick={() => {
             setopentoupdate('')
             setopenjson()
@@ -112,13 +113,23 @@ export default () => {
           block
         >
           查看json
+        </Button> */}
+        <Button
+          block
+          onClick={setopenjson}
+        >
+          查看当前数据
         </Button>
       </div>
 
-      <CheckJson
+      {/* <CheckJson
         open={openjson}
         onClose={setopenjson}
         opentoupdate={opentoupdate}
+      /> */}
+      <SelectCurrent
+        open={openjson}
+        onClose={setopenjson}
       />
     </div>
   )

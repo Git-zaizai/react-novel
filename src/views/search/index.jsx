@@ -208,6 +208,10 @@ export default () => {
     }
   }, [spinning])
 
+  useEffect(() => {
+    setSearchlist(novelData.slice(0, searchlist.length))
+  }, [novelData])
+
   return (
     <>
       <div className={`h-100-vh ${styles.searchview}`}>

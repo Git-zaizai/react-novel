@@ -17,8 +17,7 @@
 }
 
 .wola {
-  position: absolute;
-  bottom: 10px;
+  margin-top: 30px;
   width: calc(100vw - 40px);
 }
 

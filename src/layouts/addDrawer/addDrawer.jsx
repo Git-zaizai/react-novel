@@ -45,7 +45,10 @@ export default () => {
   const [checkboxs, setCheckboxs] = useState([])
 
   if (addDrawerShow && novelFormData.action === 'update' && novelFormData.data) {
-    let data = typeof window.structuredClone === 'function' ? structuredClone(novelFormData.data) : JSON.parse(JSON.stringify(novelFormData.data))
+    let data =
+      typeof window.structuredClone === 'function'
+        ? structuredClone(novelFormData.data)
+        : JSON.parse(JSON.stringify(novelFormData.data))
     data.tabs = novelFormData.data.tabs.map(t => t.tab)
     initialValues = data
   }
@@ -162,7 +165,7 @@ export default () => {
     } else {
       const index = novelData.findIndex(fv => fv['_id'] === body['_id'])
       novelData[index] = body
-      setNovelData([body].concat(novelData))
+      setNovelData([].concat(novelData))
     }
     // setValueStore({ addDrawerShow: !store.addDrawerShow })
     toggleAddDrawerShow()

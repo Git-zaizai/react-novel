@@ -121,7 +121,7 @@ export default () => {
       window.$message.error('网络错误')
       return Promise.reject(err)
     })
-    const { wsPingMap } = res.data
+    const { wsPingMap } = res.data.all_data
     if (wsPingMap.length === 0) {
       item.msgs.push('暂无电量记录')
       setitems([...items])
@@ -136,9 +136,12 @@ export default () => {
     }
 
     let wsPingItems = wsPing.times.reverse()
+    console.log('🚀 ~ getPower ~ wsPingItems:', wsPingItems)
     wsPingItems = wsPingItems.find(fv => fv.type === 'client')
     let date = wsPingItems ? wsPingItems.date : new Date()
-    item.msgs.push(`手机电量：${wsPingItems?.clientmessage.level ?? '无'}  ${dayjs(date).format('YYYY-MM-DD HH:mm:ss')}`)
+    item.msgs.push(
+      `手机电量：${wsPingItems?.clientmessage.level ?? '无'} == ${dayjs(date).format('YYYY-MM-DD HH:mm:ss')}`
+    )
     setitems([...items])
   }
 
@@ -257,7 +260,9 @@ export default () => {
                       释放当前链接
                     </Button>
                   </div>
-                  <div className="mt-10">{item.msgs.length > 0 && item.msgs.map((msg, index) => <p key={index}>{msg}</p>)}</div>
+                  <div className="mt-10">
+                    {item.msgs.length > 0 && item.msgs.map((msg, index) => <p key={index}>{msg}</p>)}
+                  </div>
                 </div>
               ))}
           </div>
