@@ -42,7 +42,7 @@ jobs:
           node-version: 20
           cache: 'pnpm'
 
-      # 打包静态文件
+      # 打包静态文件 (dist)
       - name: Build
         run: pnpm install && pnpm build
 
